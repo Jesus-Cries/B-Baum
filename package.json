@@ -1,0 +1,30 @@
+{
+    "name": "obrm.tech",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "server": "nodemon server.js",
+        "client": "npm start --prefix client",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "prod": "npm run build --prefix client"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Jesus-Cries/obrm.tech.git"
+    },
+    "author": "Leon Obermann",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Jesus-Cries/obrm.tech/issues"
+    },
+    "homepage": "https://github.com/Jesus-Cries/obrm.tech#readme",
+    "dependencies": {
+        "concurrently": "^6.2.0",
+        "express": "^4.17.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.12"
+    }
+}
