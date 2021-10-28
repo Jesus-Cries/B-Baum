@@ -17,7 +17,9 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
-    let tempBbaum: string[][] = [
+
+    const [nodeSize, setNodeSize] = useState<number>(5);
+    const [bbaum, setBbaum] = useState<string[][]>([
         ["10"],
         ["3", "7"],
         ["13", "19"],
@@ -27,12 +29,10 @@ const Bbaum: React.FC<Props> = () => {
         ["20", "21"],
         ["4", "5", "6"],
         ["14", "15", "16", "18"],
-    ];
-
-    const [nodeSize, setNodeSize] = useState<number>(5);
-    const [bbaum, setBbaum] = useState<string[][]>(new Array(tempBbaum.length).fill(new Array(1).fill(" ")));
+    ]);
 
     const normalizeArray = () => {
+        let tempBbaum: string[][] = bbaum;
         for (let i = 0; i < tempBbaum.length; i++) {
             while (tempBbaum[i].length < nodeSize) {
                 tempBbaum[i].push("‎‎ ‎");
@@ -43,7 +43,7 @@ const Bbaum: React.FC<Props> = () => {
 
     useEffect(() => {
         normalizeArray();
-    });
+    }, []);
 
     return (
         <Box>
