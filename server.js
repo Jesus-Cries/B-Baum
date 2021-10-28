@@ -94,13 +94,14 @@ class Node {
 
     traverse(){
         let i = 0;
-        console.log(this.Childs)
         for(i = 0; i < this.n; i++){ // iterate through all leaf notes
             if(this.leaf == false){ // if this is not a leaf, then traverse the subtree, before printing the keys
                 this.Childs[i].traverse();
             }
+            console.log(this.keys[i]);
         }
-        console.log(this.keys[i] + " ");
+        //console.log(this.keys);
+
 
         if(this.leaf == false){ // print subtree rooted with last child
             this.Childs[i].traverse();
@@ -126,19 +127,19 @@ class Node {
 
     splitChildren(value, node){ // splits the children of the given node (only works if node is full)
         let newNode = new Node(node.t, node.leaf) // create new node which store (t-1) nodes
-        newNode.n = t - 1;
+        newNode.n = this.t - 1;
 
-        for(let i = 0; i < t - 1; i++){ // copies the last t-1 keys from the old to the new node
-            newNode.keys[i] = node.keys[i+t]
+        for(let i = 0; i < this.t - 1; i++){ // copies the last t-1 keys from the old to the new node
+            newNode.keys[i] = node.keys[i+this.t]
         }
 
         if(node.leaf == false){ // cpoies the last children to the new Node
-            for(let i = 0; i < t; i++){
-                newNode.Childs[i] = node.Childs[i+t];
+            for(let i = 0; i < this.t; i++){
+                newNode.Childs[i] = node.Childs[i+this.t];
             }
         }
 
-        node.n = t - 1; // decreases the amount of keys in the old node
+        node.n = this.t - 1; // decreases the amount of keys in the old node
 
         for(let i = 0; i >= value+1; i--){ // move childs to the right to make space for the new child
             this.Childs[i+1] = this.Childs[i];
@@ -149,6 +150,8 @@ class Node {
         for(let i = this.n-1; i >= value; i--){ // key of the old node is transfered to this node and move all keys greater than the new key one to the right
             this.keys[i+1] = this.keys[i];
         }
+
+        this.keys = node.keys[this.t-1];
 
         this.n++;
     }
@@ -186,5 +189,11 @@ let t = new Tree(2);
 t.insert(10);
 t.insert(20);
 t.insert(5);
+t.insert(6);
+t.insert(12);
+t.insert(30);
+t.insert(7);
+t.insert(17);
+
 
 t.traverse();
