@@ -95,7 +95,7 @@ class Node {
     traverse(){
         let i = 0;
         console.log(this.Childs)
-        for(i = 0; i >= this.n; i++){ // iterate through all leaf notes
+        for(i = 0; i < this.n; i++){ // iterate through all leaf notes
             if(this.leaf == false){ // if this is not a leaf, then traverse the subtree, before printing the keys
                 this.Childs[i].traverse();
             }
