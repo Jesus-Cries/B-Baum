@@ -1,26 +1,37 @@
+import { useState } from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
     root: {
-        color: "#fff",
+        width: 250,
+        marginTop: 30,
+        marginBottom: 120,
+        justifyContent: "center",
+        alignItems: "center",
     },
     item: {
-        marginTop: 20,
+        display: "flex",
+        justifyContent: "center",
+        width: 40,
+        marginLeft: 2,
+        marginRight: 2,
         padding: 10,
-        border: "1px solid white",
+        border: "1px solid black",
     },
 });
 
 interface Props {
-    values: number[];
+    values: string[];
 }
 
 const Node: React.FC<Props> = ({ values }) => {
     const classes = useStyles();
 
     return (
-        <Grid justifyContent="center" className={classes.root} container>
+        <Grid className={classes.root} container>
             {values.map((value) => (
                 <Grid className={classes.item} item>
                     {value}
