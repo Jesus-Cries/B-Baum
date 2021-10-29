@@ -15,8 +15,8 @@
 
 ## Scripts
 
--   start: Starts the node server
--   server: Starts the node server with nodemon (dynamic reloading)
--   client: Starts only frontend with React
--   dev: Starts frontend and backend
--   prod: Creates a new build for the frontend
+- npm run start: Starts the node server
+- npm run server: Starts the node server with nodemon (dynamic reloading)
+- npm run client: Starts only frontend with React
+- npm run dev: Starts frontend and backend
+- npm run prod: Creates a new build for the frontend
