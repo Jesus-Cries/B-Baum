@@ -15,6 +15,8 @@
 
 ## Scripts
 
+Use as follows: npm run <script name>
+
 -   start: Starts the node server
 -   server: Starts the node server with nodemon (dynamic reloading)
 -   client: Starts only frontend with React
