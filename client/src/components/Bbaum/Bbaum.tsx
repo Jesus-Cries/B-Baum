@@ -7,9 +7,17 @@ import Grid from "@material-ui/core/Grid";
 import Node from "../../components/Node/Node";
 
 const useStyles = makeStyles({
-    root: {},
+    root: {
+        margin: 5,
+    },
     container: {
-        justifyContent: "space-evenly",
+        marginTop: 30,
+        borderRadius: 50,
+        backgroundColor: "#eee",
+        justifyContent: "space-around",
+    },
+    outerContainer: {
+        justifyContent: "space-around",
     },
 });
 
@@ -46,7 +54,7 @@ const Bbaum: React.FC<Props> = () => {
     }, []);
 
     return (
-        <Box>
+        <Box className={classes.root}>
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />
             </Grid>
@@ -56,14 +64,28 @@ const Bbaum: React.FC<Props> = () => {
                 <Node values={bbaum[2]} />
             </Grid>
 
-            <Grid className={classes.container} container>
+            <Grid className={classes.outerContainer} container>
+                <Grid className={classes.container} xs={6} container>
+                    <Node values={bbaum[3]} />
+                    <Node values={bbaum[4]} />
+                    <Node values={bbaum[5]} />
+                </Grid>
+
+                <Grid className={classes.container} xs={6} container>
+                    <Node values={bbaum[6]} />
+                    <Node values={bbaum[7]} />
+                    <Node values={bbaum[8]} />
+                </Grid>
+            </Grid>
+
+            {/* <Grid className={classes.container} container>
                 <Node values={bbaum[3]} />
                 <Node values={bbaum[4]} />
                 <Node values={bbaum[5]} />
                 <Node values={bbaum[6]} />
                 <Node values={bbaum[7]} />
                 <Node values={bbaum[8]} />
-            </Grid>
+            </Grid> */}
         </Box>
     );
 };
