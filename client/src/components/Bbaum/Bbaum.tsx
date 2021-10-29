@@ -10,7 +10,7 @@ import Control from "../../components/Control/Control";
 
 const useStyles = makeStyles({
     root: {
-        margin: 5,
+        padding: 5,
     },
     container: {
         marginTop: 30,
@@ -20,6 +20,9 @@ const useStyles = makeStyles({
     },
     outerContainer: {
         justifyContent: "space-around",
+    },
+    canvas: {
+        position: "absolute",
     },
 });
 
@@ -51,9 +54,18 @@ const Bbaum: React.FC<Props> = () => {
         setBbaum(tempBbaum);
     };
 
-    useEffect(() => {
-        normalizeArray();
-    }, []);
+    const drawLines = () => {
+        const canvas: HTMLCanvasElement | null = document.getElementById("canvas") as HTMLCanvasElement;
+        if (canvas) {
+            const context = canvas.getContext("2d");
+            context?.beginPath();
+            context?.moveTo(702, 172);
+            context?.lineTo(358, 273);
+            context!.lineWidth = 1;
+            context!.strokeStyle = "#777";
+            context?.stroke();
+        }
+    };
 
     const upload = () => {
         console.log("Upload");
@@ -71,13 +83,20 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Search");
     };
 
-    // Couldn't call this method "delete" as that name seems to be already used by React
+    // Couldn't name this method "delete" as that name seems to be already used by React
     const remove = () => {
         console.log("Delete");
     };
 
+    useEffect(() => {
+        normalizeArray();
+        drawLines();
+    }, []);
+
     return (
         <Box className={classes.root}>
+            <canvas id="canvas" className={classes.canvas} width={window.innerWidth} height={window.innerHeight}></canvas>
+
             <Control upload={upload} random={random} insert={insert} search={search} remove={remove} />
 
             <Grid className={classes.container} container>
