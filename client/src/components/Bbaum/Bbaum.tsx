@@ -55,9 +55,30 @@ const Bbaum: React.FC<Props> = () => {
         normalizeArray();
     }, []);
 
+    const upload = () => {
+        console.log("Upload");
+    };
+
+    const random = () => {
+        console.log("Random");
+    };
+
+    const insert = () => {
+        console.log("Insert");
+    };
+
+    const search = () => {
+        console.log("Search");
+    };
+
+    // Couldn't call this method "delete" as that name seems to be already used by React
+    const remove = () => {
+        console.log("Delete");
+    };
+
     return (
         <Box className={classes.root}>
-            <Control />
+            <Control upload={upload} random={random} insert={insert} search={search} remove={remove} />
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />
