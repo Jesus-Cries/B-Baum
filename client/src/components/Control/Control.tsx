@@ -10,6 +10,7 @@ const useStyles = makeStyles({
         display: "flex",
         justifyContent: "space-evenly",
         alignItems: "center",
+        zIndex: 50,
     },
     button: {},
     slider: {

@@ -11,6 +11,7 @@ const useStyles = makeStyles({
         marginBottom: 35,
         justifyContent: "center",
         alignItems: "center",
+        zIndex: 100,
     },
     item: {
         // fontSize: 12,
