@@ -3,13 +3,23 @@ import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 
 import Node from "../../components/Node/Node";
+import Control from "../../components/Control/Control";
 
 const useStyles = makeStyles({
-    root: {},
+    root: {
+        margin: 5,
+    },
     container: {
-        justifyContent: "space-evenly",
+        marginTop: 30,
+        borderRadius: 50,
+        backgroundColor: "#eee",
+        justifyContent: "space-around",
+    },
+    outerContainer: {
+        justifyContent: "space-around",
     },
 });
 
@@ -35,7 +45,7 @@ const Bbaum: React.FC<Props> = () => {
     const normalizeArray = () => {
         for (let i = 0; i < tempBbaum.length; i++) {
             while (tempBbaum[i].length < nodeSize) {
-                tempBbaum[i].push("‎‎ ‎");
+                tempBbaum[i].push("‎‎‏‏‎ ‎");
             }
         }
         setBbaum(tempBbaum);
@@ -43,10 +53,33 @@ const Bbaum: React.FC<Props> = () => {
 
     useEffect(() => {
         normalizeArray();
-    });
+    }, []);
+
+    const upload = () => {
+        console.log("Upload");
+    };
+
+    const random = () => {
+        console.log("Random");
+    };
+
+    const insert = () => {
+        console.log("Insert");
+    };
+
+    const search = () => {
+        console.log("Search");
+    };
+
+    // Couldn't call this method "delete" as that name seems to be already used by React
+    const remove = () => {
+        console.log("Delete");
+    };
 
     return (
-        <Box>
+        <Box className={classes.root}>
+            <Control upload={upload} random={random} insert={insert} search={search} remove={remove} />
+
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />
             </Grid>
@@ -56,14 +89,28 @@ const Bbaum: React.FC<Props> = () => {
                 <Node values={bbaum[2]} />
             </Grid>
 
-            <Grid className={classes.container} container>
+            <Grid className={classes.outerContainer} container>
+                <Grid className={classes.container} xs={6} container>
+                    <Node values={bbaum[3]} />
+                    <Node values={bbaum[4]} />
+                    <Node values={bbaum[5]} />
+                </Grid>
+
+                <Grid className={classes.container} xs={6} container>
+                    <Node values={bbaum[6]} />
+                    <Node values={bbaum[7]} />
+                    <Node values={bbaum[8]} />
+                </Grid>
+            </Grid>
+
+            {/* <Grid className={classes.container} container>
                 <Node values={bbaum[3]} />
                 <Node values={bbaum[4]} />
                 <Node values={bbaum[5]} />
                 <Node values={bbaum[6]} />
                 <Node values={bbaum[7]} />
                 <Node values={bbaum[8]} />
-            </Grid>
+            </Grid> */}
         </Box>
     );
 };
