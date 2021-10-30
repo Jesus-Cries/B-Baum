@@ -37,6 +37,7 @@ app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });
 
+// noinspection EqualityComparisonWithCoercionJS
 class Tree{
     constructor(t){
         this.root = null;
@@ -46,14 +47,16 @@ class Tree{
     traverse(){
         if(this.root != null){ //check if tree is empty
             this.root.traverse();
+        }else{
+            console.log("Tree is empty")
         }
     }
 
-    search(k){
+    find(k){
         if(this.root == null){ //check if tree is empty
             return null;
         }else{
-            return this.root.search(k)
+            return this.root.find(k)
         }
     }
 
@@ -65,30 +68,32 @@ class Tree{
         }else{
             if(this.root.n == (2*this.t)-1){ //check if node (root) is full
                 let newNode = new Node(this.t, false); // create new node
-                newNode.Childs[0] = this.root; // make the old root the child of the new root
-                newNode.splitChildren(0, this.root); // split the old root and move one of the keys to the root
-                let i = 0;
+                newNode.children[0] = this.root; // make the old root the child of the new root
+                newNode.splitNode(0, this.root); // split the old root and move one of the keys to the root
 
+                let i = 0;
                 if (newNode.keys[0] < k){ // search for child which is supposed to get the key
                     i++;
                 }
-                newNode.Childs[i].insertNotFull(k);
+                newNode.children[i].nodeNotFull(k);
+
                 this.root = newNode; // makes the new node the root
 
             }else {
-                this.root.insertNotFull(k);
+                this.root.nodeNotFull(k);
             }
         }
     }
 }
 
+// noinspection EqualityComparisonWithCoercionJS
 class Node {
 
     constructor(t,leaf){
         this.t = t; // (int) min-degree of the tree
         this.leaf = leaf; // (boolean) if leaf or not
         this.keys = new Array((2 * t) - 1); // array with keys for the nodes
-        this.Childs = new Array(2 * t); // array with child nodes
+        this.children = new Array(2 * t); // array with child nodes
         this.n = 0; // (int) number of leaf
     }
 
@@ -96,15 +101,15 @@ class Node {
         let i = 0;
         for(i = 0; i < this.n; i++){ // iterate through all leaf notes
             if(this.leaf == false){ // if this is not a leaf, then traverse the subtree, before printing the keys
-                this.Childs[i].traverse();
+                this.children[i].traverse();
             }
             console.log(this.keys[i]);
         }
-        //console.log(this.keys);
+       //console.log(this.keys);
 
 
         if(this.leaf == false){ // print subtree rooted with last child
-            this.Childs[i].traverse();
+            this.children[i].traverse();
         }
     }
 
@@ -122,41 +127,47 @@ class Node {
             return null;
         }
 
-        return this.Childs[i].find(k); // go to child of the node to find the key
+        return this.children[i].find(k); // go to child of the node to find the key
     }
 
-    splitChildren(value, node){ // splits the children of the given node (only works if node is full)
+    splitNode(value, node){ // splits the children of the given node (only works if node is full)
         let newNode = new Node(node.t, node.leaf) // create new node which store (t-1) nodes
         newNode.n = this.t - 1;
-
+        let x;
         for(let i = 0; i < this.t - 1; i++){ // copies the last t-1 keys from the old to the new node
             newNode.keys[i] = node.keys[i+this.t]
+            //node.keys.splice(i+this.t, 1)
         }
+        node.keys = node.keys.filter( ( el ) => !newNode.keys.includes( el ) );
+        //node.children.filter(Number);
 
-        if(node.leaf == false){ // cpoies the last children to the new Node
+        if(node.leaf == false){ // copies the last children to the new Node
             for(let i = 0; i < this.t; i++){
-                newNode.Childs[i] = node.Childs[i+this.t];
+                newNode.children[i] = node.children[i+this.t];
             }
+
         }
 
         node.n = this.t - 1; // decreases the amount of keys in the old node
 
-        for(let i = 0; i >= value+1; i--){ // move childs to the right to make space for the new child
-            this.Childs[i+1] = this.Childs[i];
+        for(let i = 0; i >= value+1; i--){ // move children to the right to make space for the new child
+            this.children[i+1] = this.children[i];
         }
 
-        this.Childs[value+1] = newNode; // link child to the new node
+        this.children[value+1] = newNode; // link child to the new node
 
         for(let i = this.n-1; i >= value; i--){ // key of the old node is transfered to this node and move all keys greater than the new key one to the right
             this.keys[i+1] = this.keys[i];
         }
 
-        this.keys = node.keys[this.t-1];
+        this.keys[value] = node.keys[this.t-1];
+        node.keys.splice(this.t-1, 1);
+
 
         this.n++;
     }
 
-    insertNotFull(k){
+    nodeNotFull(k){
         let i = this.n - 1; // make i the pointer to the last element in array
 
         if (this.leaf == true){ // if node is a leaf
@@ -169,15 +180,16 @@ class Node {
 
         }else{
             while (i >= 0 && this.keys[i] > k) { // find child which is supposed to get the new key
-                if (this.Childs[i+1].n == ((2*this.t) - 1)){ // check if the child is full
-                    this.splitChildren(i+1, this.Childs[i+1]) // splits the child
+                i--;
+            }
+            if (this.children[i+1].n == ((2*this.t) - 1)){ // check if the child is full
+                this.splitNode(i+1, this.children[i+1]) // splits the child
 
-                    if (this.keys[i+1] < k){ // traverse keys to see which of the childs is going to get the key
-                        i++;
-                    }
-                    this.Childs[i+1].insertNotFull(k);
+                if (this.keys[i+1] < k){ // traverse keys to see which of the children is going to get the key
+                    i++;
                 }
             }
+            this.children[i+1].nodeNotFull(k);
         }
 
     }
@@ -185,15 +197,22 @@ class Node {
 
 
 
-let t = new Tree(2);
+let t = new Tree(3);
 t.insert(10);
 t.insert(20);
 t.insert(5);
 t.insert(6);
+console.log("Traverse01")
+t.traverse();
 t.insert(12);
+console.log("Traverse02")
+t.traverse();
 t.insert(30);
+console.log("Traverse03")
+t.traverse();
 t.insert(7);
+console.log("Traverse04")
+t.traverse();
 t.insert(17);
-
-
+console.log("Traverse05")
 t.traverse();
