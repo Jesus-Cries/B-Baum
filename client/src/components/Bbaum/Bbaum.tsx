@@ -8,6 +8,8 @@ import Button from "@material-ui/core/Button";
 import Node from "../../components/Node/Node";
 import Control from "../../components/Control/Control";
 
+import { Tree } from "./Tree";
+
 const useStyles = makeStyles({
     root: {
         padding: 5,
@@ -30,6 +32,7 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
+    let myTree: Tree;
     let tempBbaum: string[][] = [
         ["10"],
         ["3", "7"],
@@ -43,7 +46,9 @@ const Bbaum: React.FC<Props> = () => {
     ];
 
     const [nodeSize, setNodeSize] = useState<number>(5);
-    const [bbaum, setBbaum] = useState<string[][]>(new Array(tempBbaum.length).fill(new Array(1).fill(" ")));
+    const [bbaum, setBbaum] = useState<string[][]>(
+        new Array(tempBbaum.length).fill(new Array(1).fill(" "))
+    );
 
     const normalizeArray = () => {
         for (let i = 0; i < tempBbaum.length; i++) {
@@ -55,7 +60,9 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const drawLines = () => {
-        const canvas: HTMLCanvasElement | null = document.getElementById("canvas") as HTMLCanvasElement;
+        const canvas: HTMLCanvasElement | null = document.getElementById(
+            "canvas"
+        ) as HTMLCanvasElement;
         if (canvas) {
             const context = canvas.getContext("2d");
             context?.beginPath();
@@ -88,16 +95,42 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Delete");
     };
 
+    const createTree = () => {
+        myTree = new Tree(3);
+        myTree.insert(10);
+        myTree.insert(20);
+        myTree.insert(5);
+        myTree.insert(8);
+        myTree.insert(12);
+        myTree.insert(12);
+        myTree.insert(7);
+        myTree.insert(17);
+        myTree.insert(60);
+        myTree.traverse();
+    };
+
     useEffect(() => {
+        createTree();
         normalizeArray();
         drawLines();
     }, []);
 
     return (
         <Box className={classes.root}>
-            <canvas id="canvas" className={classes.canvas} width={window.innerWidth} height={window.innerHeight}></canvas>
+            <canvas
+                id="canvas"
+                className={classes.canvas}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            ></canvas>
 
-            <Control upload={upload} random={random} insert={insert} search={search} remove={remove} />
+            <Control
+                upload={upload}
+                random={random}
+                insert={insert}
+                search={search}
+                remove={remove}
+            />
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />
