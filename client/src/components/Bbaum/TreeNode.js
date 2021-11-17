@@ -1,4 +1,4 @@
-export class Node {
+export class TreeNode {
     constructor(t, leaf) {
         this.t = t; // (int) min-degree of the tree
         this.leaf = leaf; // (boolean) if leaf or not
@@ -47,7 +47,7 @@ export class Node {
 
     splitNode(value, node) {
         // splits the children of the given node (only works if node is full)
-        let newNode = new Node(node.t, node.leaf); // create new node which store (t-1) nodes
+        let newNode = new TreeNode(node.t, node.leaf); // create new node which store (t-1) nodes
         newNode.n = this.t - 1;
         // let x;
         for (let i = 0; i < this.t - 1; i++) {
@@ -59,7 +59,7 @@ export class Node {
         //node.children.filter(Number);
 
         if (node.leaf === false) {
-            // copies the last children to the new Node
+            // copies the last children to the new TreeNode
             for (let i = 0; i < this.t; i++) {
                 newNode.children[i] = node.children[i + this.t];
             }

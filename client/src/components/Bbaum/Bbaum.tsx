@@ -106,7 +106,6 @@ const Bbaum: React.FC<Props> = () => {
         myTree.insert(7);
         myTree.insert(17);
         myTree.insert(60);
-        console.log("Traverse05");
         myTree.traverse();
     };
 
