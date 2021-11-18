@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, MutableRefObject} from "react";
+import { useState, useEffect, useRef, MutableRefObject } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -32,7 +32,6 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
-    const inputFile = useRef<any>(null)
     let myTree: Tree;
     let tempBbaum: string[][] = [
         ["10"],
@@ -75,18 +74,17 @@ const Bbaum: React.FC<Props> = () => {
         }
     };
 
-    const upload = () => {
-        console.log(inputFile)
-        inputFile.current.click();
-        console.log("Upload");
-        console.log(inputFile)
-    };
-
     const random = () => {
         console.log("Random");
     };
 
-    const insert = () => {
+    const insert = (key: number) => {
+        console.log(myTree);
+        if (myTree) {
+            myTree.insert(key);
+            myTree.traverse();
+        }
+
         console.log("Insert");
     };
 
@@ -128,14 +126,7 @@ const Bbaum: React.FC<Props> = () => {
                 height={window.innerHeight}
             ></canvas>
 
-            <Control
-                upload={upload}
-                random={random}
-                insert={insert}
-                search={search}
-                remove={remove}
-                inputFile={inputFile}
-            />
+            <Control random={random} insert={insert} search={search} remove={remove} />
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />
