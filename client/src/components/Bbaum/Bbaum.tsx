@@ -43,7 +43,9 @@ const Bbaum: React.FC<Props> = () => {
     ];
 
     const [nodeSize, setNodeSize] = useState<number>(5);
-    const [bbaum, setBbaum] = useState<string[][]>(new Array(tempBbaum.length).fill(new Array(1).fill(" ")));
+    const [bbaum, setBbaum] = useState<string[][]>(
+        new Array(tempBbaum.length).fill(new Array(1).fill(" "))
+    );
 
     const normalizeArray = () => {
         for (let i = 0; i < tempBbaum.length; i++) {
@@ -51,11 +53,13 @@ const Bbaum: React.FC<Props> = () => {
                 tempBbaum[i].push("‎‎‏‏‎ ‎");
             }
         }
-        setBbaum(tempBbaum);
+        setBbaum(tempBbaum); // Lädt asynchron und triggerd rerendering
     };
 
     const drawLines = () => {
-        const canvas: HTMLCanvasElement | null = document.getElementById("canvas") as HTMLCanvasElement;
+        const canvas: HTMLCanvasElement | null = document.getElementById(
+            "canvas"
+        ) as HTMLCanvasElement;
         if (canvas) {
             const context = canvas.getContext("2d");
             context?.beginPath();
@@ -91,13 +95,29 @@ const Bbaum: React.FC<Props> = () => {
     useEffect(() => {
         normalizeArray();
         drawLines();
-    }, []);
+    }, []); // Wird zu Beginn einmal ausgeführt
+
+    // useEffect(() => {
+    //     normalizeArray();
+    //     drawLines();
+    // }, [bbaum]); // Würde getriggerd werden, wenn sich der bbaum verändert -> setBbaum()
 
     return (
         <Box className={classes.root}>
-            <canvas id="canvas" className={classes.canvas} width={window.innerWidth} height={window.innerHeight}></canvas>
+            <canvas
+                id="canvas"
+                className={classes.canvas}
+                width={window.innerWidth}
+                height={window.innerHeight}
+            ></canvas>
 
-            <Control upload={upload} random={random} insert={insert} search={search} remove={remove} />
+            <Control
+                upload={upload}
+                random={random}
+                insert={insert}
+                search={search}
+                remove={remove}
+            />
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />
