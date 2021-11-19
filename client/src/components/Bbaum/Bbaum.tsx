@@ -8,6 +8,8 @@ import Button from "@material-ui/core/Button";
 import Node from "../../components/Node/Node";
 import Control from "../../components/Control/Control";
 
+import { Tree } from "./Tree";
+
 const useStyles = makeStyles({
     root: {
         padding: 5,
@@ -30,6 +32,7 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
+    let myTree: Tree;
     let tempBbaum: string[][] = [
         ["10"],
         ["3", "7"],
@@ -92,7 +95,22 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Delete");
     };
 
+    const createTree = () => {
+        myTree = new Tree(3);
+        myTree.insert(10);
+        myTree.insert(20);
+        myTree.insert(5);
+        myTree.insert(8);
+        myTree.insert(12);
+        myTree.insert(12);
+        myTree.insert(7);
+        myTree.insert(17);
+        myTree.insert(60);
+        myTree.traverse();
+    };
+
     useEffect(() => {
+        createTree();
         normalizeArray();
         drawLines();
     }, []); // Wird zu Beginn einmal ausgeführt
