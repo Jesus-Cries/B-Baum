@@ -81,20 +81,12 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const insert = (key: number) => {
-        // TODO: MyTree cant be read from other function
-        // Solution: Combination of useState and global variable
-
         let tempTree: Tree = TestTree;
-        console.log("PrE iNsErT");
-        console.log(myTree);
-        console.log("BeGiN iNsErT");
         tempTree.insert(key);
         console.log("Inserted: " + key);
         // @ts-ignore
-        console.log(tempTree.root.keys);
-        console.log(tempTree);
+        // console.log(tempTree);
         tempTree.traverse();
-        console.log("PoSt iNsErT");
         myTree = tempTree;
         setTree(tempTree);
     };
