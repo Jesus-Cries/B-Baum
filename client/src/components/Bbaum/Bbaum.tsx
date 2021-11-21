@@ -32,7 +32,7 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
-    let myTree: Tree;
+    let myTree: Tree = new Tree(3);
     let tempBbaum: string[][] = [
         ["10"],
         ["3", "7"],
@@ -44,7 +44,9 @@ const Bbaum: React.FC<Props> = () => {
         ["4", "5", "6"],
         ["14", "15", "16", "18"],
     ];
-
+    //test
+    const [TestTree, setTree] = useState<Tree>(new Tree(3));
+    //test
     const [nodeSize, setNodeSize] = useState<number>(5);
     const [bbaum, setBbaum] = useState<string[][]>(
         new Array(tempBbaum.length).fill(new Array(1).fill(" "))
@@ -79,16 +81,26 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const insert = (key: number) => {
-        console.log(myTree);
-        if (myTree) {
-            myTree.insert(key);
-            myTree.traverse();
-        }
+        // TODO: MyTree cant be read from other function
+        // Solution: Combination of useState and global variable
 
-        console.log("Insert");
+        let tempTree: Tree = TestTree;
+        console.log("PrE iNsErT");
+        console.log(myTree);
+        console.log("BeGiN iNsErT");
+        tempTree.insert(key);
+        console.log("Inserted: " + key);
+        // @ts-ignore
+        console.log(tempTree.root.keys);
+        console.log(tempTree);
+        tempTree.traverse();
+        console.log("PoSt iNsErT");
+        myTree = tempTree;
+        setTree(tempTree);
     };
 
     const search = () => {
+        console.log(myTree);
         console.log("Search");
     };
 
@@ -98,20 +110,24 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const createTree = () => {
-        myTree = new Tree(3);
-        myTree.insert(10);
-        myTree.insert(20);
-        myTree.insert(5);
-        myTree.insert(8);
-        myTree.insert(12);
-        myTree.insert(12);
-        myTree.insert(7);
-        myTree.insert(17);
-        myTree.insert(60);
-        myTree.traverse();
+        let tempTree: Tree = TestTree;
+        tempTree.insert(10);
+        tempTree.insert(20);
+        tempTree.insert(5);
+        tempTree.insert(8);
+        tempTree.insert(12);
+        tempTree.insert(12);
+        tempTree.insert(7);
+        tempTree.insert(17);
+        //tempTree.insert(50);
+        tempTree.traverse();
+        myTree = tempTree;
+        setTree(tempTree);
+        console.log(myTree);
     };
 
     useEffect(() => {
+        TestTree.traverse();
         createTree();
         normalizeArray();
         drawLines();

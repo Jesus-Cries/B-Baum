@@ -4,6 +4,7 @@ import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
     root: {
@@ -17,6 +18,7 @@ const useStyles = makeStyles({
     slider: {
         width: "30%",
     },
+    numberInput: {},
 });
 
 interface Props {
@@ -30,12 +32,10 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
     const inputFile = useRef<any>(null);
-    //const [isFilePicked, setIsFilePicked] = useState(false);
+    const [amount, setAmount] = useState<number>();
 
-    //inputFile.current.click();
     const changeHandler = (event: any) => {
         setSelectedFile(event.target.files[0]);
-        //setIsFilePicked(true);
     };
 
     const parseCSV = (file: any) => {
@@ -49,7 +49,7 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
                         lines.forEach(function (item, index) {
                             switch (item.split(",")[0]) {
                                 case "i":
-                                    console.log(parseInt(item.split(",")[1]));
+                                    //console.log(parseInt(item.split(",")[1]));
                                     insert(parseInt(item.split(",")[1]));
                                     break;
                                 case "d":
@@ -68,6 +68,16 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
     // Forwards click to input element
     const handleUpload = () => {
         inputFile.current.click();
+    };
+
+    const handleTextChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setAmount(event.target.value as number);
+    };
+
+    const handleInsert = () => {
+        if (amount) {
+            insert(amount);
+        }
     };
 
     useEffect(() => {
@@ -90,7 +100,7 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
             <Button className={classes.button} variant="contained" onClick={random}>
                 Random
             </Button>
-            <Button className={classes.button} variant="contained">
+            <Button className={classes.button} variant="contained" onClick={handleInsert}>
                 Insert
             </Button>
             <Button className={classes.button} variant="contained" onClick={search}>
@@ -99,6 +109,14 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
             <Button className={classes.button} variant="contained" onClick={remove}>
                 Delete
             </Button>
+            <TextField
+                id="numberInput"
+                className={classes.numberInput}
+                autoFocus
+                label="Amount"
+                onChange={handleTextChange}
+                inputProps={{ maxLength: 75 }}
+            />
             <Slider className={classes.slider}></Slider>
         </Box>
     );
