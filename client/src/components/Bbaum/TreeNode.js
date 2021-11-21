@@ -120,6 +120,9 @@ export class TreeNode {
         }
     }
 
+    // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
+    // TODO: Implement the rest of the algorithm for deletion of leaf keys
+    // TODO: Implement algorithm for deletion of internal keys
     deleteKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
