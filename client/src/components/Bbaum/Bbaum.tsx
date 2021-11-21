@@ -73,7 +73,7 @@ const Bbaum: React.FC<Props> = () => {
             context?.stroke();
         }
     };
-
+    // TODO: waasd
     const upload = () => {
         console.log("Upload");
     };

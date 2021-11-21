@@ -7,7 +7,7 @@ export class TreeNode {
         this.n = 0; // (int) Number of keys
         this.parent = null;
     }
-
+    // TODO: Was geht ab
     // Fragen:
     //      - Warum ist this.leaf === false zweimal in traverse?
     //      - this.leaf === true -> return null heißt, der key wurde nicht gefunden, oder?
