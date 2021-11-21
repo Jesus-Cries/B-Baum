@@ -1,18 +1,23 @@
 export class TreeNode {
     constructor(t, leaf) {
-        this.t = t; // (int) min-degree of the tree
-        this.leaf = leaf; // (boolean) if leaf or not
-        this.keys = new Array(2 * t - 1); // array with keys for the nodes
-        this.children = new Array(2 * t); // array with child nodes
-        this.n = 0; // (int) number of leaf
+        this.t = t; // (int) Min-degree of the tree
+        this.leaf = leaf; // (boolean) If leaf or not
+        this.keys = new Array(2 * t - 1); // Array with keys for the nodes
+        this.children = new Array(2 * t); // Array with child nodes
+        this.n = 0; // (int) Number of keys
+        this.parent = null;
     }
+
+    // Fragen:
+    //      - Warum ist this.leaf === false zweimal in traverse?
+    //      - this.leaf === true -> return null heißt, der key wurde nicht gefunden, oder?
 
     traverse() {
         let i = 0;
         for (i = 0; i < this.n; i++) {
-            // iterate through all leaf notes
+            // Iterate through all leaf notes
             if (this.leaf === false) {
-                // if this is not a leaf, then traverse the subtree, before printing the keys
+                // If this is not a leaf, then traverse the subtree, before printing the keys
                 this.children[i].traverse();
             }
             console.log(this.keys[i]);
@@ -39,6 +44,7 @@ export class TreeNode {
 
         if (this.leaf === true) {
             // if the key is not found it is a leaf
+            // Alternative: If the node is a leaf then the key is not in the tree
             return null;
         }
 
@@ -57,7 +63,7 @@ export class TreeNode {
         }
         node.keys = node.keys.filter((el) => !newNode.keys.includes(el));
         //node.children.filter(Number);
-
+    
         if (node.leaf === false) {
             // copies the last children to the new TreeNode
             for (let i = 0; i < this.t; i++) {
