@@ -45,7 +45,7 @@ const Bbaum: React.FC<Props> = () => {
         ["14", "15", "16", "18"],
     ];
     //test
-    const [TestTree, setTree] = useState<Tree>(new Tree(3));
+    const [bTree, setbTree] = useState<Tree>(new Tree(3));
     //test
     const [nodeSize, setNodeSize] = useState<number>(5);
     const [bbaum, setBbaum] = useState<string[][]>(
@@ -81,14 +81,14 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const insert = (key: number) => {
-        let tempTree: Tree = TestTree;
+        let tempTree: Tree = bTree;
         tempTree.insert(key);
         console.log("Inserted: " + key);
         // @ts-ignore
         // console.log(tempTree);
         tempTree.traverse();
         myTree = tempTree;
-        setTree(tempTree);
+        setbTree(tempTree);
     };
 
     const search = () => {
@@ -102,7 +102,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const createTree = () => {
-        let tempTree: Tree = TestTree;
+        let tempTree: Tree = bTree;
         tempTree.insert(10);
         tempTree.insert(20);
         tempTree.insert(5);
@@ -114,12 +114,12 @@ const Bbaum: React.FC<Props> = () => {
         //tempTree.insert(50);
         tempTree.traverse();
         myTree = tempTree;
-        setTree(tempTree);
+        setbTree(tempTree);
         console.log(myTree);
     };
 
     useEffect(() => {
-        TestTree.traverse();
+        bTree.traverse();
         createTree();
         normalizeArray();
         drawLines();
