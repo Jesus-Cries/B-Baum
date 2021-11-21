@@ -73,7 +73,7 @@ const Bbaum: React.FC<Props> = () => {
             context?.stroke();
         }
     };
-    // TODO: waasd
+
     const upload = () => {
         console.log("Upload");
     };
@@ -106,7 +106,27 @@ const Bbaum: React.FC<Props> = () => {
         myTree.insert(7);
         myTree.insert(17);
         myTree.insert(60);
-        myTree.traverse();
+        // console.log("------- CREATE TREE -------");
+        // console.log(myTree);
+        // myTree.traverse();
+        console.log("------- DELETE -------");
+
+        // Forces theft from right sibling
+        myTree.delete(8);
+        myTree.delete(12);
+        myTree.delete(7);
+
+        // Forces theft from left sibling
+        // myTree.delete(12);
+        // myTree.delete(12);
+        // myTree.delete(17);
+        // myTree.delete(60);
+
+        console.log(myTree);
+        console.log(myTree.root?.keys);
+        console.log(myTree.root?.children[0].keys);
+        console.log(myTree.root?.children[1].keys);
+        // myTree.traverse();
     };
 
     useEffect(() => {
