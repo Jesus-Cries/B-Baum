@@ -132,7 +132,7 @@ const Bbaum: React.FC<Props> = () => {
                 className={classes.canvas}
                 width={window.innerWidth}
                 height={window.innerHeight}
-            ></canvas>
+            />
 
             <Control random={random} insert={insert} search={search} remove={remove} />
 
