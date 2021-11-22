@@ -150,20 +150,8 @@ const Bbaum: React.FC<Props> = () => {
             // Expected result: 20 --> - 12 - 60 -
             case 6: // Forces theft from right child
                 tempTree.delete(5);
-                console.log("    " + tempTree.root?.keys);
-                let childrenKeys = "- ";
-                tempTree.root?.children.forEach((child) => (childrenKeys += child.keys + " - "));
-                console.log(childrenKeys);
                 tempTree.delete(8);
-                console.log("    " + tempTree.root?.keys);
-                childrenKeys = "- ";
-                tempTree.root?.children.forEach((child) => (childrenKeys += child.keys + " - "));
-                console.log(childrenKeys);
                 tempTree.delete(10);
-                console.log("    " + tempTree.root?.keys);
-                childrenKeys = "- ";
-                tempTree.root?.children.forEach((child) => (childrenKeys += child.keys + " - "));
-                console.log(childrenKeys);
                 tempTree.delete(17);
                 break;
         }

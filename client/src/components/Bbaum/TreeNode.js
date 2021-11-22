@@ -11,9 +11,6 @@ export class TreeNode {
         this.children = []; // Array with child nodes (2 * minChildren)
         this.parent = parent;
     }
-    // Fragen:
-    //      - Warum ist this.leaf === false zweimal in traverse?
-    //      - this.leaf === true -> return null heißt, der key wurde nicht gefunden, oder?
 
     traverse() {
         let i = 0;
@@ -136,7 +133,6 @@ export class TreeNode {
             console.log("Node is a leaf");
 
             // ENOUGH KEYS
-            console.log("keys.length: " + this.keys.length);
             if (this.keys.length > this.minKeys) {
                 console.log("Enough keys for simple deletion");
                 return this.keys.splice(index, 1);
