@@ -39,9 +39,8 @@ export class Tree {
                 null
             ); // make new node as leaf
             this.root.keys[0] = k; // add key to the node
-            this.root.numberOfKeys = 1; // increase number of nodes
         } else {
-            if (this.root.numberOfKeys === 2 * this.minChildren - 1) {
+            if (this.root.keys.length === 2 * this.minChildren - 1) {
                 //check if node (root) is full
                 let newNode = new TreeNode(
                     this.maxChildren,

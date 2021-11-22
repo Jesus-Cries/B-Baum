@@ -1,4 +1,4 @@
-import { RestaurantMenu } from "@material-ui/icons";
+import { HeightRounded, RestaurantMenu } from "@material-ui/icons";
 
 export class TreeNode {
     constructor(maxChildren, minChildren, maxKeys, minKeys, leaf, parent) {
@@ -9,7 +9,6 @@ export class TreeNode {
         this.leaf = leaf; // (boolean) If leaf or not
         this.keys = []; // Array with keys for the nodes (2 * minChildren - 1)
         this.children = []; // Array with child nodes (2 * minChildren)
-        this.numberOfKeys = 0; // (int) Number of keys
         this.parent = parent;
     }
     // Fragen:
@@ -18,7 +17,7 @@ export class TreeNode {
 
     traverse() {
         let i = 0;
-        for (i = 0; i < this.numberOfKeys; i++) {
+        for (i = 0; i < this.keys.length; i++) {
             // Iterate through all leaf notes
             if (this.leaf === false) {
                 // If this is not a leaf, then traverse the subtree, before printing the keys
@@ -36,7 +35,7 @@ export class TreeNode {
 
     find(key) {
         let i = 0;
-        while (i < this.numberOfKeys && key > this.keys[i]) {
+        while (i < this.keys.length && key > this.keys[i]) {
             // find key which is equal or greater than key
             i++;
         }
@@ -65,7 +64,6 @@ export class TreeNode {
             node.leaf,
             this
         ); // create new node which store (minChildren-1) nodes
-        newNode.numberOfKeys = this.minChildren - 1;
         // let x;
         for (let i = 0; i < this.minChildren - 1; i++) {
             // copies the last minChildren-1 keys from the old to the new node
@@ -82,8 +80,6 @@ export class TreeNode {
             }
         }
 
-        node.numberOfKeys = this.minChildren - 1; // decreases the amount of keys in the old node
-
         for (let i = 0; i >= value + 1; i--) {
             // move children to the right to make space for the new child
             this.children[i + 1] = this.children[i];
@@ -91,19 +87,17 @@ export class TreeNode {
 
         this.children[value + 1] = newNode; // link child to the new node
 
-        for (let i = this.numberOfKeys - 1; i >= value; i--) {
+        for (let i = this.keys.length - 1; i >= value; i--) {
             // key of the old node is transfered to this node and move all keys greater than the new key one to the right
             this.keys[i + 1] = this.keys[i];
         }
 
         this.keys[value] = node.keys[this.minChildren - 1];
         node.keys.splice(this.minChildren - 1, 1);
-
-        this.numberOfKeys++;
     }
 
     nodeNotFull(key) {
-        let i = this.numberOfKeys - 1; // make i the pointer to the last element in array
+        let i = this.keys.length - 1; // make i the pointer to the last element in array
 
         if (this.leaf === true) {
             // if node is a leaf
@@ -113,13 +107,12 @@ export class TreeNode {
                 i--;
             }
             this.keys[i + 1] = key; // inserts key
-            this.numberOfKeys++; // increments number of keys
         } else {
             while (i >= 0 && this.keys[i] > key) {
                 // find child which is supposed to get the new key
                 i--;
             }
-            if (this.children[i + 1].numberOfKeys === 2 * this.minChildren - 1) {
+            if (this.children[i + 1].keys.length === 2 * this.minChildren - 1) {
                 // check if the child is full
                 this.splitNode(i + 1, this.children[i + 1]); // splits the child
 
@@ -133,8 +126,6 @@ export class TreeNode {
     }
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
-    // TODO: Check why numberOfKeys doesn't align with keys.length in case 6 when deleting "10"
-    // Further Info: numberOfKeys has to be decremete
     deleteKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
@@ -145,12 +136,10 @@ export class TreeNode {
             console.log("Node is a leaf");
 
             // ENOUGH KEYS
-            console.log("numberOfKeys: " + this.numberOfKeys);
             console.log("keys.length: " + this.keys.length);
             if (this.keys.length > this.minKeys) {
                 console.log("Enough keys for simple deletion");
-                this.numberOfKeys--;
-                return this.keys.splice(index, 1)[0];
+                return this.keys.splice(index, 1);
             }
 
             // NOT ENOUGH KEYS
@@ -167,7 +156,6 @@ export class TreeNode {
                     this.minChildren - 1
                 ) {
                     console.log("Has enough keys for theft");
-                    this.numberOfKeys--;
                     return this.theftFromSibling(index, indexInParentsChildren, "Left");
                 }
             }
@@ -182,7 +170,6 @@ export class TreeNode {
                     this.minChildren - 1
                 ) {
                     console.log("Has enough keys for theft");
-                    this.numberOfKeys--;
                     return this.theftFromSibling(index, indexInParentsChildren, "Right");
                 }
             }
@@ -190,14 +177,12 @@ export class TreeNode {
             // MERGE WITH LEFT SIBLING
             if (leftSiblingsExists) {
                 console.log("Merge with left sibling");
-                this.numberOfKeys--;
                 return this.mergeWithSibling(index, indexInParentsChildren, "Left");
             }
 
             // MERGE WITH RIGHT SIBLING
             if (rightSiblingExists) {
                 console.log("Merge with right sibling");
-                this.numberOfKeys--;
                 return this.mergeWithSibling(index, indexInParentsChildren, "Right");
             }
         }
@@ -219,7 +204,6 @@ export class TreeNode {
             )[0];
 
             // Put that key at the place where the old key was deleted
-            this.numberOfKeys--;
             return (this.keys[index] = highestKeyFromLeftChild);
         }
 
@@ -231,7 +215,6 @@ export class TreeNode {
             let lowestKeyFromRightChild = this.children[index + 1].keys.splice(0, 1)[0];
 
             // Put that key at the place where the old key was deleted
-            this.numberOfKeys--;
             return (this.keys[index] = lowestKeyFromRightChild);
         }
     }
