@@ -4,15 +4,25 @@ import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { ButtonGroup, TextField } from "@material-ui/core";
+import { ButtonGroup, Grid, Paper, TextField } from "@material-ui/core";
 
+// @ts-ignore
 const useStyles = makeStyles({
     root: {
         marginTop: 30,
         display: "flex",
-        justifyContent: "space-evenly",
+        justifyContent: "center",
         alignItems: "center",
         zIndex: 50,
+        flexDirection: "column",
+    },
+    row: {
+        display: "flex",
+        //flexWrap: "wrap",
+        justifyContent: "space-evenly",
+        alignItems: "center",
+        width: "90%",
+        margin: 10,
     },
     button: {},
     slider: {
@@ -20,12 +30,15 @@ const useStyles = makeStyles({
     },
     numberInput: {
         width: "4%",
+        margin: 5,
     },
     limitUpper: {
-        width: "5%",
+        width: "6%",
+        margin: 5,
     },
     limitLower: {
-        width: "5%",
+        width: "6%",
+        margin: 5,
     },
 });
 
@@ -34,15 +47,17 @@ interface Props {
     insert: (key: number) => void;
     search: () => void;
     remove: () => void;
+    order: number;
 }
 
-const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
+const Control: React.FC<Props> = ({ random, insert, search, remove, order }) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
     const inputFile = useRef<any>(null);
     const [amount, setAmount] = useState<String>();
     const [lowerLimit, setLowerLimit] = useState<number>();
     const [upperLimit, setUpperLimit] = useState<number>();
+    const [insertionTempo, setInsertionTempo] = useState<number>();
 
     const changeHandler = (event: any) => {
         setSelectedFile(event.target.files[0]);
@@ -50,7 +65,7 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
 
     const parseCSV = (file: any) => {
         if (file) {
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.onload = function (e) {
                 if (reader.result != null) {
                     let csvText: string | ArrayBuffer = reader.result;
@@ -119,12 +134,19 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
         setUpperLimit(event.target.value as number);
     };
 
+    const handleTempo = (event: React.ChangeEvent<{ value: number }>) => {
+        setInsertionTempo(event.target.value as number);
+    };
+
     useEffect(() => {
         console.log(selectedFile);
         parseCSV(selectedFile);
+        console.log("Insertiontempo: " + insertionTempo);
     }, [selectedFile]);
 
+    // @ts-ignore
     return (
+        // TODO: Implement Paper for better visivility
         <Box className={classes.root}>
             <input
                 type="file"
@@ -175,7 +197,10 @@ const Control: React.FC<Props> = ({ random, insert, search, remove }) => {
                     Delete
                 </Button>
             </ButtonGroup>
-            <Slider className={classes.slider}></Slider>
+            <Slider
+                className={classes.slider}
+                //onChange={handleTempo}
+            />
         </Box>
     );
 };
