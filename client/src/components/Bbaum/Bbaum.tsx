@@ -103,6 +103,7 @@ const Bbaum: React.FC<Props> = () => {
 
     const createTree = () => {
         let tempTree: Tree = bTree;
+
         tempTree.insert(10);
         tempTree.insert(20);
         tempTree.insert(5);
@@ -114,7 +115,7 @@ const Bbaum: React.FC<Props> = () => {
 
         console.log("------- DELETE -------");
 
-        let testCase = 6;
+        let testCase = 9;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
         switch (testCase) {
@@ -153,6 +154,25 @@ const Bbaum: React.FC<Props> = () => {
                 tempTree.delete(8);
                 tempTree.delete(10);
                 tempTree.delete(17);
+                break;
+
+            // Expected result: 17 --> - 8,12 - 60 -
+            case 7: // Forces merge of left and right children
+                tempTree.delete(5);
+                tempTree.delete(20);
+                tempTree.delete(10);
+                break;
+
+            // Expected result: 10 --> - 8 - 12,60 -
+            case 8: // Forces merge of left and right children (Alternative)
+                tempTree.delete(5);
+                tempTree.delete(20);
+                tempTree.delete(17);
+                break;
+
+            case 9: // Forces merging of parent with child
+                tempTree.delete(60);
+                tempTree.insert(7);
                 break;
         }
 

@@ -123,6 +123,7 @@ export class TreeNode {
     }
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
+    // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
     deleteKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
@@ -186,10 +187,10 @@ export class TreeNode {
         // NODE IS INTERNAL
         console.log("Node is internal");
 
-        // STEAL FROM LEFT CHILD
-
         // Check if child "to the left" has more than the minimum number of keys
         // Index of deleted key === key of child that has lesser values
+
+        // STEAL FROM LEFT CHILD
         if (this.children[index].keys.length > this.minKeys) {
             console.log("Left child to key has enough keys");
 
@@ -213,6 +214,17 @@ export class TreeNode {
             // Put that key at the place where the old key was deleted
             return (this.keys[index] = lowestKeyFromRightChild);
         }
+
+        // MERGE LEFT AND RIGHT CHILDREN
+        this.keys.splice(index, 1);
+
+        // Get keys from left child
+        let keysFromLeftChild = this.children[index].keys;
+
+        // Put keys in right child
+        this.children[index + 1].keys.splice(0, 0, keysFromLeftChild);
+
+        return this.children.splice(index, 1);
     }
 
     theftFromSibling(index, indexInParentsChildren, siblingSide) {
