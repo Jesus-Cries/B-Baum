@@ -31,7 +31,9 @@ export class TreeNode {
     }
 
     find(key) {
-        this.cost = 0;
+        if(this.parent == null){
+            this.cost = 0;
+        }
         let i = 0;
         while (i < this.numberOfKeys && key > this.keys[i]) {
             // find key which is equal or greater than key
@@ -41,7 +43,7 @@ export class TreeNode {
 
         if (this.keys[i] === key) {
             // if key found return the key
-            return this, this.cost;
+            return this;
         }
 
         if (this.leaf === true) {

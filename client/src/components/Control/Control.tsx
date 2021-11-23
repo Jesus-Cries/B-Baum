@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Grid, Paper, TextField } from "@material-ui/core";
+import { TreeNode } from "../Bbaum/TreeNode";
 
 // @ts-ignore
 const useStyles = makeStyles({
@@ -153,7 +154,7 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order, chang
             let numbers = amount.split(",");
             numbers.forEach(function (item) {
                 if (Number.isInteger(parseInt(item))) {
-                    search(parseInt(item));
+                    console.log(search(parseInt(item)));
                 } else {
                     alert("error");
                 }

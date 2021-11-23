@@ -97,7 +97,7 @@ const Bbaum: React.FC<Props> = () => {
 
     const search = (key: number) => {
         console.log(bTree);
-        alert(bTree.find(key));
+        alert(bTree.find(key).cost);
         console.log(myTree);
         console.log("Search");
     };
@@ -123,10 +123,8 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.insert(5);
         tempTree.insert(8);
         tempTree.insert(12);
-        tempTree.insert(12);
-        tempTree.insert(7);
         tempTree.insert(17);
-        tempTree.insert(60);
+        tempTree.insert(7);
         tempTree.traverse();
 
         console.log("------- DELETE -------");
