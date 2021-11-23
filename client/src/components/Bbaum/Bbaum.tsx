@@ -112,40 +112,90 @@ const Bbaum: React.FC<Props> = () => {
         bTree.root = null;
     };
 
-    const changeOrder = () => {
-
-    };
+    const changeOrder = () => {};
 
     const createTree = () => {
         let tempTree: Tree = bTree;
+
         tempTree.insert(10);
         tempTree.insert(20);
         tempTree.insert(5);
         tempTree.insert(8);
         tempTree.insert(12);
-        tempTree.insert(12);
-        tempTree.insert(7);
         tempTree.insert(17);
         tempTree.insert(60);
         tempTree.traverse();
 
         console.log("------- DELETE -------");
 
-        // Forces theft from right sibling
-        //tempTree.delete(8);
-        //tempTree.delete(12);
-        //tempTree.delete(7);
+        let testCase = 7;
+        // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
-        // Forces theft from left sibling
-        // tempTree.delete(12);
-        // tempTree.delete(12);
-        // tempTree.delete(17);
-        // tempTree.delete(60);
+        switch (testCase) {
+            // Expected result: 10, 20 --> - 5 - 17 - 60 -
+            case 1: // Forces theft from right sibling
+                tempTree.delete(8);
+                tempTree.delete(12);
+                break;
+
+            // Expected result: 8, 17 --> - 5 - 10 - 20,60 -
+            case 2: // Forces theft from left sibling
+                tempTree.delete(12);
+                break;
+
+            // Expected result: 17 --> - 10,12 - 20,60 -
+            case 3: // Forces merge with right sibling
+                tempTree.delete(5);
+                tempTree.delete(8);
+                break;
+
+            // Expected result: 17 --> - 5,10 - 60 -
+            case 4: // Forces merge with left sibling
+                tempTree.delete(8);
+                tempTree.delete(20);
+                tempTree.delete(12);
+                break;
+
+            // Expected result: 8,17 --> - 5 - 12 - 20,60
+            case 5: // Forces theft from left child
+                tempTree.delete(10);
+                break;
+
+            // Expected result: 20 --> - 12 - 60 -
+            case 6: // Forces theft from right child
+                tempTree.delete(5);
+                tempTree.delete(8);
+                tempTree.delete(10);
+                tempTree.delete(17);
+                break;
+
+            // Expected result: 17 --> - 8,12 - 60 -
+            case 7: // Forces merge of left and right children
+                tempTree.delete(5);
+                tempTree.delete(20);
+                tempTree.delete(10);
+                break;
+
+            // Expected result: 10 --> - 8 - 12,60 -
+            case 8: // Forces merge of left and right children (Alternative)
+                tempTree.delete(5);
+                tempTree.delete(20);
+                tempTree.delete(17);
+                break;
+
+            case 9: // Forces merging of parent with child
+                tempTree.delete(60);
+                tempTree.insert(7);
+                break;
+        }
 
         console.log(tempTree);
-        console.log(tempTree.root?.keys);
-        console.log(tempTree.root?.children[0].keys);
-        console.log(tempTree.root?.children[1].keys);
+        console.log("    " + tempTree.root?.keys);
+
+        let childrenKeys = "- ";
+        tempTree.root?.children.forEach((child) => (childrenKeys += child.keys + " - "));
+        console.log(childrenKeys);
+
         // myTree.traverse();
 
         myTree = tempTree;
@@ -162,8 +212,15 @@ const Bbaum: React.FC<Props> = () => {
 
     return (
         <Box className={classes.root}>
-
-            <Control random={random} insert={insert} search={search} remove={remove} order={myTree.minDegree} changeOrder={changeOrder} reset={reset}/>
+            <Control
+                random={random}
+                insert={insert}
+                search={search}
+                remove={remove}
+                order={myTree.minChildren}
+                changeOrder={changeOrder}
+                reset={reset}
+            />
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />

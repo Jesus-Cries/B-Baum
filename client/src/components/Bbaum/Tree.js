@@ -1,9 +1,12 @@
 import { TreeNode } from "./TreeNode";
 
 export class Tree {
-    constructor(minDegree) {
+    constructor(degree) {
         this.root = null;
-        this.minDegree = minDegree;
+        this.maxChildren = degree;
+        this.minChildren = Math.ceil(degree / 2);
+        this.maxKeys = degree - 1;
+        this.minKeys = Math.ceil(degree / 2) - 1;
     }
 
     traverse() {
@@ -27,13 +30,26 @@ export class Tree {
     insert(k) {
         if (this.root === null) {
             //check if tree is empty
-            this.root = new TreeNode(this.minDegree, true, null); // make new node as leaf
+            this.root = new TreeNode(
+                this.maxChildren,
+                this.minChildren,
+                this.maxKeys,
+                this.minKeys,
+                true,
+                null
+            ); // make new node as leaf
             this.root.keys[0] = k; // add key to the node
-            this.root.numberOfKeys = 1; // increase number of nodes
         } else {
-            if (this.root.numberOfKeys === 2 * this.minDegree - 1) {
+            if (this.root.keys.length === 2 * this.minChildren - 1) {
                 //check if node (root) is full
-                let newNode = new TreeNode(this.minDegree, false, null); // create new node
+                let newNode = new TreeNode(
+                    this.maxChildren,
+                    this.minChildren,
+                    this.maxKeys,
+                    this.minKeys,
+                    false,
+                    null
+                ); // create new node
                 this.root.parent = newNode;
                 newNode.children[0] = this.root; // make the old root the child of the new root
                 newNode.splitNode(0, this.root); // split the old root and move one of the keys to the root
