@@ -154,7 +154,7 @@ const Bbaum: React.FC<Props> = () => {
                 height={window.innerHeight}
             />
 
-            <Control random={random} insert={insert} search={search} remove={remove} />
+            <Control random={random} insert={insert} search={search} remove={remove} order={myTree.minDegree}/>
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />

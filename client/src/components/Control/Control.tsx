@@ -148,59 +148,78 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order }) => 
     return (
         // TODO: Implement Paper for better visivility
         <Box className={classes.root}>
-            <input
-                type="file"
-                id="file"
-                ref={inputFile}
-                style={{ display: "none" }}
-                onChange={changeHandler}
-            />
-            <Button className={classes.button} variant="contained" onClick={handleUpload}>
-                Upload
-            </Button>
-            <TextField
-                id="lowerLimit"
-                className={classes.limitUpper}
-                autoFocus
-                label="Lower Limit"
-                onChange={handleLowerLimit}
-                inputProps={{ maxLength: 75 }}
-            />
-            <TextField
-                id="upperLimit"
-                className={classes.limitLower}
-                autoFocus
-                label="Upper Limit"
-                onChange={handleUpperLimit}
-                inputProps={{ maxLength: 75 }}
-            />
-            <Button className={classes.button} variant="contained" onClick={handleRandom}>
-                Random
-            </Button>
+            <Paper className={classes.row}>
+                <input
+                    type="file"
+                    id="file"
+                    ref={inputFile}
+                    style={{ display: "none" }}
+                    onChange={changeHandler}
+                />
+                <Button className={classes.button} variant="contained" onClick={handleUpload}>
+                    Upload
+                </Button>
+                <TextField
+                    id="lowerLimit"
+                    className={classes.limitUpper}
+                    autoFocus
+                    label="Lower Limit"
+                    onChange={handleLowerLimit}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <TextField
+                    id="upperLimit"
+                    className={classes.limitLower}
+                    autoFocus
+                    label="Upper Limit"
+                    onChange={handleUpperLimit}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <Button className={classes.button} variant="contained" onClick={handleRandom}>
+                    Random
+                </Button>
 
-            <TextField
-                id="numberInput"
-                className={classes.numberInput}
-                autoFocus
-                label="Value"
-                onChange={handleTextChange}
-                inputProps={{ maxLength: 75 }}
-            />
-            <ButtonGroup>
-                <Button className={classes.button} variant="contained" onClick={handleInsert}>
-                    Insert
+                <TextField
+                    id="numberInput"
+                    className={classes.numberInput}
+                    autoFocus
+                    label="Value"
+                    onChange={handleTextChange}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <ButtonGroup>
+                    <Button className={classes.button} variant="contained" onClick={handleInsert}>
+                        Insert
+                    </Button>
+                    <Button className={classes.button} variant="contained" onClick={search}>
+                        Search
+                    </Button>
+                    <Button className={classes.button} variant="contained" onClick={remove}>
+                        Delete
+                    </Button>
+                </ButtonGroup>
+            </Paper>
+            <Paper className={classes.row}>
+                <Box component="div" sx={{ display: 'inline' }}>Current Order:{" "}{order}</Box>
+                <TextField
+                    id="upperLimit"
+                    className={classes.limitLower}
+                    autoFocus
+                    label="Order"
+                    //onChange={}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <Button className={classes.button} variant="contained" >
+                    Change Order
                 </Button>
-                <Button className={classes.button} variant="contained" onClick={search}>
-                    Search
+                <Button className={classes.button} variant="contained" >
+                    Reset
                 </Button>
-                <Button className={classes.button} variant="contained" onClick={remove}>
-                    Delete
-                </Button>
-            </ButtonGroup>
-            <Slider
-                className={classes.slider}
-                //onChange={handleTempo}
-            />
+                <Slider
+                    className={classes.slider}
+                    //onChange={handleTempo}
+                />
+            </Paper>
         </Box>
     );
 };
