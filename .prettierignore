@@ -1,5 +1,5 @@
 # Ignore artifacts:
 build
 
-# Ignore all JS files:
+# Ignore the server.js file:
 server.js

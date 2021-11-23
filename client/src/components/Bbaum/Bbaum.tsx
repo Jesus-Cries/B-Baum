@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, MutableRefObject } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -32,7 +32,7 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
-    let myTree: Tree;
+    let myTree: Tree = new Tree(3);
     let tempBbaum: string[][] = [
         ["10"],
         ["3", "7"],
@@ -44,7 +44,9 @@ const Bbaum: React.FC<Props> = () => {
         ["4", "5", "6"],
         ["14", "15", "16", "18"],
     ];
-
+    //test
+    const [bTree, setbTree] = useState<Tree>(new Tree(3));
+    //test
     const [nodeSize, setNodeSize] = useState<number>(5);
     const [bbaum, setBbaum] = useState<string[][]>(
         new Array(tempBbaum.length).fill(new Array(1).fill(" "))
@@ -74,19 +76,23 @@ const Bbaum: React.FC<Props> = () => {
         }
     };
 
-    const upload = () => {
-        console.log("Upload");
-    };
-
     const random = () => {
         console.log("Random");
     };
 
-    const insert = () => {
-        console.log("Insert");
+    const insert = (key: number) => {
+        let tempTree: Tree = bTree;
+        tempTree.insert(key);
+        console.log("Inserted: " + key);
+        // @ts-ignore
+        // console.log(tempTree);
+        tempTree.traverse();
+        myTree = tempTree;
+        setbTree(tempTree);
     };
 
     const search = () => {
+        console.log(myTree);
         console.log("Search");
     };
 
@@ -96,17 +102,40 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const createTree = () => {
-        myTree = new Tree(3);
-        myTree.insert(10);
-        myTree.insert(20);
-        myTree.insert(5);
-        myTree.insert(8);
-        myTree.insert(12);
-        myTree.insert(12);
-        myTree.insert(7);
-        myTree.insert(17);
-        myTree.insert(60);
+        let tempTree: Tree = bTree;
+        tempTree.insert(10);
+        tempTree.insert(20);
+        tempTree.insert(5);
+        tempTree.insert(8);
+        tempTree.insert(12);
+        tempTree.insert(12);
+        tempTree.insert(7);
+        tempTree.insert(17);
+        tempTree.insert(60);
+        tempTree.traverse();
+
+        console.log("------- DELETE -------");
+
+        // Forces theft from right sibling
+        tempTree.delete(8);
+        tempTree.delete(12);
+        tempTree.delete(7);
+
+        // Forces theft from left sibling
+        // tempTree.delete(12);
+        // tempTree.delete(12);
+        // tempTree.delete(17);
+        // tempTree.delete(60);
+
+        console.log(tempTree);
+        console.log(tempTree.root?.keys);
+        console.log(tempTree.root?.children[0].keys);
+        console.log(tempTree.root?.children[1].keys);
         // myTree.traverse();
+
+        myTree = tempTree;
+        setbTree(tempTree);
+        console.log(myTree);
     };
 
     let treeTopBottom: Int32Array[][];
@@ -142,6 +171,7 @@ const Bbaum: React.FC<Props> = () => {
     }
 
     useEffect(() => {
+        bTree.traverse();
         createTree();
         normalizeArray();
         drawLines();
@@ -166,15 +196,9 @@ const Bbaum: React.FC<Props> = () => {
                 className={classes.canvas}
                 width={window.innerWidth}
                 height={window.innerHeight}
-            ></canvas>
-
-            <Control
-                upload={upload}
-                random={random}
-                insert={insert}
-                search={search}
-                remove={remove}
             />
+
+            <Control random={random} insert={insert} search={search} remove={remove} order={2}/>
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />
