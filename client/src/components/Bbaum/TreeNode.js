@@ -42,7 +42,7 @@ export class TreeNode {
 
         if (this.keys[i] === key) {
             // if key found return the key
-            return this, this.cost;
+            return this;
         }
 
         if (this.leaf === true) {
@@ -51,7 +51,7 @@ export class TreeNode {
             return null;
         }
 
-        this.children[i].cost = this.cost+1;
+        this.children[i].cost = this.cost + 1;
         return this.children[i].find(key); // go to child of the node to find the key
     }
 

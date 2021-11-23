@@ -128,7 +128,7 @@ const Bbaum: React.FC<Props> = () => {
 
         console.log("------- DELETE -------");
 
-        let testCase = 9;
+        let testCase = 7;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
         switch (testCase) {
