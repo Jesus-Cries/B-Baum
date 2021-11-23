@@ -106,13 +106,52 @@ const Bbaum: React.FC<Props> = () => {
         myTree.insert(7);
         myTree.insert(17);
         myTree.insert(60);
-        myTree.traverse();
+        // myTree.traverse();
     };
+
+    let treeTopBottom: Int32Array[][];
+
+    const getTreeTopToBottom = () => {
+        let level = 0;
+        console.log("Top to Bottom"); 
+        
+        if(myTree.root != null) {
+            for(let i = 0; i < myTree.root.keys.length; i++) {
+                console.log(myTree.root.keys[i]); 
+            }
+        }
+    }
+
+    const getRootAndChildren = (root: any, level: number ) => {
+        console.log("Root and Children");
+        if(root != null) {
+            for(let i = 0; i < root.keys.length; i++) {
+                if(root.keys[i] !== undefined) {
+                    console.log(root.keys[i]); 
+
+                    // treeTopBottom[level][i] = root.keys[i];
+                    treeTopBottom[level].push(root.keys[i]);
+                }
+            }
+            for(let i = 0; i < root.children.length; i++) {
+                if(root.children[i] != undefined) {
+                    getRootAndChildren(root.children[i], level+1);
+                }
+            }
+        }
+    }
 
     useEffect(() => {
         createTree();
         normalizeArray();
         drawLines();
+        // getTreeTopToBottom();
+
+        getRootAndChildren(myTree.root, 0);
+        // for(i = 0; i < tree)
+        for (const item of treeTopBottom) {
+            console.log(item);
+        }
     }, []); // Wird zu Beginn einmal ausgeführt
 
     // useEffect(() => {
