@@ -53,7 +53,15 @@ interface Props {
     order: number;
 }
 
-const Control: React.FC<Props> = ({ random, insert, search, remove, order, changeOrder, reset }) => {
+const Control: React.FC<Props> = ({
+    random,
+    insert,
+    search,
+    remove,
+    order,
+    changeOrder,
+    reset,
+}) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
     const inputFile = useRef<any>(null);
@@ -76,8 +84,7 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order, chang
                         let lines = csvText.split(/\r?\n/);
                         lines.forEach(function (item, index) {
                             if (typeof insertionTempo === "number") {
-                                setTimeout(function() {
-                                }, insertionTempo);
+                                setTimeout(function () {}, insertionTempo);
                             }
                             switch (item.split(",")[0]) {
                                 case "i":
@@ -120,8 +127,7 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order, chang
                 for (let i = 0; i < endLoop; i++) {
                     console.log("rte");
                     if (typeof insertionTempo === "number") {
-                        setTimeout(function() {
-                        }, insertionTempo);
+                        setTimeout(function () {}, insertionTempo);
                     }
                     console.log("inserting");
                     insert(Math.floor(Math.random() * 100) + 1);
@@ -154,19 +160,17 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order, chang
             let numbers = amount.split(",");
             numbers.forEach(function (item) {
                 if (Number.isInteger(parseInt(item))) {
-                    console.log(search(parseInt(item)));
+                    search(parseInt(item));
                 } else {
                     alert("error");
                 }
             });
         }
-    }
+    };
 
     const handleTempo = (event: React.ChangeEvent<{ value: number | Array<number>, activeThumb: number }>) => {
         setInsertionTempo(event.target.value as number);
     };
-
-
 
     useEffect(() => {
         console.log(selectedFile);
