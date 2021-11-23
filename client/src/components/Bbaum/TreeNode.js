@@ -1,5 +1,3 @@
-import { HeightRounded, RestaurantMenu } from "@material-ui/icons";
-
 export class TreeNode {
     constructor(maxChildren, minChildren, maxKeys, minKeys, leaf, parent) {
         this.maxChildren = maxChildren;

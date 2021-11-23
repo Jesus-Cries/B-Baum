@@ -1,7 +1,4 @@
-import { useState } from "react";
-
 import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
@@ -50,7 +47,11 @@ const Node: React.FC<Props> = ({ values }) => {
                         <Grid className={classes.gap} item>
                             {emptyChar}
                         </Grid>
-                        <Grid className={classes.item} style={{ backgroundColor: valueAsNaN ? "#ccc" : "#fafafa" }} item>
+                        <Grid
+                            className={classes.item}
+                            style={{ backgroundColor: valueAsNaN ? "#ccc" : "#fafafa" }}
+                            item
+                        >
                             {value}
                         </Grid>
                     </>
