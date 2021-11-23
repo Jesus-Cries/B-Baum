@@ -6,6 +6,7 @@ export class TreeNode {
         this.children = new Array(); // Array with child nodes (2 * minDegree)
         this.numberOfKeys = 0; // (int) Number of keys
         this.parent = parent;
+        this.cost = 0;
     }
     // Fragen:
     //      - Warum ist this.leaf === false zweimal in traverse?
@@ -30,15 +31,17 @@ export class TreeNode {
     }
 
     find(key) {
+        this.cost = 0;
         let i = 0;
         while (i < this.numberOfKeys && key > this.keys[i]) {
             // find key which is equal or greater than key
+            this.cost++;
             i++;
         }
 
         if (this.keys[i] === key) {
             // if key found return the key
-            return this;
+            return this, this.cost;
         }
 
         if (this.leaf === true) {
@@ -47,6 +50,7 @@ export class TreeNode {
             return null;
         }
 
+        this.children[i].cost = this.cost+1;
         return this.children[i].find(key); // go to child of the node to find the key
     }
 
