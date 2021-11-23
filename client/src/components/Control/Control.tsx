@@ -45,19 +45,21 @@ const useStyles = makeStyles({
 interface Props {
     random: () => void;
     insert: (key: number) => void;
-    search: () => void;
+    search: (key: number) => void;
     remove: () => void;
+    changeOrder: () => void;
+    reset: () => void;
     order: number;
 }
 
-const Control: React.FC<Props> = ({ random, insert, search, remove, order }) => {
+const Control: React.FC<Props> = ({ random, insert, search, remove, order, changeOrder, reset }) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
     const inputFile = useRef<any>(null);
     const [amount, setAmount] = useState<String>();
     const [lowerLimit, setLowerLimit] = useState<number>();
     const [upperLimit, setUpperLimit] = useState<number>();
-    const [insertionTempo, setInsertionTempo] = useState<number>();
+    const [insertionTempo, setInsertionTempo] = useState<number | number[]>();
 
     const changeHandler = (event: any) => {
         setSelectedFile(event.target.files[0]);
@@ -72,6 +74,10 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order }) => 
                     if (typeof csvText === "string") {
                         let lines = csvText.split(/\r?\n/);
                         lines.forEach(function (item, index) {
+                            if (typeof insertionTempo === "number") {
+                                setTimeout(function() {
+                                }, insertionTempo);
+                            }
                             switch (item.split(",")[0]) {
                                 case "i":
                                     //console.log(parseInt(item.split(",")[1]));
@@ -95,6 +101,36 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order }) => 
         inputFile.current.click();
     };
 
+    const handleLowerLimit = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setLowerLimit(event.target.value as number);
+    };
+    const handleUpperLimit = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setUpperLimit(event.target.value as number);
+    };
+
+    const handleRandom = () => {
+        if (upperLimit && lowerLimit) {
+            if (lowerLimit <= upperLimit) {
+
+                let endLoop = Math.floor(
+                    Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
+                );
+                console.log(endLoop);
+                for (let i = 0; i < endLoop; i++) {
+                    console.log("rte");
+                    if (typeof insertionTempo === "number") {
+                        setTimeout(function() {
+                        }, insertionTempo);
+                    }
+                    console.log("inserting");
+                    insert(Math.floor(Math.random() * 100) + 1);
+                }
+            } else {
+                alert("False limits");
+            }
+        }
+    };
+
     const handleTextChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setAmount(event.target.value as String);
     };
@@ -112,95 +148,109 @@ const Control: React.FC<Props> = ({ random, insert, search, remove, order }) => 
         }
     };
 
-    const handleRandom = () => {
-        if (upperLimit && lowerLimit) {
-            if (lowerLimit < upperLimit) {
-                let endLoop = Math.floor(
-                    Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
-                );
-                for (let i = 0; i < endLoop; i++) {
-                    insert(Math.floor(Math.random() * 100) + 1);
+    const handleSearch = () => {
+        if (amount) {
+            let numbers = amount.split(",");
+            numbers.forEach(function (item) {
+                if (Number.isInteger(parseInt(item))) {
+                    search(parseInt(item));
+                } else {
+                    alert("error");
                 }
-            } else {
-                alert("False limits");
-            }
+            });
         }
-    };
+    }
 
-    const handleLowerLimit = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setLowerLimit(event.target.value as number);
-    };
-    const handleUpperLimit = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setUpperLimit(event.target.value as number);
-    };
-
-    const handleTempo = (event: React.ChangeEvent<{ value: number }>) => {
+    const handleTempo = (event: React.ChangeEvent<{ value: number | Array<number>, activeThumb: number }>) => {
         setInsertionTempo(event.target.value as number);
     };
+
+
 
     useEffect(() => {
         console.log(selectedFile);
         parseCSV(selectedFile);
-        console.log("Insertiontempo: " + insertionTempo);
     }, [selectedFile]);
 
     // @ts-ignore
     return (
         // TODO: Implement Paper for better visivility
         <Box className={classes.root}>
-            <input
-                type="file"
-                id="file"
-                ref={inputFile}
-                style={{ display: "none" }}
-                onChange={changeHandler}
-            />
-            <Button className={classes.button} variant="contained" onClick={handleUpload}>
-                Upload
-            </Button>
-            <TextField
-                id="lowerLimit"
-                className={classes.limitUpper}
-                autoFocus
-                label="Lower Limit"
-                onChange={handleLowerLimit}
-                inputProps={{ maxLength: 75 }}
-            />
-            <TextField
-                id="upperLimit"
-                className={classes.limitLower}
-                autoFocus
-                label="Upper Limit"
-                onChange={handleUpperLimit}
-                inputProps={{ maxLength: 75 }}
-            />
-            <Button className={classes.button} variant="contained" onClick={handleRandom}>
-                Random
-            </Button>
+            <Paper className={classes.row}>
+                <input
+                    type="file"
+                    id="file"
+                    ref={inputFile}
+                    style={{ display: "none" }}
+                    onChange={changeHandler}
+                />
+                <Button className={classes.button} variant="contained" onClick={handleUpload}>
+                    Upload
+                </Button>
+                <TextField
+                    id="lowerLimit"
+                    className={classes.limitUpper}
+                    autoFocus
+                    label="Lower Limit"
+                    onChange={handleLowerLimit}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <TextField
+                    id="upperLimit"
+                    className={classes.limitLower}
+                    autoFocus
+                    label="Upper Limit"
+                    onChange={handleUpperLimit}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <Button className={classes.button} variant="contained" onClick={handleRandom}>
+                    Random
+                </Button>
 
-            <TextField
-                id="numberInput"
-                className={classes.numberInput}
-                autoFocus
-                label="Value"
-                onChange={handleTextChange}
-                inputProps={{ maxLength: 75 }}
-            />
-            <ButtonGroup>
-                <Button className={classes.button} variant="contained" onClick={handleInsert}>
-                    Insert
+                <TextField
+                    id="numberInput"
+                    className={classes.numberInput}
+                    autoFocus
+                    label="Value"
+                    onChange={handleTextChange}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <ButtonGroup>
+                    <Button className={classes.button} variant="contained" onClick={handleInsert}>
+                        Insert
+                    </Button>
+                    <Button className={classes.button} variant="contained" onClick={handleSearch}>
+                        Search
+                    </Button>
+                    <Button className={classes.button} variant="contained" onClick={remove}>
+                        Delete
+                    </Button>
+                </ButtonGroup>
+            </Paper>
+            <Paper className={classes.row}>
+                <Box component="div" sx={{ display: 'inline' }}>Current Order:{" "}{order}</Box>
+                <TextField
+                    id="upperLimit"
+                    className={classes.limitLower}
+                    autoFocus
+                    label="Order"
+                    //onChange={}
+                    inputProps={{ maxLength: 75 }}
+                />
+                <Button className={classes.button} variant="contained" onClick={changeOrder}>
+                    Change Order
                 </Button>
-                <Button className={classes.button} variant="contained" onClick={search}>
-                    Search
+                <Button className={classes.button} variant="contained" onClick={reset}>
+                    Reset
                 </Button>
-                <Button className={classes.button} variant="contained" onClick={remove}>
-                    Delete
-                </Button>
-            </ButtonGroup>
-            <Slider
-                className={classes.slider}
-                //onChange={handleTempo}
-            />
+                <Slider
+                    className={classes.slider}
+                    min={0}
+                    max={1000}
+                    onChange={(_, newValue) => setInsertionTempo(newValue)}
+                    onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
+                />
+            </Paper>
         </Box>
     );
 };

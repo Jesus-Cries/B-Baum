@@ -24,18 +24,6 @@ Use as follows: npm run <script name>
 -   prod: Creates a new build for the frontend
   
 ## Anforderungen
-  
-Für die Aufgabe gelten folgende Rahmenbedingungen:
-
-- Implementierung in folgende Programmiersprachen: Python, Java und Javascript/TypeScript
-- Es muss ein Algorithmus für das Suchen, Einfügen und Löschen von Werten implementiert werden.
-- Es muss eine grafische Benutzeroberfläche (UI) für die Bedienung, Auswertung und Visualisierung des B-Baumes implementiert werden.
-- Für das UI können gängige Frameworks, die in der jeweiligen Programmiersprache vorhanden sind, verwendet werden (z.B. React oder Angular bei JavaScript).
-- Eine eigenständige Implementierung der Aufgabe ist zwingend erforderlich, Kopien aus einschlägige Quellen bzw. von den anderen Gruppen werden nicht bewertet.
-- Jeder Programmentwurf muss dokumentiert sein. Die Dokumentation muss folgende Punkte beinhalten:
-- Schritte, die für die Ausführung des Programmes notwendig sind (z.B. Installationanleitung etc.)
-- Eine Funktionsbeschreibung
-- Die Lösung sollte bevorzugt als Docker Image/Container bereitgestellt werden, wenn für die Lösung viele Abhänfigkeiten zu instlalieren wären (z.B. React/Angular bzw. Server/Client Anwendungen). Wenn nicht, müssen alle benötigten Komponenten als ZIP File bereitgestellt werden.
 
 Folgende Anforderungen sind bei der Implementierung zu berücksichtigen und umzusetzen:
 
@@ -49,6 +37,6 @@ Folgende Anforderungen sind bei der Implementierung zu berücksichtigen und umzu
 - Wenn die Werte aus einer CSV Datei eingelesen werden, müssen die eingelesenen Werte zunächst angezeigt werden. Nach der Bestätigung sollen die sie einzeln und automatisch hinzugefügt/gelöscht werden.
 - Es muss möglich sein, die Ordnung des B-Baumes zu verändern. Wenn die Ordnung des B-Baumes verändert wird, soll der B-Baum initialisiert werden.
 - Bei einer Suche nach einem Wert sollte folgendes ausgegeben werden:
-- Ob der Wert gefunden wurde oder nicht. Wenn ja, soll die Fundstelle angezeigt werden.
-- Die Kosten der Suche (wie viele Seitenzugriffe waren dafür notwendig)
+  - Ob der Wert gefunden wurde oder nicht. Wenn ja, soll die Fundstelle angezeigt werden.
+  - Die Kosten der Suche (wie viele Seitenzugriffe waren dafür notwendig)
 - Es soll eine Möglichkeit geben das Programm zurückzusetzen, um von Vorne zu beginnen.

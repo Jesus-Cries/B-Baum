@@ -28,6 +28,10 @@ const useStyles = makeStyles({
     },
 });
 
+// TODO: Implement Change Order
+// TODO: Implement Search correctly (showing node of the key on display)
+// TODO: Integrate Deletion into upload and button
+
 interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
@@ -91,7 +95,9 @@ const Bbaum: React.FC<Props> = () => {
         setbTree(tempTree);
     };
 
-    const search = () => {
+    const search = (key: number) => {
+        console.log(bTree);
+        alert(bTree.find(key));
         console.log(myTree);
         console.log("Search");
     };
@@ -100,6 +106,13 @@ const Bbaum: React.FC<Props> = () => {
     const remove = () => {
         console.log("Delete");
     };
+
+    const reset = () => {
+        myTree.root = null;
+        bTree.root = null;
+    };
+
+    const changeOrder = () => {};
 
     const createTree = () => {
         let tempTree: Tree = bTree;
@@ -199,14 +212,15 @@ const Bbaum: React.FC<Props> = () => {
 
     return (
         <Box className={classes.root}>
-            <canvas
-                id="canvas"
-                className={classes.canvas}
-                width={window.innerWidth}
-                height={window.innerHeight}
+            <Control
+                random={random}
+                insert={insert}
+                search={search}
+                remove={remove}
+                order={myTree.minChildren}
+                changeOrder={changeOrder}
+                reset={reset}
             />
-
-            <Control random={random} insert={insert} search={search} remove={remove} />
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />

@@ -10,6 +10,7 @@ export class TreeNode {
         this.keys = []; // Array with keys for the nodes (2 * minChildren - 1)
         this.children = []; // Array with child nodes (2 * minChildren)
         this.parent = parent;
+        this.cost = 0;
     }
 
     traverse() {
@@ -31,15 +32,17 @@ export class TreeNode {
     }
 
     find(key) {
+        this.cost = 0;
         let i = 0;
         while (i < this.keys.length && key > this.keys[i]) {
             // find key which is equal or greater than key
+            this.cost++;
             i++;
         }
 
         if (this.keys[i] === key) {
             // if key found return the key
-            return this;
+            return this, this.cost;
         }
 
         if (this.leaf === true) {
@@ -48,6 +51,7 @@ export class TreeNode {
             return null;
         }
 
+        this.children[i].cost = this.cost+1;
         return this.children[i].find(key); // go to child of the node to find the key
     }
 
