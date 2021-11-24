@@ -9,6 +9,7 @@ import Node from "../../components/Node/Node";
 import Control from "../../components/Control/Control";
 
 import { Tree } from "./Tree";
+import { TreeNode } from "./TreeNode";
 
 const useStyles = makeStyles({
     root: {
@@ -128,7 +129,7 @@ const Bbaum: React.FC<Props> = () => {
 
         console.log("------- DELETE -------");
 
-        let testCase = 7;
+        let testCase = 20;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
         switch (testCase) {
@@ -187,6 +188,8 @@ const Bbaum: React.FC<Props> = () => {
                 tempTree.delete(60);
                 tempTree.insert(7);
                 break;
+            default:
+                break;
         }
 
         console.log(tempTree);
@@ -203,7 +206,7 @@ const Bbaum: React.FC<Props> = () => {
         console.log(myTree);
     };
 
-    let treeTopBottom: Int32Array[][];
+    let treeTopBottom: number[][] = [];
 
     const getTreeTopToBottom = () => {
         let level = 0;
@@ -216,19 +219,36 @@ const Bbaum: React.FC<Props> = () => {
         }
     }
 
-    const getRootAndChildren = (root: any, level: number ) => {
-        console.log("Root and Children");
+    const getRootAndChildren = (root: TreeNode | null, level: number ) => {
+        console.log("Root level: " + level);
+
+
         if(root != null) {
             for(let i = 0; i < root.keys.length; i++) {
-                if(root.keys[i] !== undefined) {
-                    console.log(root.keys[i]); 
+                if(root.keys[i] === undefined) {return}
 
+                if(root.keys[i] !== undefined) {
+                    if(root.keys == null) {
+                        console.log("kaka");
+                    }
+                    console.log("I: " + i + " Keys.length: " + root.keys.length);
+                    console.log(root.keys[i]); 
+                    // console.log(root); 
+
+
+                    // FIXME: Überall wo auf das Array gepushed wird können die Errors entstehen
                     // treeTopBottom[level][i] = root.keys[i];
-                    treeTopBottom[level].push(root.keys[i]);
+                    // console.log(treeTopBottom[level]);
+                    let x = root.keys[i];
+                    console.log(x);
+                    // treeTopBottom[level].push(root.keys[i]);
+                    // treeTopBottom[level].push(x);
+                    console.log("Pushed: " + root.keys[i]);
                 }
             }
             for(let i = 0; i < root.children.length; i++) {
-                if(root.children[i] != undefined) {
+                if(root.children[i] !== undefined) {
+                    console.log("Start recursion");
                     getRootAndChildren(root.children[i], level+1);
                 }
             }
@@ -244,9 +264,9 @@ const Bbaum: React.FC<Props> = () => {
 
         getRootAndChildren(myTree.root, 0);
         // for(i = 0; i < tree)
-        for (const item of treeTopBottom) {
-            console.log(item);
-        }
+        // for (const item of treeTopBottom) {
+        //     console.log(item);
+        // }
     }, []); // Wird zu Beginn einmal ausgeführt
 
     // useEffect(() => {
