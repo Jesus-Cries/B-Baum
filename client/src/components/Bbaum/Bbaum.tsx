@@ -221,30 +221,18 @@ const Bbaum: React.FC<Props> = () => {
 
     const getRootAndChildren = (root: TreeNode | null, level: number ) => {
         console.log("Root level: " + level);
-
+        treeTopBottom[level] = [];
 
         if(root != null) {
             for(let i = 0; i < root.keys.length; i++) {
-                if(root.keys[i] === undefined) {return}
-
-                if(root.keys[i] !== undefined) {
-                    if(root.keys == null) {
-                        console.log("kaka");
-                    }
-                    console.log("I: " + i + " Keys.length: " + root.keys.length);
-                    console.log(root.keys[i]); 
-                    // console.log(root); 
-
-
-                    // FIXME: Überall wo auf das Array gepushed wird können die Errors entstehen
-                    // treeTopBottom[level][i] = root.keys[i];
-                    // console.log(treeTopBottom[level]);
-                    let x = root.keys[i];
-                    console.log(x);
-                    // treeTopBottom[level].push(root.keys[i]);
-                    // treeTopBottom[level].push(x);
-                    console.log("Pushed: " + root.keys[i]);
-                }
+                // if(root.keys[i] === undefined) {return}
+                console.log("I: " + i + " Keys.length: " + root.keys.length);
+                console.log(root.keys[i]); 
+                // treeTopBottom[level][i] = root.keys[i];
+                // console.log(treeTopBottom[level]);
+                treeTopBottom[level].push(root.keys[i]);
+                // treeTopBottom[level].push(x);
+                console.log("Pushed: " + root.keys[i]);
             }
             for(let i = 0; i < root.children.length; i++) {
                 if(root.children[i] !== undefined) {
@@ -264,9 +252,9 @@ const Bbaum: React.FC<Props> = () => {
 
         getRootAndChildren(myTree.root, 0);
         // for(i = 0; i < tree)
-        // for (const item of treeTopBottom) {
-        //     console.log(item);
-        // }
+        for (let item of treeTopBottom) {
+            console.log(item);
+        }
     }, []); // Wird zu Beginn einmal ausgeführt
 
     // useEffect(() => {
