@@ -116,18 +116,20 @@ const Bbaum: React.FC<Props> = () => {
     const createTree = () => {
         let tempTree: Tree = bTree;
 
-        tempTree.insert(10);
-        tempTree.insert(20);
-        tempTree.insert(5);
-        tempTree.insert(8);
-        tempTree.insert(12);
-        tempTree.insert(17);
-        tempTree.insert(7);
+        tempTree.insertTest(10);
+        tempTree.insertTest(20);
+        tempTree.insertTest(5);
+        tempTree.insertTest(8);
+        tempTree.insertTest(12);
+        tempTree.insertTest(17);
+        //tempTree.insertTest(60);
+        tempTree.insertTest(7);
+        console.log(tempTree)
         tempTree.traverse();
 
         console.log("------- DELETE -------");
 
-        let testCase = 7;
+        let testCase = 0;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
         switch (testCase) {
@@ -183,7 +185,7 @@ const Bbaum: React.FC<Props> = () => {
                 break;
 
             case 9: // Forces merging of parent with child
-                tempTree.delete(60);
+                //tempTree.delete(60);
                 tempTree.insert(7);
                 break;
         }
@@ -192,7 +194,7 @@ const Bbaum: React.FC<Props> = () => {
         console.log("    " + tempTree.root?.keys);
 
         let childrenKeys = "- ";
-        tempTree.root?.children.forEach((child) => (childrenKeys += child.keys + " - "));
+        tempTree.root?.children.forEach((child: { keys: string; }) => (childrenKeys += child.keys + " - "));
         console.log(childrenKeys);
 
         // myTree.traverse();
