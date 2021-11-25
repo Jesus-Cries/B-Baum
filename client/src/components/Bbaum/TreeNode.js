@@ -1,9 +1,10 @@
 export class TreeNode {
-    constructor(maxChildren, minChildren, maxKeys, minKeys, leaf, parent) {
+    constructor(maxChildren, leaf, parent) {
         this.maxChildren = maxChildren;
-        this.minChildren = minChildren; // (int) Min-degree of the tree
-        this.maxKeys = maxKeys;
-        this.minKeys = minKeys;
+        this.maxChildren = maxChildren;
+        this.minChildren = Math.ceil(maxChildren / 2);
+        this.maxKeys = maxChildren - 1;
+        this.minKeys = Math.ceil(maxChildren / 2) - 1;
         this.leaf = leaf; // (boolean) If leaf or not
         this.keys = []; // Array with keys for the nodes (2 * minChildren - 1)
         this.children = []; // Array with child nodes (2 * minChildren)
@@ -30,7 +31,9 @@ export class TreeNode {
     }
 
     find(key) {
-        this.cost = 0;
+        if (this.parent == null) {
+            this.cost = 0;
+        }
         let i = 0;
         while (i < this.keys.length && key > this.keys[i]) {
             // find key which is equal or greater than key
@@ -55,14 +58,7 @@ export class TreeNode {
 
     splitNode(value, node) {
         // splits the children of the given node (only works if node is full)
-        let newNode = new TreeNode(
-            this.maxChildren,
-            this.minChildren,
-            this.maxKeys,
-            this.minKeys,
-            node.leaf,
-            this
-        ); // create new node which store (minChildren-1) nodes
+        let newNode = new TreeNode(this.maxChildren, node.leaf, this); // create new node which store (minChildren-1) nodes
         // let x;
         for (let i = 0; i < this.minChildren - 1; i++) {
             // copies the last minChildren-1 keys from the old to the new node
@@ -111,7 +107,9 @@ export class TreeNode {
                 // find child which is supposed to get the new key
                 i--;
             }
-            if (this.children[i + 1].keys.length === 2 * this.minChildren - 1) {
+            console.log(this.maxKeys);
+            console.log(this.minKeys);
+            if (this.children[i + 1].keys.length === this.maxKeys) {
                 // check if the child is full
                 this.splitNode(i + 1, this.children[i + 1]); // splits the child
 
@@ -122,6 +120,38 @@ export class TreeNode {
             }
             this.children[i + 1].nodeNotFull(key);
         }
+    }
+
+    addChild(node, position) {
+        console.log(this);
+        this.children.splice(position, 0, node);
+        node.parent = this;
+    }
+
+    addValue(value) {
+        if (!value) {
+            return;
+        }
+        let pos = 0;
+        while (pos < this.keys.length && this.keys[pos] < value) {
+            pos++;
+        }
+        this.keys.splice(pos, 0, value);
+    }
+
+    deleteChild(pos) {
+        return this.children.splice(pos, 1)[0];
+    }
+
+    removeValue(pos) {
+        if (pos >= this.keys.length) {
+            return null;
+        }
+        return this.keys.splice(pos, 1)[0];
+    }
+
+    get numberOfKeys() {
+        return this.keys.length;
     }
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree

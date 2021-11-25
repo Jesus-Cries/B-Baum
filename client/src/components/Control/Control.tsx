@@ -4,7 +4,8 @@ import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { ButtonGroup, Paper, TextField } from "@material-ui/core";
+import { ButtonGroup, Grid, Paper, TextField } from "@material-ui/core";
+import { TreeNode } from "../Bbaum/TreeNode";
 
 // @ts-ignore
 const useStyles = makeStyles({
@@ -118,6 +119,7 @@ const Control: React.FC<Props> = ({
     const handleRandom = () => {
         if (upperLimit && lowerLimit) {
             if (lowerLimit <= upperLimit) {
+
                 let endLoop = Math.floor(
                     Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
                 );
@@ -166,9 +168,7 @@ const Control: React.FC<Props> = ({
         }
     };
 
-    const handleTempo = (
-        event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
-    ) => {
+    const handleTempo = (event: React.ChangeEvent<{ value: number | Array<number>, activeThumb: number }>) => {
         setInsertionTempo(event.target.value as number);
     };
 
@@ -233,9 +233,7 @@ const Control: React.FC<Props> = ({
                 </ButtonGroup>
             </Paper>
             <Paper className={classes.row}>
-                <Box component="div" sx={{ display: "inline" }}>
-                    Current Order: {order}
-                </Box>
+                <Box component="div" sx={{ display: 'inline' }}>Current Order:{" "}{order}</Box>
                 <TextField
                     id="upperLimit"
                     className={classes.limitLower}
