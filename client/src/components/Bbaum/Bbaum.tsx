@@ -8,6 +8,7 @@ import Node from "../../components/Node/Node";
 import Control from "../../components/Control/Control";
 
 import { Tree } from "./Tree";
+import { TreeNode } from "./TreeNode";
 
 const useStyles = makeStyles({
     root: {
@@ -122,14 +123,13 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.insertTest(8);
         tempTree.insertTest(12);
         tempTree.insertTest(17);
-        //tempTree.insertTest(60);
-        tempTree.insertTest(7);
-        console.log(tempTree)
+        tempTree.insertTest(60);
+        console.log(tempTree);
         tempTree.traverse();
 
         console.log("------- DELETE -------");
 
-        let testCase = 0;
+        let testCase = 9;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
         switch (testCase) {
@@ -184,18 +184,27 @@ const Bbaum: React.FC<Props> = () => {
                 tempTree.delete(17);
                 break;
 
+            // Expected result: 10 --> - 7 - 17 - --> - 5 - 8 - 12 - 20 -
             case 9: // Forces merging of parent with child
-                //tempTree.delete(60);
-                tempTree.insert(7);
+                tempTree.delete(60);
+                tempTree.insertTest(7);
                 break;
         }
 
         console.log(tempTree);
-        console.log("    " + tempTree.root?.keys);
+        console.log("        " + tempTree.root?.keys);
 
-        let childrenKeys = "- ";
-        tempTree.root?.children.forEach((child: { keys: string; }) => (childrenKeys += child.keys + " - "));
+        let childrenKeys = "    - ";
+        tempTree.root?.children.forEach((child: TreeNode) => (childrenKeys += child.keys + " - "));
         console.log(childrenKeys);
+
+        let grandchildrenKeys = "- ";
+        tempTree.root?.children.forEach((child: TreeNode) => {
+            child.children.forEach((grandchild) => {
+                grandchildrenKeys += grandchild.keys + " - ";
+            });
+        });
+        console.log(grandchildrenKeys);
 
         // myTree.traverse();
 

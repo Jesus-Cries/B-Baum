@@ -31,7 +31,7 @@ export class TreeNode {
     }
 
     find(key) {
-        if(this.parent == null){
+        if (this.parent == null) {
             this.cost = 0;
         }
         let i = 0;
@@ -58,7 +58,7 @@ export class TreeNode {
 
     splitNode(value, node) {
         // splits the children of the given node (only works if node is full)
-        let newNode = new TreeNode( this.maxChildren, node.leaf, this); // create new node which store (minChildren-1) nodes
+        let newNode = new TreeNode(this.maxChildren, node.leaf, this); // create new node which store (minChildren-1) nodes
         // let x;
         for (let i = 0; i < this.minChildren - 1; i++) {
             // copies the last minChildren-1 keys from the old to the new node
@@ -107,8 +107,8 @@ export class TreeNode {
                 // find child which is supposed to get the new key
                 i--;
             }
-            console.log(this.maxKeys)
-            console.log(this.minKeys)
+            console.log(this.maxKeys);
+            console.log(this.minKeys);
             if (this.children[i + 1].keys.length === this.maxKeys) {
                 // check if the child is full
                 this.splitNode(i + 1, this.children[i + 1]); // splits the child
@@ -123,7 +123,7 @@ export class TreeNode {
     }
 
     addChild(node, position) {
-        console.log(this)
+        console.log(this);
         this.children.splice(position, 0, node);
         node.parent = this;
     }
