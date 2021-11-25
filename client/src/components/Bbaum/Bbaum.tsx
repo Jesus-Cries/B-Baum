@@ -198,11 +198,12 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.root?.children.forEach((child: TreeNode) => (childrenKeys += child.keys + " - "));
         console.log(childrenKeys);
 
-        let grandchildrenKeys = "- ";
+        let grandchildrenKeys = "| - ";
         tempTree.root?.children.forEach((child: TreeNode) => {
             child.children.forEach((grandchild) => {
                 grandchildrenKeys += grandchild.keys + " - ";
             });
+            grandchildrenKeys += "| ";
         });
         console.log(grandchildrenKeys);
 
