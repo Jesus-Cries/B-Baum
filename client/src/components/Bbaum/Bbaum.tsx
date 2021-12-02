@@ -37,7 +37,7 @@ interface Props {}
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
     let myTree: Tree = new Tree(3);
-    let tempBbaum: string[][] = [
+    let tempTreeAsArrayForInitialization: string[][] = [
         ["10"],
         ["3", "7"],
         ["13", "19"],
@@ -46,23 +46,25 @@ const Bbaum: React.FC<Props> = () => {
         ["11", "12"],
         ["20", "21"],
         ["4", "5", "6"],
-        ["14", "15", "16", "18"],
-    ];
+        ["14", "15", "16"],
+    ]; // TODO: Kann eig gelöscht werden. Deswegen steht am Anfang was drinne.
+
     //test
-    const [bTree, setbTree] = useState<Tree>(new Tree(3));
+    const [tree, setTree] = useState<Tree>(new Tree(3)); // Der tatsächliche Baum
     //test
-    const [nodeSize, setNodeSize] = useState<number>(5);
-    const [bbaum, setBbaum] = useState<string[][]>(
-        new Array(tempBbaum.length).fill(new Array(1).fill(" "))
+    const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
+    const [treeAsArray, setTreeAsArray] = useState<string[][]>(
+        // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
+        new Array(tempTreeAsArrayForInitialization.length).fill(new Array(1).fill(" "))
     );
 
     const normalizeArray = (/* array kommt hier rein */) => {
-        for (let i = 0; i < tempBbaum.length; i++) {
-            while (tempBbaum[i].length < nodeSize) {
-                tempBbaum[i].push("‎‎‏‏‎ ‎");
+        for (let i = 0; i < tempTreeAsArrayForInitialization.length; i++) {
+            while (tempTreeAsArrayForInitialization[i].length < nodeSize) {
+                tempTreeAsArrayForInitialization[i].push("‎‎‏‏‎ ‎");
             }
         }
-        setBbaum(tempBbaum); // Lädt asynchron und triggerd rerendering
+        setTreeAsArray(tempTreeAsArrayForInitialization); // Lädt asynchron und triggerd rerendering
     };
 
     const drawLines = () => {
@@ -85,19 +87,19 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const insert = (key: number) => {
-        let tempTree: Tree = bTree;
+        let tempTree: Tree = tree;
         tempTree.insert(key);
         console.log("Inserted: " + key);
         // @ts-ignore
         // console.log(tempTree);
         tempTree.traverse();
         myTree = tempTree;
-        setbTree(tempTree);
+        setTree(tempTree);
     };
 
     const search = (key: number) => {
-        console.log(bTree);
-        alert(bTree.find(key).cost);
+        console.log(tree);
+        alert(tree.find(key).cost);
         console.log(myTree);
         console.log("Search");
     };
@@ -109,13 +111,13 @@ const Bbaum: React.FC<Props> = () => {
 
     const reset = () => {
         myTree.root = null;
-        bTree.root = null;
+        tree.root = null;
     };
 
     const changeOrder = () => {};
 
     const createTree = () => {
-        let tempTree: Tree = bTree;
+        let tempTree: Tree = tree; // bTree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
         tempTree.insertTest(10);
         tempTree.insertTest(20);
@@ -211,7 +213,7 @@ const Bbaum: React.FC<Props> = () => {
         // myTree.traverse();
 
         myTree = tempTree;
-        setbTree(tempTree);
+        setTree(tempTree);
         console.log(myTree);
     };
 
@@ -244,12 +246,12 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     // Neuer useEffect hook mit dependency bTree
-    // getRootAndChrisdfj ausführen
+    // getRootAndChildren ausführen
     // array normalisieren -> jedes array hat für jede node die selbe länge
     // setBbaum() ausführen -> akutalisiert das ui
     // in der render methode auf basis von bbaum das array rendern
     useEffect(() => {
-        bTree.traverse();
+        tree.traverse();
         createTree();
         normalizeArray();
         drawLines();
@@ -260,23 +262,15 @@ const Bbaum: React.FC<Props> = () => {
         for (let item of treeTopBottom) {
             console.log(item);
         }
+
+        treeTopBottom.map((item) => {
+            console.log("Test print Nodes: " + item);
+        });
     }, []); // Wird zu Beginn einmal ausgeführt
 
-    let numberOfItems = 4;
-
-    const nodes = treeTopBottom.map((item) => {
-        // return <Node values={item as string[]} />;
-    });
-    // return [...Array(numberOfItems).keys()].map((key) => (
-    //     <Grid className={classes.container} container>
-    //         <Node values={bbaum[0]} />
-    //     </Grid>
-    // ));
-
-    // useEffect(() => {
-    //     normalizeArray();
-    //     drawLines();
-    // }, [bbaum]); // Würde getriggerd werden, wenn sich der bbaum verändert -> setBbaum()
+    const [someBaum, setsomeBaum] = useState<string[][]>(
+        new Array(treeTopBottom.length).fill(new Array(1).fill(" "))
+    );
 
     return (
         <Box className={classes.root}>
@@ -285,43 +279,42 @@ const Bbaum: React.FC<Props> = () => {
                 insert={insert}
                 search={search}
                 remove={remove}
-                order={myTree.minChildren}
+                order={tree.minChildren}
                 changeOrder={changeOrder}
                 reset={reset}
             />
 
-            {treeTopBottom.map((item) => {
+            {treeTopBottom.map((item, index) => {
                 console.log("Item für Node: " + item);
                 return (
                     <>
                         <Grid className={classes.container} container>
-                            <Node values={item} />
-                            <p>hello</p>
+                            <Node values={someBaum[index]} />
                         </Grid>
                     </>
                 );
             })}
 
             <Grid className={classes.container} container>
-                <Node values={bbaum[0]} />
+                <Node values={treeAsArray[0]} />
             </Grid>
 
             <Grid className={classes.container} container>
-                <Node values={bbaum[1]} />
-                <Node values={bbaum[2]} />
+                <Node values={treeAsArray[1]} />
+                <Node values={treeAsArray[2]} />
             </Grid>
 
             <Grid className={classes.outerContainer} container>
                 <Grid className={classes.container} xs={6} container>
-                    <Node values={bbaum[3]} />
-                    <Node values={bbaum[4]} />
-                    <Node values={bbaum[5]} />
+                    <Node values={treeAsArray[3]} />
+                    <Node values={treeAsArray[4]} />
+                    <Node values={treeAsArray[5]} />
                 </Grid>
 
                 <Grid className={classes.container} xs={6} container>
-                    <Node values={bbaum[6]} />
-                    <Node values={bbaum[7]} />
-                    <Node values={bbaum[8]} />
+                    <Node values={treeAsArray[6]} />
+                    <Node values={treeAsArray[7]} />
+                    <Node values={treeAsArray[8]} />
                 </Grid>
             </Grid>
 
