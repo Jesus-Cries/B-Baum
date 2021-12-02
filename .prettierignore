@@ -2,4 +2,4 @@
 build
 
 # Ignore all JS files:
-*.js
+server.js
