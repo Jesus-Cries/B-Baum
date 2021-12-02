@@ -221,7 +221,7 @@ const Bbaum: React.FC<Props> = () => {
     let treeTopBottom: string[][] = [];
     treeTopBottom[0] = [];
 
-    const getRootAndChildren = (root: TreeNode | null, level: number) => {
+    const getTreeTopToBottom = (root: TreeNode | null, level: number) => {
         console.log("Root level: " + level);
 
         if (root != null) {
@@ -240,7 +240,7 @@ const Bbaum: React.FC<Props> = () => {
                     treeTopBottom[level + 1] = [];
                 }
                 console.log("Start recursion");
-                getRootAndChildren(root.children[i], level + 1);
+                getTreeTopToBottom(root.children[i], level + 1);
             }
         }
     };
@@ -257,7 +257,7 @@ const Bbaum: React.FC<Props> = () => {
         drawLines();
         // getTreeTopToBottom();
 
-        getRootAndChildren(myTree.root, 0);
+        getTreeTopToBottom(myTree.root, 0);
         console.log("Print array");
         for (let item of treeTopBottom) {
             console.log(item);
