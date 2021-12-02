@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, MutableRefObject } from "react";
+import { useState, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 
 import Node from "../../components/Node/Node";
 import Control from "../../components/Control/Control";
@@ -98,7 +97,7 @@ const Bbaum: React.FC<Props> = () => {
 
     const search = (key: number) => {
         console.log(bTree);
-        alert(bTree.find(key));
+        alert(bTree.find(key).cost);
         console.log(myTree);
         console.log("Search");
     };
@@ -118,15 +117,14 @@ const Bbaum: React.FC<Props> = () => {
     const createTree = () => {
         let tempTree: Tree = bTree;
 
-        tempTree.insert(10);
-        tempTree.insert(20);
-        tempTree.insert(5);
-        tempTree.insert(8);
-        tempTree.insert(50);
-        tempTree.insert(1);
-        tempTree.insert(12);
-        tempTree.insert(17);
-        tempTree.insert(60);
+        tempTree.insertTest(10);
+        tempTree.insertTest(20);
+        tempTree.insertTest(5);
+        tempTree.insertTest(8);
+        tempTree.insertTest(12);
+        tempTree.insertTest(17);
+        tempTree.insertTest(60);
+        console.log(tempTree);
         tempTree.traverse();
 
         console.log("------- DELETE -------");
@@ -186,20 +184,29 @@ const Bbaum: React.FC<Props> = () => {
                 tempTree.delete(17);
                 break;
 
+            // Expected result: 10 --> - 7 - 17 - --> - 5 - 8 - 12 - 20 -
             case 9: // Forces merging of parent with child
                 tempTree.delete(60);
-                tempTree.insert(7);
+                tempTree.insertTest(7);
                 break;
             default:
                 break;
         }
 
         console.log(tempTree);
-        console.log("    " + tempTree.root?.keys);
+        console.log("        " + tempTree.root?.keys);
 
-        let childrenKeys = "- ";
-        tempTree.root?.children.forEach((child) => (childrenKeys += child.keys + " - "));
+        let childrenKeys = "    - ";
+        tempTree.root?.children.forEach((child: TreeNode) => (childrenKeys += child.keys + " - "));
         console.log(childrenKeys);
+
+        let grandchildrenKeys = "- ";
+        tempTree.root?.children.forEach((child: TreeNode) => {
+            child.children.forEach((grandchild) => {
+                grandchildrenKeys += grandchild.keys + " - ";
+            });
+        });
+        console.log(grandchildrenKeys);
 
         // myTree.traverse();
 
