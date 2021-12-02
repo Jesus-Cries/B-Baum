@@ -57,7 +57,7 @@ const Bbaum: React.FC<Props> = () => {
         new Array(tempBbaum.length).fill(new Array(1).fill(" "))
     );
 
-    const normalizeArray = () => {
+    const normalizeArray = (/* array kommt hier rein */) => {
         for (let i = 0; i < tempBbaum.length; i++) {
             while (tempBbaum[i].length < nodeSize) {
                 tempBbaum[i].push("‎‎‏‏‎ ‎");
@@ -122,6 +122,8 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.insert(20);
         tempTree.insert(5);
         tempTree.insert(8);
+        tempTree.insert(50);
+        tempTree.insert(1);
         tempTree.insert(12);
         tempTree.insert(17);
         tempTree.insert(60);
@@ -206,43 +208,39 @@ const Bbaum: React.FC<Props> = () => {
         console.log(myTree);
     };
 
-    let treeTopBottom: number[][] = [];
+    // Save tree from top to bottom as numbers
+    let treeTopBottom: string[][] = [];
+    treeTopBottom[0] = [];
 
-    const getTreeTopToBottom = () => {
-        let level = 0;
-        console.log("Top to Bottom"); 
-        
-        if(myTree.root != null) {
-            for(let i = 0; i < myTree.root.keys.length; i++) {
-                console.log(myTree.root.keys[i]); 
-            }
-        }
-    }
-
-    const getRootAndChildren = (root: TreeNode | null, level: number ) => {
+    const getRootAndChildren = (root: TreeNode | null, level: number) => {
         console.log("Root level: " + level);
-        treeTopBottom[level] = [];
 
-        if(root != null) {
-            for(let i = 0; i < root.keys.length; i++) {
-                // if(root.keys[i] === undefined) {return}
+        if (root != null) {
+            // Iterate over all keys of a node
+            for (let i = 0; i < root.keys.length; i++) {
                 console.log("I: " + i + " Keys.length: " + root.keys.length);
-                console.log(root.keys[i]); 
-                // treeTopBottom[level][i] = root.keys[i];
-                // console.log(treeTopBottom[level]);
+                console.log(root.keys[i]);
                 treeTopBottom[level].push(root.keys[i]);
-                // treeTopBottom[level].push(x);
                 console.log("Pushed: " + root.keys[i]);
+                console.log("Array: " + treeTopBottom[level]);
             }
-            for(let i = 0; i < root.children.length; i++) {
-                if(root.children[i] !== undefined) {
-                    console.log("Start recursion");
-                    getRootAndChildren(root.children[i], level+1);
+            // Iterate over all children of a node
+            for (let i = 0; i < root.children.length; i++) {
+                // Initialise array for the next level
+                if (i == 0) {
+                    treeTopBottom[level + 1] = [];
                 }
+                console.log("Start recursion");
+                getRootAndChildren(root.children[i], level + 1);
             }
         }
-    }
+    };
 
+    // Neuer useEffect hook mit dependency bTree
+    // getRootAndChrisdfj ausführen
+    // array normalisieren -> jedes array hat für jede node die selbe länge
+    // setBbaum() ausführen -> akutalisiert das ui
+    // in der render methode auf basis von bbaum das array rendern
     useEffect(() => {
         bTree.traverse();
         createTree();
@@ -251,11 +249,22 @@ const Bbaum: React.FC<Props> = () => {
         // getTreeTopToBottom();
 
         getRootAndChildren(myTree.root, 0);
-        // for(i = 0; i < tree)
+        console.log("Print array");
         for (let item of treeTopBottom) {
             console.log(item);
         }
     }, []); // Wird zu Beginn einmal ausgeführt
+
+    let numberOfItems = 4;
+
+    const nodes = treeTopBottom.map((item) => {
+        // return <Node values={item as string[]} />;
+    });
+    // return [...Array(numberOfItems).keys()].map((key) => (
+    //     <Grid className={classes.container} container>
+    //         <Node values={bbaum[0]} />
+    //     </Grid>
+    // ));
 
     // useEffect(() => {
     //     normalizeArray();
@@ -273,6 +282,18 @@ const Bbaum: React.FC<Props> = () => {
                 changeOrder={changeOrder}
                 reset={reset}
             />
+
+            {treeTopBottom.map((item) => {
+                console.log("Item für Node: " + item);
+                return (
+                    <>
+                        <Grid className={classes.container} container>
+                            <Node values={item} />
+                            <p>hello</p>
+                        </Grid>
+                    </>
+                );
+            })}
 
             <Grid className={classes.container} container>
                 <Node values={bbaum[0]} />

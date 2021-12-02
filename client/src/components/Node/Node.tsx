@@ -38,19 +38,25 @@ interface Props {
 const Node: React.FC<Props> = ({ values }) => {
     const classes = useStyles();
     let emptyChar: string = " ‎";
+    // let i = -1;
 
     return (
         <Grid className={classes.root} container>
             {values.map((value) => {
                 let valueAsInt: number = parseInt(value);
                 let valueAsNaN: boolean = isNaN(valueAsInt);
+                // i++;
 
                 return (
                     <>
                         <Grid className={classes.gap} item>
                             {emptyChar}
                         </Grid>
-                        <Grid className={classes.item} style={{ backgroundColor: valueAsNaN ? "#ccc" : "#fafafa" }} item>
+                        <Grid
+                            className={classes.item}
+                            style={{ backgroundColor: valueAsNaN ? "#ccc" : "#fafafa" }}
+                            item
+                        >
                             {value}
                         </Grid>
                     </>
