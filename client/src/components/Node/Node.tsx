@@ -34,7 +34,6 @@ interface Props {
 
 const Node: React.FC<Props> = ({ values }) => {
     const classes = useStyles();
-    let emptyChar: string = " ‎";
     // let i = -1;
 
     return (
@@ -47,7 +46,7 @@ const Node: React.FC<Props> = ({ values }) => {
                 return (
                     <>
                         <Grid className={classes.gap} item>
-                            {emptyChar}
+                            &nbsp;
                         </Grid>
                         <Grid
                             className={classes.item}
@@ -60,7 +59,7 @@ const Node: React.FC<Props> = ({ values }) => {
                 );
             })}
             <Grid className={classes.gap} item>
-                {emptyChar}
+                &nbsp;
             </Grid>
         </Grid>
     );
