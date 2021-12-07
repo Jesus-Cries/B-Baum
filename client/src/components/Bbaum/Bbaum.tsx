@@ -54,16 +54,19 @@ const Bbaum: React.FC<Props> = () => {
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
-        new Array(tempTreeAsArrayForInitialization.length).fill(new Array(1).fill(" "))
+        new Array(tempTreeAsArrayForInitialization.length).fill(
+            new Array(1).fill(new Array(1).fill(" "))
+        )
     );
 
     const normalizeArray = (/* array kommt hier rein */) => {
-        for (let i = 0; i < tempTreeAsArrayForInitialization.length; i++) {
-            while (tempTreeAsArrayForInitialization[i].length < nodeSize) {
-                tempTreeAsArrayForInitialization[i].push("‎‎‏‏‎ ‎");
-            }
-        }
-        // setTreeAsArray(tempTreeAsArrayForInitialization); // Lädt asynchron und triggerd rerendering
+        treeTopBottom.forEach((level) => {
+            level.forEach((node) => {
+                while (node.length < nodeSize) {
+                    node.push("‎‎‏‏‎ ‎");
+                }
+            });
+        });
     };
 
     const drawLines = () => {
@@ -241,7 +244,7 @@ const Bbaum: React.FC<Props> = () => {
     let treeTopBottom: string[][][] = [];
     treeTopBottom[0] = [[]];
 
-    const getTreeTopToBottom = (root: TreeNode | null, level: number) => {
+    const traverserTreeBreadthFirst = (root: TreeNode | null, level: number) => {
         if (root != null) {
             let childIndex = 0;
             // Initialize current tree level in array
@@ -254,7 +257,7 @@ const Bbaum: React.FC<Props> = () => {
         }
         treeTopBottom[1] = [];
 
-        getTreeTopToBottomRecursion(root, 1);
+        traverserTreeBreadthFirstRecursion(root, 1);
 
         // Removes empty empty lower level arrays
         for (let i = 0; i < treeTopBottom.length; i++) {
@@ -262,10 +265,13 @@ const Bbaum: React.FC<Props> = () => {
                 treeTopBottom.splice(i);
             }
         }
+
+        normalizeArray();
+
         return treeTopBottom;
     };
 
-    const getTreeTopToBottomRecursion = (root: TreeNode | null, level: number) => {
+    const traverserTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
         console.log("Root level: " + level);
 
         let childIndex = 0;
@@ -297,7 +303,7 @@ const Bbaum: React.FC<Props> = () => {
                     // Define undefined level
                     treeTopBottom[level + 1] = [];
                 }
-                getTreeTopToBottomRecursion(child, level + 1);
+                traverserTreeBreadthFirstRecursion(child, level + 1);
             });
         }
     };
@@ -314,27 +320,19 @@ const Bbaum: React.FC<Props> = () => {
         drawLines();
 
         // let treeTopBottom: string[][][];
-        getTreeTopToBottom(tree.root, 0);
+        traverserTreeBreadthFirst(tree.root, 0);
         console.log("Weird stuff");
         treeTopBottom.forEach((element) => {
             console.log(element);
         });
-        console.log(treeTopBottom.length);
+
+        setTreeAsArray(treeTopBottom);
 
         // treeTopBottom.map((item) => {
         //     console.log("Test print Nodes: " + item);
         // });
     }, []); // Wird zu Beginn einmal ausgeführt
-    // {treeTopBottom.map((item, index) => {
-    //     console.log("Item für Node: " + item);
-    //     return (
-    //         <>
-    //             <Grid className={classes.container} container>
-    //                 {/* <Node values={someBaum[index]} /> */}
-    //             </Grid>
-    //         </>
-    //     );
-    // })}
+
     return (
         <Box className={classes.root}>
             <Control
@@ -346,6 +344,17 @@ const Bbaum: React.FC<Props> = () => {
                 changeOrder={changeOrder}
                 reset={reset}
             />
+
+            {treeAsArray.map((level) => {
+                return (
+                    <Grid className={classes.container} container>
+                        {level.map((node) => {
+                            console.log(node);
+                            return <Node values={node} />;
+                        })}
+                    </Grid>
+                );
+            })}
 
             {/* <Grid className={classes.container} container>
                 <Node values={treeAsArray[0]} />
