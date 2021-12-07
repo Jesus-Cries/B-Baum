@@ -9,6 +9,7 @@ import Control from "../../components/Control/Control";
 
 import { Tree } from "./Tree";
 import { TreeNode } from "./TreeNode";
+import { forEachLeadingCommentRange } from "typescript";
 
 const useStyles = makeStyles({
     root: {
@@ -49,11 +50,9 @@ const Bbaum: React.FC<Props> = () => {
         ["14", "15", "16"],
     ]; // TODO: Kann eig gelöscht werden. Deswegen steht am Anfang was drinne.
 
-    //test
     const [tree, setTree] = useState<Tree>(new Tree(3)); // Der tatsächliche Baum
-    //test
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
-    const [treeAsArray, setTreeAsArray] = useState<string[][]>(
+    const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(tempTreeAsArrayForInitialization.length).fill(new Array(1).fill(" "))
     );
@@ -64,7 +63,7 @@ const Bbaum: React.FC<Props> = () => {
                 tempTreeAsArrayForInitialization[i].push("‎‎‏‏‎ ‎");
             }
         }
-        setTreeAsArray(tempTreeAsArrayForInitialization); // Lädt asynchron und triggerd rerendering
+        // setTreeAsArray(tempTreeAsArrayForInitialization); // Lädt asynchron und triggerd rerendering
     };
 
     const drawLines = () => {
@@ -88,7 +87,7 @@ const Bbaum: React.FC<Props> = () => {
 
     const insert = (key: number) => {
         let tempTree: Tree = tree;
-        tempTree.insert(key);
+        tempTree.insertTest(key);
         console.log("Inserted: " + key);
         // @ts-ignore
         // console.log(tempTree);
@@ -119,6 +118,11 @@ const Bbaum: React.FC<Props> = () => {
     const createTree = () => {
         let tempTree: Tree = tree; // bTree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
+        // for (let i = 0; i < 11; i++) {
+        //     let rndInt = Math.floor(Math.random() * 500) + 1;
+        //     console.log(rndInt);
+        //     tempTree.insertTest(rndInt);
+        // }
         tempTree.insertTest(10);
         tempTree.insertTest(20);
         tempTree.insertTest(5);
@@ -126,6 +130,16 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.insertTest(12);
         tempTree.insertTest(17);
         tempTree.insertTest(60);
+        tempTree.insertTest(11);
+        tempTree.insertTest(13);
+        tempTree.insertTest(14);
+        tempTree.insertTest(15);
+        // tempTree.insertTest(40);
+
+        // tempTree.insertTest(16);
+        // tempTree.insertTest(18);
+        // tempTree.insertTest(19);
+
         console.log(tempTree);
         tempTree.traverse();
 
@@ -199,13 +213,19 @@ const Bbaum: React.FC<Props> = () => {
         console.log("        " + tempTree.root?.keys);
 
         let childrenKeys = "    - ";
-        tempTree.root?.children.forEach((child: TreeNode) => (childrenKeys += child.keys + " - "));
+        tempTree.root?.children.forEach((child: TreeNode) => {
+            childrenKeys += "|";
+            childrenKeys += child.keys + " - ";
+            childrenKeys += "|";
+        });
         console.log(childrenKeys);
 
         let grandchildrenKeys = "- ";
         tempTree.root?.children.forEach((child: TreeNode) => {
             child.children.forEach((grandchild) => {
+                grandchildrenKeys += "|";
                 grandchildrenKeys += grandchild.keys + " - ";
+                grandchildrenKeys += "|";
             });
         });
         console.log(grandchildrenKeys);
@@ -218,30 +238,67 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     // Save tree from top to bottom as numbers
-    let treeTopBottom: string[][] = [];
-    treeTopBottom[0] = [];
+    let treeTopBottom: string[][][] = [];
+    treeTopBottom[0] = [[]];
 
     const getTreeTopToBottom = (root: TreeNode | null, level: number) => {
+        if (root != null) {
+            let childIndex = 0;
+            // Initialize current tree level in array
+            treeTopBottom[level][childIndex] = [];
+
+            // Iterate over all keys of a node
+            root?.keys.forEach((key: string, index: number) => {
+                treeTopBottom[level][childIndex][index] = key;
+            });
+        }
+        treeTopBottom[1] = [];
+
+        getTreeTopToBottomRecursion(root, 1);
+
+        // Removes empty empty lower level arrays
+        for (let i = 0; i < treeTopBottom.length; i++) {
+            if (treeTopBottom[i].length == 0) {
+                treeTopBottom.splice(i);
+            }
+        }
+        return treeTopBottom;
+    };
+
+    const getTreeTopToBottomRecursion = (root: TreeNode | null, level: number) => {
         console.log("Root level: " + level);
 
+        let childIndex = 0;
+        // Determines the childIndex for the current level
+        for (let i = 0; i < treeTopBottom[level].length; i++) {
+            childIndex = i;
+        }
+        if (treeTopBottom[level].length > 1) {
+            childIndex++;
+        }
+
         if (root != null) {
-            // Iterate over all keys of a node
-            for (let i = 0; i < root.keys.length; i++) {
-                console.log("I: " + i + " Keys.length: " + root.keys.length);
-                console.log(root.keys[i]);
-                treeTopBottom[level].push(root.keys[i]);
-                console.log("Pushed: " + root.keys[i]);
-                console.log("Array: " + treeTopBottom[level]);
-            }
+            // Iterate over all children of root to get their values
+            root?.children.forEach((child) => {
+                treeTopBottom[level][childIndex] = [];
+
+                // Iterate over all keys of a node
+                child.keys.forEach((key: string, index: number) => {
+                    treeTopBottom[level][childIndex][index] = key;
+                });
+                childIndex++;
+            });
+
             // Iterate over all children of a node
-            for (let i = 0; i < root.children.length; i++) {
-                // Initialise array for the next level
-                if (i == 0) {
+            root.children.forEach((child) => {
+                childIndex = 0;
+                // Check if next level has been initialized
+                if (typeof treeTopBottom[level + 1] === "undefined") {
+                    // Define undefined level
                     treeTopBottom[level + 1] = [];
                 }
-                console.log("Start recursion");
-                getTreeTopToBottom(root.children[i], level + 1);
-            }
+                getTreeTopToBottomRecursion(child, level + 1);
+            });
         }
     };
 
@@ -255,23 +312,29 @@ const Bbaum: React.FC<Props> = () => {
         createTree();
         normalizeArray();
         drawLines();
-        // getTreeTopToBottom();
 
-        getTreeTopToBottom(myTree.root, 0);
-        console.log("Print array");
-        for (let item of treeTopBottom) {
-            console.log(item);
-        }
-
-        treeTopBottom.map((item) => {
-            console.log("Test print Nodes: " + item);
+        // let treeTopBottom: string[][][];
+        getTreeTopToBottom(tree.root, 0);
+        console.log("Weird stuff");
+        treeTopBottom.forEach((element) => {
+            console.log(element);
         });
+        console.log(treeTopBottom.length);
+
+        // treeTopBottom.map((item) => {
+        //     console.log("Test print Nodes: " + item);
+        // });
     }, []); // Wird zu Beginn einmal ausgeführt
-
-    const [someBaum, setsomeBaum] = useState<string[][]>(
-        new Array(treeTopBottom.length).fill(new Array(1).fill(" "))
-    );
-
+    // {treeTopBottom.map((item, index) => {
+    //     console.log("Item für Node: " + item);
+    //     return (
+    //         <>
+    //             <Grid className={classes.container} container>
+    //                 {/* <Node values={someBaum[index]} /> */}
+    //             </Grid>
+    //         </>
+    //     );
+    // })}
     return (
         <Box className={classes.root}>
             <Control
@@ -284,18 +347,7 @@ const Bbaum: React.FC<Props> = () => {
                 reset={reset}
             />
 
-            {treeTopBottom.map((item, index) => {
-                console.log("Item für Node: " + item);
-                return (
-                    <>
-                        <Grid className={classes.container} container>
-                            <Node values={someBaum[index]} />
-                        </Grid>
-                    </>
-                );
-            })}
-
-            <Grid className={classes.container} container>
+            {/* <Grid className={classes.container} container>
                 <Node values={treeAsArray[0]} />
             </Grid>
 
@@ -316,7 +368,7 @@ const Bbaum: React.FC<Props> = () => {
                     <Node values={treeAsArray[7]} />
                     <Node values={treeAsArray[8]} />
                 </Grid>
-            </Grid>
+            </Grid> */}
 
             {/* <Grid className={classes.container} container>
                 <Node values={bbaum[3]} />
