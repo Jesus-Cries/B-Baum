@@ -59,7 +59,7 @@ const Bbaum: React.FC<Props> = () => {
         )
     );
 
-    const normalizeArray = (/* array kommt hier rein */) => {
+    const normalizeArray = () => {
         treeTopBottom.forEach((level) => {
             level.forEach((node) => {
                 while (node.length < nodeSize) {
@@ -69,6 +69,10 @@ const Bbaum: React.FC<Props> = () => {
         });
     };
 
+    const updateTree = () => {
+        traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+    };
     const drawLines = () => {
         const canvas: HTMLCanvasElement | null = document.getElementById(
             "canvas"
@@ -97,8 +101,8 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
-        traverserTreeBreadthFirst(tree.root, 0);
-        setTreeAsArray(treeTopBottom);
+
+        updateTree();
     };
 
     const search = (key: number) => {
@@ -109,8 +113,14 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     // Couldn't name this method "delete" as that name seems to be already used by React
-    const remove = () => {
+    // FIXME: Algorithm doesnt reorder the nodes properly
+    const remove = (key: number) => {
+        let tempTree: Tree = tree;
+        tempTree.delete(key);
+
+        setTree(tempTree);
         console.log("Delete");
+        updateTree();
     };
 
     const reset = () => {
@@ -121,7 +131,7 @@ const Bbaum: React.FC<Props> = () => {
     const changeOrder = () => {};
 
     const createTree = () => {
-        let tempTree: Tree = tree; // bTree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
+        let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
         // for (let i = 0; i < 11; i++) {
         //     let rndInt = Math.floor(Math.random() * 500) + 1;
