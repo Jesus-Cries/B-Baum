@@ -47,7 +47,7 @@ interface Props {
     random: () => void;
     insert: (key: number) => void;
     search: (key: number) => void;
-    remove: () => void;
+    remove: (key: number) => void;
     changeOrder: () => void;
     reset: () => void;
     order: number;
@@ -119,7 +119,6 @@ const Control: React.FC<Props> = ({
     const handleRandom = () => {
         if (upperLimit && lowerLimit) {
             if (lowerLimit <= upperLimit) {
-
                 let endLoop = Math.floor(
                     Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
                 );
@@ -168,7 +167,22 @@ const Control: React.FC<Props> = ({
         }
     };
 
-    const handleTempo = (event: React.ChangeEvent<{ value: number | Array<number>, activeThumb: number }>) => {
+    const handleRemove = () => {
+        if (amount) {
+            let numbers = amount.split(",");
+            numbers.forEach(function (item) {
+                if (Number.isInteger(parseInt(item))) {
+                    remove(parseInt(item));
+                } else {
+                    alert("error");
+                }
+            });
+        }
+    };
+
+    const handleTempo = (
+        event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
+    ) => {
         setInsertionTempo(event.target.value as number);
     };
 
@@ -227,13 +241,15 @@ const Control: React.FC<Props> = ({
                     <Button className={classes.button} variant="contained" onClick={handleSearch}>
                         Search
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={remove}>
+                    <Button className={classes.button} variant="contained" onClick={handleRemove}>
                         Delete
                     </Button>
                 </ButtonGroup>
             </Paper>
             <Paper className={classes.row}>
-                <Box component="div" sx={{ display: 'inline' }}>Current Order:{" "}{order}</Box>
+                <Box component="div" sx={{ display: "inline" }}>
+                    Current Order: {order}
+                </Box>
                 <TextField
                     id="upperLimit"
                     className={classes.limitLower}

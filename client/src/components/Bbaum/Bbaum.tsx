@@ -113,8 +113,13 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     // Couldn't name this method "delete" as that name seems to be already used by React
-    const remove = () => {
+    const remove = (key: number) => {
+        let tempTree: Tree = tree;
+        tempTree.delete(key);
+
+        setTree(tempTree);
         console.log("Delete");
+        updateTree();
     };
 
     const reset = () => {
@@ -125,7 +130,7 @@ const Bbaum: React.FC<Props> = () => {
     const changeOrder = () => {};
 
     const createTree = () => {
-        let tempTree: Tree = tree; // bTree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
+        let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
         // for (let i = 0; i < 11; i++) {
         //     let rndInt = Math.floor(Math.random() * 500) + 1;
