@@ -59,7 +59,7 @@ const Bbaum: React.FC<Props> = () => {
         )
     );
 
-    const normalizeArray = (/* array kommt hier rein */) => {
+    const normalizeArray = () => {
         treeTopBottom.forEach((level) => {
             level.forEach((node) => {
                 while (node.length < nodeSize) {
@@ -69,6 +69,10 @@ const Bbaum: React.FC<Props> = () => {
         });
     };
 
+    const updateTree = () => {
+        traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+    };
     const drawLines = () => {
         const canvas: HTMLCanvasElement | null = document.getElementById(
             "canvas"
@@ -97,8 +101,8 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
-        traverserTreeBreadthFirst(tree.root, 0);
-        setTreeAsArray(treeTopBottom);
+
+        updateTree();
     };
 
     const search = (key: number) => {
