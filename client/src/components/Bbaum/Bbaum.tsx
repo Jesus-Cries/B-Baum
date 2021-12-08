@@ -113,6 +113,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     // Couldn't name this method "delete" as that name seems to be already used by React
+    // FIXME: Algorithm doesnt reorder the nodes properly
     const remove = (key: number) => {
         let tempTree: Tree = tree;
         tempTree.delete(key);
