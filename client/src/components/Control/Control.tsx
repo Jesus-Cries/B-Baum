@@ -122,6 +122,9 @@ const Control: React.FC<Props> = ({
                 let endLoop = Math.floor(
                     Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
                 );
+                if (endLoop == 0) {
+                    endLoop = 1;
+                }
                 console.log(endLoop);
                 for (let i = 0; i < endLoop; i++) {
                     console.log("rte");

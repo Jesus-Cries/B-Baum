@@ -130,6 +130,7 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.delete(key);
 
         setTree(tempTree);
+        updateTree();
         console.log("Delete");
     };
 
@@ -139,7 +140,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const changeTempo = (tempo: number) => {
-        setTempo(tempo);
+        //setTempo(tempo);
     };
 
     const changeOrder = () => {};
