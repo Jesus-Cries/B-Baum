@@ -119,7 +119,6 @@ const Control: React.FC<Props> = ({
     const handleRandom = () => {
         if (upperLimit && lowerLimit) {
             if (lowerLimit <= upperLimit) {
-
                 let endLoop = Math.floor(
                     Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
                 );
@@ -168,14 +167,17 @@ const Control: React.FC<Props> = ({
         }
     };
 
-    const handleTempo = (event: React.ChangeEvent<{ value: number | Array<number>, activeThumb: number }>) => {
+    const handleTempo = (
+        event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
+    ) => {
         setInsertionTempo(event.target.value as number);
     };
 
     useEffect(() => {
         console.log(selectedFile);
         parseCSV(selectedFile);
-    }, [selectedFile]);
+        //changeTempo(insertionTempo);
+    }, [selectedFile, insertionTempo]);
 
     // @ts-ignore
     return (
@@ -233,7 +235,9 @@ const Control: React.FC<Props> = ({
                 </ButtonGroup>
             </Paper>
             <Paper className={classes.row}>
-                <Box component="div" sx={{ display: 'inline' }}>Current Order:{" "}{order}</Box>
+                <Box component="div" sx={{ display: "inline" }}>
+                    Current Order: {order}
+                </Box>
                 <TextField
                     id="upperLimit"
                     className={classes.limitLower}

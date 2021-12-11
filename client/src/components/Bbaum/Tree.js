@@ -29,131 +29,92 @@ export class Tree {
         }
     }
 
-    // Testing----------------------------------------------------------------------------------------------------------
-
-    insertTest(value){
-        let actual = this.root;
-        if (actual === null) {
-            //check if tree is empty
+    insert(key) {
+        let currentRoot = this.root;
+        if (currentRoot === null) {
+            // Check if tree is empty
             this.root = new TreeNode(this.maxChildren, true, null); // make new node as leaf
-            this.root.keys[0] = value; // add key to the node
-            //this.root.numberOfKeys = 1; // increase number of nodes
-        } else if (actual.numberOfKeys >= this.maxChildren) {
-            // Create a new node to become the root
-            // Append the old root to the new one
+            this.root.keys[0] = key; // add key to the node
+        } else if (currentRoot.numberOfKeys === this.maxKeys) {
+            // If root is full create a new node to become the root
+            // Make the old root a child of the new Root
             let temp = new TreeNode(this.root.maxChildren, false, null);
             temp.tree = this;
             this.root = temp;
-            temp.addChild(actual, 0);
-            this.split(actual, temp, 1);
-            this.insertNonFull(temp, parseInt(value));
+            temp.addChild(currentRoot, 0);
+            this.splitNode(currentRoot, temp, 1);
+            // After split add key
+            this.insertNotFullNode(this.root, parseInt(key));
         } else {
-            this.insertNonFull(actual, parseInt(value));
+            this.insertNotFullNode(currentRoot, parseInt(key));
         }
     }
 
-    split(child, parent, pos) {
-        let newChild = new TreeNode(this.maxChildren,child.leaf,parent);
-        //
+    splitNode(child, parent, pos) {
         // Create a new child
-        // Pass values from the old child to the new
-        //console.log(child.keys);
-        for (let k = 1; k < this.maxKeys; k++) {
-            //console.log(this.maxKeys)
-            //console.log(child.keys)
-            newChild.addValue(child.removeValue(this.maxKeys));
+        let newChild = new TreeNode(this.maxChildren, child.leaf, parent);
+        // Give the new child the keys from the old child
+        for (let k = 1; k < this.minChildren; k++) {
+            newChild.addValue(child.removeValue(this.minChildren));
         }
-        // Trasspass child nodes from the old child to the new
+
+        // Give the new child the children from the old child
         if (!child.leaf) {
             for (let k = 1; k <= this.minChildren; k++) {
                 newChild.addChild(child.deleteChild(this.minChildren), k - 1);
             }
         }
-        // Add new child to the parent
+        // Give parent the new child
         parent.addChild(newChild, pos);
-        // Pass value to parent
+        // Give parent the key
         parent.addValue(child.removeValue(this.minChildren - 1));
         parent.leaf = false;
     }
 
-    insertNonFull(node, value) {
+    insertNotFullNode(node, key) {
         if (node.leaf) {
-            node.addValue(value);
+            // Give lead node the key
+            node.addValue(key);
             return;
         }
-        let temp = node.numberOfKeys;
-        while (temp > 0 && value < node.keys[temp - 1]) {
-            temp = temp - 1;
+
+        // Iterate through the keys to see where the new Key should be added
+        let currentKeyIndex = node.numberOfKeys;
+        while (currentKeyIndex > 0 && key < node.keys[currentKeyIndex - 1]) {
+            currentKeyIndex--;
         }
 
-        //console.log(node.children[temp].keys)
         let inserted = false;
-
-        if (node.children[temp].numberOfKeys === this.maxKeys) {
-            //console.log("Temp: " + temp)
-            //console.log("Value to split" + value)
-            //console.log(node)
-            inserted = true;
-            node.children[temp].addValue(value);
-            this.split(node.children[temp], node, temp + 1);
-            if (value  > node.keys[temp]) {
-                temp = temp + 1;
+        if (node.children[currentKeyIndex].numberOfKeys === this.maxKeys) {
+            // Split the node if node is already full
+            //inserted = true;
+            //node.children[temp].addValue(key);
+            this.splitNode(node.children[currentKeyIndex], node, currentKeyIndex + 1);
+            // After splitting the node check to which child the key should be added
+            if (key > node.keys[currentKeyIndex]) {
+                currentKeyIndex++;
             }
         }
-        if (inserted === false){
-            this.insertNonFull(node.children[temp], value);
+
+        if (inserted === false) {
+            this.insertNotFullNode(node.children[currentKeyIndex], key);
         }
-        if (node.numberOfKeys > this.maxKeys && node.parent == null){
-            this.splitRoot();
-        }
-        //console.log(node.keys)
+        //if (node.numberOfKeys === 2 * this.maxChildren - 1 && node.parent == null) {
+        //this.splitRoot();
+        //}
     }
 
-    splitRoot(){
-        console.log("splitroot")
-        let newRoot = new TreeNode(this.maxChildren,false,null);
+    splitRoot() {
+        let newRoot = new TreeNode(this.maxChildren, false, null);
         let oldRoot = this.root;
         this.root = newRoot;
-        newRoot.addValue(oldRoot.removeValue(this.minChildren-1));
-        for (let i = 0; i < oldRoot.numberOfKeys; i++){
-            let newChild = new TreeNode(this.maxChildren, false,this.root);
+        newRoot.addValue(oldRoot.removeValue(this.minChildren - 1));
+        for (let i = 0; i < oldRoot.numberOfKeys; i++) {
+            let newChild = new TreeNode(this.maxChildren, false, this.root);
             newChild.addValue(oldRoot.keys[i]);
-            newRoot.addChild(newChild,i);
-            for (let j = 0+i; j<this.minChildren+i;j++) {
-                console.log(oldRoot.children[i+j].keys)
-                console.log(this.minChildren)
-                console.log(i +" "+ j)
-                newChild.addChild(oldRoot.children[j+i],j);
-            }
-        }
-        console.log(this)
-    }
-
-    // Testing
-
-    insert(k) {
-        if (this.root === null) {
-            //check if tree is empty
-            this.root = new TreeNode(this.maxChildren, true, null); // make new node as leaf
-            this.root.keys[0] = k; // add key to the node
-        } else {
-            if (this.root.keys.length === this.maxKeys) {
-                //check if node (root) is full
-                let newNode = new TreeNode(this.maxChildren, false, null); // create new node
-                this.root.parent = newNode;
-                newNode.children[0] = this.root; // make the old root the child of the new root
-                newNode.splitNode(0, this.root); // split the old root and move one of the keys to the root
-
-                let i = 0;
-                if (newNode.keys[0] < k) {
-                    // search for child which is supposed to get the key
-                    i++;
-                }
-                newNode.children[i].nodeNotFull(k);
-
-                this.root = newNode; // makes the new node the root
-            } else {
-                this.root.nodeNotFull(k);
+            newRoot.addChild(newChild, i);
+            for (let j = 0 + i; j < this.minChildren + i; j++) {
+                newChild.addChild(oldRoot.children[j + i], j);
             }
         }
     }

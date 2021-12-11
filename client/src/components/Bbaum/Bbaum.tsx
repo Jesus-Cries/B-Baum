@@ -37,7 +37,20 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
-    let myTree: Tree = new Tree(3);
+    //Knuth Order, k |  (min,max)  | CLRS Degree, t
+    // ---------------|-------------|---------------
+    //      0         |      -      |        –
+    //      1         |      –      |        –
+    //      2         |      –      |        –
+    //      3         |    (2,3)    |        –
+    //      4         |    (2,4)    |      t = 2
+    //      5         |    (3,5)    |        –
+    //      6         |    (3,6)    |      t = 3
+    //      7         |    (4,7)    |        –
+    //      8         |    (4,8)    |      t = 4
+    //      9         |    (5,9)    |        –
+    //      10        |    (5,10)   |      t = 5
+    let myTree: Tree = new Tree(4);
     let tempTreeAsArrayForInitialization: string[][] = [
         ["10"],
         ["3", "7"],
@@ -50,8 +63,9 @@ const Bbaum: React.FC<Props> = () => {
         ["14", "15", "16"],
     ]; // TODO: Kann eig gelöscht werden. Deswegen steht am Anfang was drinne.
 
-    const [tree, setTree] = useState<Tree>(new Tree(3)); // Der tatsächliche Baum
+    const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
+    const [tempo, setTempo] = useState<number>(1000);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(tempTreeAsArrayForInitialization.length).fill(
@@ -90,13 +104,15 @@ const Bbaum: React.FC<Props> = () => {
 
     const insert = (key: number) => {
         let tempTree: Tree = tree;
-        tempTree.insertTest(key);
+        tempTree.insert(key);
         console.log("Inserted: " + key);
         // @ts-ignore
-        // console.log(tempTree);
         tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
+        traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+        setTimeout(function () {}, tempo);
     };
 
     const search = (key: number) => {
@@ -116,39 +132,21 @@ const Bbaum: React.FC<Props> = () => {
         tree.root = null;
     };
 
+    const changeTempo = (tempo: number) => {
+        setTempo(tempo);
+    };
+
     const changeOrder = () => {};
 
     const createTree = () => {
         let tempTree: Tree = tree; // bTree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
-
-        // for (let i = 0; i < 11; i++) {
-        //     let rndInt = Math.floor(Math.random() * 500) + 1;
-        //     console.log(rndInt);
-        //     tempTree.insertTest(rndInt);
-        // }
-        tempTree.insertTest(10);
-        tempTree.insertTest(20);
-        tempTree.insertTest(5);
-        tempTree.insertTest(8);
-        tempTree.insertTest(12);
-        tempTree.insertTest(17);
-        tempTree.insertTest(60);
-        tempTree.insertTest(11);
-        tempTree.insertTest(13);
-        tempTree.insertTest(14);
-        tempTree.insertTest(15);
-        // tempTree.insertTest(40);
-
-        // tempTree.insertTest(16);
-        // tempTree.insertTest(18);
-        // tempTree.insertTest(19);
 
         console.log(tempTree);
         tempTree.traverse();
 
         console.log("------- DELETE -------");
 
-        let testCase = 20;
+        let testCase = 0;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
         switch (testCase) {
@@ -206,7 +204,7 @@ const Bbaum: React.FC<Props> = () => {
             // Expected result: 10 --> - 7 - 17 - --> - 5 - 8 - 12 - 20 -
             case 9: // Forces merging of parent with child
                 tempTree.delete(60);
-                tempTree.insertTest(7);
+                tempTree.insert(7);
                 break;
             default:
                 break;

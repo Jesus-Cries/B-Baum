@@ -1,7 +1,6 @@
 export class TreeNode {
     constructor(maxChildren, leaf, parent) {
         this.maxChildren = maxChildren;
-        this.maxChildren = maxChildren;
         this.minChildren = Math.ceil(maxChildren / 2);
         this.maxKeys = maxChildren - 1;
         this.minKeys = Math.ceil(maxChildren / 2) - 1;
