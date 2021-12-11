@@ -47,7 +47,7 @@ interface Props {
     random: () => void;
     insert: (key: number) => void;
     search: (key: number) => void;
-    remove: () => void;
+    remove: (key: number) => void;
     changeOrder: () => void;
     reset: () => void;
     order: number;
@@ -167,6 +167,19 @@ const Control: React.FC<Props> = ({
         }
     };
 
+    const handleRemove = () => {
+        if (amount) {
+            let numbers = amount.split(",");
+            numbers.forEach(function (item) {
+                if (Number.isInteger(parseInt(item))) {
+                    remove(parseInt(item));
+                } else {
+                    alert("error");
+                }
+            });
+        }
+    };
+
     const handleTempo = (
         event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
     ) => {
@@ -229,7 +242,7 @@ const Control: React.FC<Props> = ({
                     <Button className={classes.button} variant="contained" onClick={handleSearch}>
                         Search
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={remove}>
+                    <Button className={classes.button} variant="contained" onClick={handleRemove}>
                         Delete
                     </Button>
                 </ButtonGroup>

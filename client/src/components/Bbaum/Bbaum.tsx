@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
+import Grid, { GridSize } from "@material-ui/core/Grid";
 
 import Node from "../../components/Node/Node";
 import Control from "../../components/Control/Control";
@@ -65,7 +65,6 @@ const Bbaum: React.FC<Props> = () => {
 
     const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
-    const [tempo, setTempo] = useState<number>(1000);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(tempTreeAsArrayForInitialization.length).fill(
@@ -73,7 +72,7 @@ const Bbaum: React.FC<Props> = () => {
         )
     );
 
-    const normalizeArray = (/* array kommt hier rein */) => {
+    const normalizeArray = () => {
         treeTopBottom.forEach((level) => {
             level.forEach((node) => {
                 while (node.length < nodeSize) {
@@ -83,6 +82,10 @@ const Bbaum: React.FC<Props> = () => {
         });
     };
 
+    const updateTree = () => {
+        traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+    };
     const drawLines = () => {
         const canvas: HTMLCanvasElement | null = document.getElementById(
             "canvas"
@@ -110,9 +113,7 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
-        traverserTreeBreadthFirst(tree.root, 0);
-        setTreeAsArray(treeTopBottom);
-        setTimeout(function () {}, tempo);
+        updateTree();
     };
 
     const search = (key: number) => {
@@ -123,7 +124,12 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     // Couldn't name this method "delete" as that name seems to be already used by React
-    const remove = () => {
+    // FIXME: Algorithm doesnt reorder the nodes properly
+    const remove = (key: number) => {
+        let tempTree: Tree = tree;
+        tempTree.delete(key);
+
+        setTree(tempTree);
         console.log("Delete");
     };
 
@@ -139,7 +145,7 @@ const Bbaum: React.FC<Props> = () => {
     const changeOrder = () => {};
 
     const createTree = () => {
-        let tempTree: Tree = tree; // bTree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
+        let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
         console.log(tempTree);
         tempTree.traverse();
@@ -258,13 +264,6 @@ const Bbaum: React.FC<Props> = () => {
 
         traverserTreeBreadthFirstRecursion(root, 1);
 
-        // Removes empty empty lower level arrays
-        for (let i = 0; i < treeTopBottom.length; i++) {
-            if (treeTopBottom[i].length == 0) {
-                treeTopBottom.splice(i);
-            }
-        }
-
         normalizeArray();
 
         return treeTopBottom;
@@ -293,6 +292,10 @@ const Bbaum: React.FC<Props> = () => {
                 });
                 childIndex++;
             });
+            // Add border element to indicate children end of the current root
+            if (treeTopBottom[level].length != 0) {
+                treeTopBottom[level][childIndex] = ["border"];
+            }
 
             // Iterate over all children of a node
             root.children.forEach((child) => {
@@ -345,47 +348,63 @@ const Bbaum: React.FC<Props> = () => {
             />
 
             {treeAsArray.map((level) => {
-                return (
-                    <Grid className={classes.container} container>
-                        {level.map((node) => {
-                            console.log(node);
-                            return <Node values={node} />;
-                        })}
-                    </Grid>
-                );
+                {
+                    let hasBorder = false;
+
+                    let levelCopy: string[][] = level;
+                    let levelSplit: string[][][] = [];
+                    let childrenIndex: number = 0;
+                    let startIndex: number = 0;
+                    let endIndex: number = 0;
+
+                    level.forEach((node) => {
+                        levelSplit[childrenIndex] = [[]];
+                        if (node[0] == "border") {
+                            levelSplit[childrenIndex] = levelCopy.slice(startIndex, endIndex);
+                            childrenIndex++;
+
+                            startIndex = endIndex;
+                            // Skips border node
+                            startIndex++;
+
+                            hasBorder = true;
+                        }
+                        endIndex++;
+                    });
+
+                    // Adds whole level to levelSplit because level without borders wont be added in loop
+                    if (!hasBorder) {
+                        levelSplit[childrenIndex] = levelCopy;
+                    }
+
+                    // Apply appropriate scaling factor to Grids
+                    let scaling: number = 12;
+                    if (levelSplit.length != 0) {
+                        scaling = 12 / levelSplit.length;
+                        scaling = Math.round(scaling);
+                    }
+                    let scalingConvert: GridSize = scaling as GridSize;
+
+                    // Return Grid for current level
+                    return (
+                        <Grid className={classes.outerContainer} container>
+                            {levelSplit.map((element) => {
+                                return (
+                                    <Grid
+                                        className={classes.container}
+                                        xs={scalingConvert}
+                                        container
+                                    >
+                                        {element.map((node) => {
+                                            return <Node values={node} />;
+                                        })}
+                                    </Grid>
+                                );
+                            })}
+                        </Grid>
+                    );
+                }
             })}
-
-            {/* <Grid className={classes.container} container>
-                <Node values={treeAsArray[0]} />
-            </Grid>
-
-            <Grid className={classes.container} container>
-                <Node values={treeAsArray[1]} />
-                <Node values={treeAsArray[2]} />
-            </Grid>
-
-            <Grid className={classes.outerContainer} container>
-                <Grid className={classes.container} xs={6} container>
-                    <Node values={treeAsArray[3]} />
-                    <Node values={treeAsArray[4]} />
-                    <Node values={treeAsArray[5]} />
-                </Grid>
-
-                <Grid className={classes.container} xs={6} container>
-                    <Node values={treeAsArray[6]} />
-                    <Node values={treeAsArray[7]} />
-                    <Node values={treeAsArray[8]} />
-                </Grid>
-            </Grid> */}
-
-            {/* <Grid className={classes.container} container>
-                <Node values={bbaum[3]} />
-                <Node values={bbaum[4]} />
-                <Node values={bbaum[5]} />
-                <Node values={bbaum[6]} />
-                <Node values={bbaum[7]} />
-                <Node values={bbaum[8]} />
-            </Grid> */}
         </Box>
     );
 };
