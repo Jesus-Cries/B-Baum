@@ -84,17 +84,19 @@ const Control: React.FC<Props> = ({
                         let lines = csvText.split(/\r?\n/);
                         lines.forEach(function (item, index) {
                             if (typeof insertionTempo === "number") {
-                                setTimeout(function () {}, insertionTempo);
-                            }
-                            switch (item.split(",")[0]) {
-                                case "i":
-                                    //console.log(parseInt(item.split(",")[1]));
-                                    insert(parseInt(item.split(",")[1]));
-                                    break;
-                                case "d":
-                                    break;
-                                default:
-                                    break;
+                                setTimeout(function () {
+                                    switch (item.split(",")[0]) {
+                                        case "i":
+                                            //console.log(parseInt(item.split(",")[1]));
+                                            insert(parseInt(item.split(",")[1]));
+                                            //updateTree();
+                                            break;
+                                        case "d":
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }, insertionTempo);
                             }
                         });
                         console.log(lines);
@@ -189,6 +191,11 @@ const Control: React.FC<Props> = ({
         setInsertionTempo(event.target.value as number);
     };
 
+    const testSpeed = (value: number) => {
+        setInsertionTempo(value);
+        return value.toString();
+    };
+
     useEffect(() => {
         console.log(selectedFile);
         parseCSV(selectedFile);
@@ -270,10 +277,12 @@ const Control: React.FC<Props> = ({
                 </Button>
                 <Slider
                     className={classes.slider}
-                    min={0}
-                    max={1000}
-                    onChange={(_, newValue) => setInsertionTempo(newValue)}
-                    onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
+                    min={1000}
+                    step={100}
+                    max={5000}
+                    //onChange={(_, newValue) => setInsertionTempo(newValue)}
+                    //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
+                    getAriaValueText={testSpeed}
                 />
             </Paper>
         </Box>

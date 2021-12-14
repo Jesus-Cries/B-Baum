@@ -12,6 +12,7 @@ export class TreeNode {
     }
 
     traverse() {
+        let array = [];
         let i = 0;
         for (i = 0; i < this.keys.length; i++) {
             // Iterate through all leaf notes
@@ -19,7 +20,10 @@ export class TreeNode {
                 // If this is not a leaf, then traverse the subtree, before printing the keys
                 this.children[i].traverse();
             }
-            if (this.keys[i]) console.log(this.keys[i]);
+            if (this.keys[i]) {
+                console.log(this.keys[i]);
+                array.push(this.keys[i]);
+            }
         }
         //console.log(this.keys);
 
@@ -27,6 +31,8 @@ export class TreeNode {
             // print subtree rooted with last child
             this.children[i].traverse();
         }
+
+        console.log(array);
     }
 
     find(key) {
@@ -53,72 +59,6 @@ export class TreeNode {
 
         this.children[i].cost = this.cost + 1;
         return this.children[i].find(key); // go to child of the node to find the key
-    }
-
-    splitNode(value, node) {
-        // splits the children of the given node (only works if node is full)
-        let newNode = new TreeNode(this.maxChildren, node.leaf, this); // create new node which store (minChildren-1) nodes
-        // let x;
-        for (let i = 0; i < this.minChildren - 1; i++) {
-            // copies the last minChildren-1 keys from the old to the new node
-            newNode.keys[i] = node.keys[i + this.minChildren];
-            //node.keys.splice(i+this.minChildren, 1)
-        }
-        node.keys = node.keys.filter((el) => !newNode.keys.includes(el));
-        //node.children.filter(Number);
-
-        if (node.leaf === false) {
-            // copies the last children to the new TreeNode
-            for (let i = 0; i < this.minChildren; i++) {
-                newNode.children[i] = node.children[i + this.minChildren];
-            }
-        }
-
-        for (let i = 0; i >= value + 1; i--) {
-            // move children to the right to make space for the new child
-            this.children[i + 1] = this.children[i];
-        }
-
-        this.children[value + 1] = newNode; // link child to the new node
-
-        for (let i = this.keys.length - 1; i >= value; i--) {
-            // key of the old node is transfered to this node and move all keys greater than the new key one to the right
-            this.keys[i + 1] = this.keys[i];
-        }
-
-        this.keys[value] = node.keys[this.minChildren - 1];
-        node.keys.splice(this.minChildren - 1, 1);
-    }
-
-    nodeNotFull(key) {
-        let i = this.keys.length - 1; // make i the pointer to the last element in array
-
-        if (this.leaf === true) {
-            // if node is a leaf
-            while (i >= 0 && this.keys[i] > key) {
-                // traverse keys in order to find location for the new key
-                this.keys[i + 1] = this.keys[i]; // moves ll keys greater than key one to the right
-                i--;
-            }
-            this.keys[i + 1] = key; // inserts key
-        } else {
-            while (i >= 0 && this.keys[i] > key) {
-                // find child which is supposed to get the new key
-                i--;
-            }
-            console.log(this.maxKeys);
-            console.log(this.minKeys);
-            if (this.children[i + 1].keys.length === this.maxKeys) {
-                // check if the child is full
-                this.splitNode(i + 1, this.children[i + 1]); // splits the child
-
-                if (this.keys[i + 1] < key) {
-                    // traverse keys to see which of the children is going to get the key
-                    i++;
-                }
-            }
-            this.children[i + 1].nodeNotFull(key);
-        }
     }
 
     addChild(node, position) {
