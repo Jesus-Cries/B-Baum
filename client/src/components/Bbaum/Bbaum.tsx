@@ -38,22 +38,12 @@ interface Props {}
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
     let myTree: Tree = new Tree(3);
-    let tempTreeAsArrayForInitialization: string[][] = [
-        ["10"],
-        ["3", "7"],
-        ["13", "19"],
-        ["1", "2"],
-        ["8", "9"],
-        ["11", "12"],
-        ["20", "21"],
-        ["4", "5", "6"],
-        ["14", "15", "16"],
-    ]; // TODO: Kann eig gelöscht werden. Deswegen steht am Anfang was drinne.
+    let tempTreeAsArrayForInitialization: string[][] = [];
 
     const [tree, setTree] = useState<Tree>(new Tree(3)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
-        // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
+        // Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(tempTreeAsArrayForInitialization.length).fill(
             new Array(1).fill(new Array(1).fill(" "))
         )
@@ -277,7 +267,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const traverserTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
-        console.log("Root level: " + level);
+        // console.log("Root level: " + level);
 
         let childIndex = 0;
         // Determines the childIndex for the current level
@@ -297,8 +287,6 @@ const Bbaum: React.FC<Props> = () => {
                 child.keys.forEach((key: string, index: number) => {
                     treeTopBottom[level][childIndex][index] = key;
                 });
-                // childIndex++;
-                // treeTopBottom[level][childIndex] = [""];
                 childIndex++;
             });
             // Add border element to indicate children end of the current root
@@ -330,8 +318,30 @@ const Bbaum: React.FC<Props> = () => {
         normalizeArray();
         drawLines();
 
-        // let treeTopBottom: string[][][];
         traverserTreeBreadthFirst(tree.root, 0);
+
+        treeTopBottom[3][0] = ["2", "1"];
+        treeTopBottom[3][1] = ["border", "1"];
+        treeTopBottom[3][2] = ["2", "4"];
+        treeTopBottom[3][3] = ["border", "1"];
+        treeTopBottom[3][4] = ["2", "4"];
+        treeTopBottom[3][5] = ["border", "1"];
+        treeTopBottom[3][6] = ["2", "4"];
+        treeTopBottom[3][7] = ["border", "1"];
+        treeTopBottom[3][8] = ["2", "4"];
+        treeTopBottom[3][9] = ["border", "1"];
+        treeTopBottom[3][10] = ["2", "4"];
+        treeTopBottom[3][11] = ["border", "1"];
+        // treeTopBottom[3][12] = ["2", "4"];
+        // treeTopBottom[3][13] = ["border", "1"];
+        // treeTopBottom[3][14] = ["2", "4"];
+        // treeTopBottom[3][15] = ["border", "1"];
+        // treeTopBottom[3][16] = ["2", "4"];
+        // treeTopBottom[3][17] = ["border", "1"];
+        // treeTopBottom[3][18] = ["2", "4"];
+        // treeTopBottom[3][19] = ["border", "1"];
+
+        normalizeArray();
         console.log("Weird stuff");
         treeTopBottom.forEach((element) => {
             console.log(element);
@@ -387,6 +397,7 @@ const Bbaum: React.FC<Props> = () => {
                     }
 
                     // Apply appropriate scaling factor to Grids
+                    // FIXME: When levelSplit.length = 5 or more the result is bad
                     let scaling: number = 12;
                     if (levelSplit.length != 0) {
                         scaling = 12 / levelSplit.length;
