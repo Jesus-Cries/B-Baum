@@ -9,7 +9,6 @@ import Control from "../../components/Control/Control";
 
 import { Tree } from "./Tree";
 import { TreeNode } from "./TreeNode";
-import { forEachLeadingCommentRange } from "typescript";
 
 const useStyles = makeStyles({
     root: {
@@ -40,7 +39,7 @@ const Bbaum: React.FC<Props> = () => {
     let myTree: Tree = new Tree(3);
     let tempTreeAsArrayForInitialization: string[][] = [];
 
-    const [tree, setTree] = useState<Tree>(new Tree(3)); // Der tatsächliche Baum
+    const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
@@ -61,8 +60,10 @@ const Bbaum: React.FC<Props> = () => {
 
     const updateTree = () => {
         traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(traverserTreeBreadthFirst(tree.root, 0));
         setTreeAsArray(treeTopBottom);
     };
+
     const drawLines = () => {
         const canvas: HTMLCanvasElement | null = document.getElementById(
             "canvas"
@@ -84,14 +85,12 @@ const Bbaum: React.FC<Props> = () => {
 
     const insert = (key: number) => {
         let tempTree: Tree = tree;
-        tempTree.insertTest(key);
+        tempTree.insert(key);
         console.log("Inserted: " + key);
-        // @ts-ignore
-        // console.log(tempTree);
+        console.log(tree);
         tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
-
         updateTree();
     };
 
@@ -109,13 +108,14 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.delete(key);
 
         setTree(tempTree);
-        console.log("Delete");
         updateTree();
+        console.log("Delete");
     };
 
     const reset = () => {
         myTree.root = null;
         tree.root = null;
+        updateTree();
     };
 
     const changeOrder = () => {};
@@ -123,34 +123,11 @@ const Bbaum: React.FC<Props> = () => {
     const createTree = () => {
         let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
-        // for (let i = 0; i < 11; i++) {
-        //     let rndInt = Math.floor(Math.random() * 500) + 1;
-        //     console.log(rndInt);
-        //     tempTree.insertTest(rndInt);
-        // }
-        tempTree.insertTest(10);
-        tempTree.insertTest(20);
-        tempTree.insertTest(5);
-        tempTree.insertTest(8);
-        tempTree.insertTest(12);
-        tempTree.insertTest(17);
-        tempTree.insertTest(60);
-        tempTree.insertTest(11);
-        tempTree.insertTest(13);
-        tempTree.insertTest(14);
-        tempTree.insertTest(15);
-        // tempTree.insertTest(40);
-
-        // tempTree.insertTest(16);
-        // tempTree.insertTest(18);
-        // tempTree.insertTest(19);
-
-        console.log(tempTree);
         tempTree.traverse();
 
-        console.log("------- DELETE -------");
+        // console.log("------- DELETE -------");
 
-        let testCase = 20;
+        let testCase = 0;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
 
         switch (testCase) {
@@ -208,14 +185,14 @@ const Bbaum: React.FC<Props> = () => {
             // Expected result: 10 --> - 7 - 17 - --> - 5 - 8 - 12 - 20 -
             case 9: // Forces merging of parent with child
                 tempTree.delete(60);
-                tempTree.insertTest(7);
+                tempTree.insert(7);
                 break;
             default:
                 break;
         }
 
-        console.log(tempTree);
-        console.log("        " + tempTree.root?.keys);
+        // console.log(tempTree);
+        // console.log("        " + tempTree.root?.keys);
 
         let childrenKeys = "    - ";
         tempTree.root?.children.forEach((child: TreeNode) => {
@@ -223,23 +200,24 @@ const Bbaum: React.FC<Props> = () => {
             childrenKeys += child.keys + " - ";
             childrenKeys += "|";
         });
-        console.log(childrenKeys);
+        // console.log(childrenKeys);
 
-        let grandchildrenKeys = "- ";
+        let grandchildrenKeys = "| - ";
         tempTree.root?.children.forEach((child: TreeNode) => {
             child.children.forEach((grandchild) => {
                 grandchildrenKeys += "|";
                 grandchildrenKeys += grandchild.keys + " - ";
                 grandchildrenKeys += "|";
             });
+            grandchildrenKeys += "| ";
         });
-        console.log(grandchildrenKeys);
+        // console.log(grandchildrenKeys);
 
         // myTree.traverse();
 
         myTree = tempTree;
         setTree(tempTree);
-        console.log(myTree);
+        // console.log(myTree);
     };
 
     // Save tree from top to bottom as numbers
@@ -343,8 +321,9 @@ const Bbaum: React.FC<Props> = () => {
 
         normalizeArray();
         console.log("Weird stuff");
+        // console.log("Weird stuff");
         treeTopBottom.forEach((element) => {
-            console.log(element);
+            // console.log(element);
         });
 
         setTreeAsArray(treeTopBottom);
@@ -353,6 +332,10 @@ const Bbaum: React.FC<Props> = () => {
         //     console.log("Test print Nodes: " + item);
         // });
     }, []); // Wird zu Beginn einmal ausgeführt
+
+    useEffect(() => {
+        updateTree();
+    }, [tree]);
 
     return (
         <Box className={classes.root}>
