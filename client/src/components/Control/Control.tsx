@@ -82,22 +82,25 @@ const Control: React.FC<Props> = ({
                     let csvText: string | ArrayBuffer = reader.result;
                     if (typeof csvText === "string") {
                         let lines = csvText.split(/\r?\n/);
-                        lines.forEach(function (item, index) {
-                            if (typeof insertionTempo === "number") {
-                                setTimeout(function () {}, insertionTempo);
-                            }
-                            switch (item.split(",")[0]) {
-                                case "i":
-                                    //console.log(parseInt(item.split(",")[1]));
-                                    insert(parseInt(item.split(",")[1]));
-                                    break;
-                                case "d":
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-                        console.log(lines);
+                        let i = 0;
+                        if (typeof insertionTempo === "number") {
+                            let interval = setInterval(function () {
+                                switch (lines[i].split(",")[0]) {
+                                    case "i":
+                                        insert(parseInt(lines[i].split(",")[1]));
+                                        break;
+                                    case "d":
+                                        remove(parseInt(lines[i].split(",")[1]));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                i++;
+                                if (i === lines.length) {
+                                    clearInterval(interval);
+                                }
+                            }, insertionTempo);
+                        }
                     }
                 }
             };
@@ -122,14 +125,18 @@ const Control: React.FC<Props> = ({
                 let endLoop = Math.floor(
                     Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
                 );
+                if (endLoop == 0) {
+                    endLoop = 1;
+                }
                 console.log(endLoop);
                 for (let i = 0; i < endLoop; i++) {
                     console.log("rte");
                     if (typeof insertionTempo === "number") {
-                        setTimeout(function () {}, insertionTempo);
+                        setTimeout(function () {
+                            insert(Math.floor(Math.random() * 100) + 1);
+                            console.log("inserting");
+                        }, insertionTempo);
                     }
-                    console.log("inserting");
-                    insert(Math.floor(Math.random() * 100) + 1);
                 }
             } else {
                 alert("False limits");
@@ -180,15 +187,25 @@ const Control: React.FC<Props> = ({
         }
     };
 
-    const handleTempo = (
-        event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
-    ) => {
-        setInsertionTempo(event.target.value as number);
+    const handleReset = () => {
+        reset();
+    };
+
+    //const handleTempo = (
+    //    event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
+    //) => {
+    //    setInsertionTempo(event.target.value as number);
+    //};
+
+    const testSpeed = (value: number) => {
+        setInsertionTempo(value);
+        return value.toString();
     };
 
     useEffect(() => {
         console.log(selectedFile);
         parseCSV(selectedFile);
+        //changeTempo(insertionTempo);
     }, [selectedFile]);
 
     // @ts-ignore
@@ -261,15 +278,17 @@ const Control: React.FC<Props> = ({
                 <Button className={classes.button} variant="contained" onClick={changeOrder}>
                     Change Order
                 </Button>
-                <Button className={classes.button} variant="contained" onClick={reset}>
+                <Button className={classes.button} variant="contained" onClick={handleReset}>
                     Reset
                 </Button>
                 <Slider
                     className={classes.slider}
-                    min={0}
-                    max={1000}
-                    onChange={(_, newValue) => setInsertionTempo(newValue)}
-                    onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
+                    min={1000}
+                    step={100}
+                    max={5000}
+                    //onChange={(_, newValue) => setInsertionTempo(newValue)}
+                    //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
+                    getAriaValueText={testSpeed}
                 />
             </Paper>
         </Box>
