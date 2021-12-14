@@ -21,7 +21,7 @@ export class TreeNode {
                 this.children[i].traverse();
             }
             if (this.keys[i]) {
-                console.log(this.keys[i]);
+                // console.log(this.keys[i]);
                 array.push(this.keys[i]);
             }
         }
@@ -32,7 +32,7 @@ export class TreeNode {
             this.children[i].traverse();
         }
 
-        console.log(array);
+        // console.log(array);
     }
 
     find(key) {
@@ -62,7 +62,7 @@ export class TreeNode {
     }
 
     addChild(node, position) {
-        console.log(this);
+        // console.log(this);
         this.children.splice(position, 0, node);
         node.parent = this;
     }

@@ -148,10 +148,10 @@ const Bbaum: React.FC<Props> = () => {
     const createTree = () => {
         let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
-        console.log(tempTree);
+        // console.log(tempTree);
         tempTree.traverse();
 
-        console.log("------- DELETE -------");
+        // console.log("------- DELETE -------");
 
         let testCase = 0;
         // Base: 10, 17 --> - 5,8 - 12 - 20,60
@@ -217,8 +217,8 @@ const Bbaum: React.FC<Props> = () => {
                 break;
         }
 
-        console.log(tempTree);
-        console.log("        " + tempTree.root?.keys);
+        // console.log(tempTree);
+        // console.log("        " + tempTree.root?.keys);
 
         let childrenKeys = "    - ";
         tempTree.root?.children.forEach((child: TreeNode) => {
@@ -226,7 +226,7 @@ const Bbaum: React.FC<Props> = () => {
             childrenKeys += child.keys + " - ";
             childrenKeys += "|";
         });
-        console.log(childrenKeys);
+        // console.log(childrenKeys);
 
         let grandchildrenKeys = "| - ";
         tempTree.root?.children.forEach((child: TreeNode) => {
@@ -237,13 +237,13 @@ const Bbaum: React.FC<Props> = () => {
             });
             grandchildrenKeys += "| ";
         });
-        console.log(grandchildrenKeys);
+        // console.log(grandchildrenKeys);
 
         // myTree.traverse();
 
         myTree = tempTree;
         setTree(tempTree);
-        console.log(myTree);
+        // console.log(myTree);
     };
 
     // Save tree from top to bottom as numbers
@@ -271,7 +271,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const traverserTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
-        console.log("Root level: " + level);
+        // console.log("Root level: " + level);
 
         let childIndex = 0;
         // Determines the childIndex for the current level
@@ -324,9 +324,9 @@ const Bbaum: React.FC<Props> = () => {
 
         // let treeTopBottom: string[][][];
         traverserTreeBreadthFirst(tree.root, 0);
-        console.log("Weird stuff");
+        // console.log("Weird stuff");
         treeTopBottom.forEach((element) => {
-            console.log(element);
+            // console.log(element);
         });
 
         setTreeAsArray(treeTopBottom);
