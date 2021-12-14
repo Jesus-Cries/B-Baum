@@ -187,11 +187,15 @@ const Control: React.FC<Props> = ({
         }
     };
 
-    const handleTempo = (
-        event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
-    ) => {
-        setInsertionTempo(event.target.value as number);
+    const handleReset = () => {
+        reset();
     };
+
+    //const handleTempo = (
+    //    event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
+    //) => {
+    //    setInsertionTempo(event.target.value as number);
+    //};
 
     const testSpeed = (value: number) => {
         setInsertionTempo(value);
@@ -202,7 +206,7 @@ const Control: React.FC<Props> = ({
         console.log(selectedFile);
         parseCSV(selectedFile);
         //changeTempo(insertionTempo);
-    }, [selectedFile, insertionTempo]);
+    }, [selectedFile]);
 
     // @ts-ignore
     return (
@@ -274,7 +278,7 @@ const Control: React.FC<Props> = ({
                 <Button className={classes.button} variant="contained" onClick={changeOrder}>
                     Change Order
                 </Button>
-                <Button className={classes.button} variant="contained" onClick={reset}>
+                <Button className={classes.button} variant="contained" onClick={handleReset}>
                     Reset
                 </Button>
                 <Slider

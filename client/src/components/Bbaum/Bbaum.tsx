@@ -9,7 +9,6 @@ import Control from "../../components/Control/Control";
 
 import { Tree } from "./Tree";
 import { TreeNode } from "./TreeNode";
-import { forEachLeadingCommentRange } from "typescript";
 
 const useStyles = makeStyles({
     root: {
@@ -84,8 +83,10 @@ const Bbaum: React.FC<Props> = () => {
 
     const updateTree = () => {
         traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(traverserTreeBreadthFirst(tree.root, 0));
         setTreeAsArray(treeTopBottom);
     };
+
     const drawLines = () => {
         const canvas: HTMLCanvasElement | null = document.getElementById(
             "canvas"
@@ -109,7 +110,7 @@ const Bbaum: React.FC<Props> = () => {
         let tempTree: Tree = tree;
         tempTree.insert(key);
         console.log("Inserted: " + key);
-        // @ts-ignore
+        console.log(tree);
         tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
@@ -137,10 +138,7 @@ const Bbaum: React.FC<Props> = () => {
     const reset = () => {
         myTree.root = null;
         tree.root = null;
-    };
-
-    const changeTempo = (tempo: number) => {
-        //setTempo(tempo);
+        updateTree();
     };
 
     const changeOrder = () => {};
@@ -148,7 +146,6 @@ const Bbaum: React.FC<Props> = () => {
     const createTree = () => {
         let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
 
-        // console.log(tempTree);
         tempTree.traverse();
 
         // console.log("------- DELETE -------");
@@ -335,6 +332,10 @@ const Bbaum: React.FC<Props> = () => {
         //     console.log("Test print Nodes: " + item);
         // });
     }, []); // Wird zu Beginn einmal ausgeführt
+
+    useEffect(() => {
+        updateTree();
+    }, [tree]);
 
     return (
         <Box className={classes.root}>

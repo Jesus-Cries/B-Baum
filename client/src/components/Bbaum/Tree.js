@@ -31,6 +31,7 @@ export class Tree {
 
     insert(key) {
         let currentRoot = this.root;
+
         if (currentRoot === null) {
             // Check if tree is empty
             this.root = new TreeNode(this.maxChildren, true, null); // make new node as leaf
@@ -38,14 +39,16 @@ export class Tree {
         } else if (currentRoot.numberOfKeys === this.maxKeys) {
             // If root is full create a new node to become the root
             // Make the old root a child of the new Root
-            let temp = new TreeNode(this.root.maxChildren, false, null);
-            temp.tree = this;
-            this.root = temp;
-            temp.addChild(currentRoot, 0);
-            this.splitNode(currentRoot, temp, 1);
+            let newRoot = new TreeNode(this.root.maxChildren, false, null);
+            newRoot.tree = this;
+            this.root = newRoot;
+            newRoot.addChild(currentRoot, 0);
+            this.splitNode(currentRoot, newRoot, 1);
+
             // After split add key
-            this.insertNotFullNode(this.root, parseInt(key));
+            this.insertNotFullNode(newRoot, parseInt(key));
         } else {
+            // Else just insert the value into next best node
             this.insertNotFullNode(currentRoot, parseInt(key));
         }
     }
@@ -53,6 +56,7 @@ export class Tree {
     splitNode(child, parent, pos) {
         // Create a new child
         let newChild = new TreeNode(this.maxChildren, child.leaf, parent);
+
         // Give the new child the keys from the old child
         for (let k = 1; k < this.minChildren; k++) {
             newChild.addValue(child.removeValue(this.minChildren));
@@ -64,8 +68,10 @@ export class Tree {
                 newChild.addChild(child.deleteChild(this.minChildren), k - 1);
             }
         }
+
         // Give parent the new child
         parent.addChild(newChild, pos);
+
         // Give parent the key
         parent.addValue(child.removeValue(this.minChildren - 1));
         parent.leaf = false;
@@ -90,6 +96,7 @@ export class Tree {
             //inserted = true;
             //node.children[temp].addValue(key);
             this.splitNode(node.children[currentKeyIndex], node, currentKeyIndex + 1);
+
             // After splitting the node check to which child the key should be added
             if (key > node.keys[currentKeyIndex]) {
                 currentKeyIndex++;
