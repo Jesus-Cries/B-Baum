@@ -82,24 +82,25 @@ const Control: React.FC<Props> = ({
                     let csvText: string | ArrayBuffer = reader.result;
                     if (typeof csvText === "string") {
                         let lines = csvText.split(/\r?\n/);
-                        lines.forEach(function (item, index) {
-                            if (typeof insertionTempo === "number") {
-                                setTimeout(function () {
-                                    switch (item.split(",")[0]) {
-                                        case "i":
-                                            //console.log(parseInt(item.split(",")[1]));
-                                            insert(parseInt(item.split(",")[1]));
-                                            //updateTree();
-                                            break;
-                                        case "d":
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }, insertionTempo);
-                            }
-                        });
-                        console.log(lines);
+                        let i = 0;
+                        if (typeof insertionTempo === "number") {
+                            let interval = setInterval(function () {
+                                switch (lines[i].split(",")[0]) {
+                                    case "i":
+                                        insert(parseInt(lines[i].split(",")[1]));
+                                        break;
+                                    case "d":
+                                        remove(parseInt(lines[i].split(",")[1]));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                i++;
+                                if (i === lines.length) {
+                                    clearInterval(interval);
+                                }
+                            }, insertionTempo);
+                        }
                     }
                 }
             };
@@ -131,10 +132,11 @@ const Control: React.FC<Props> = ({
                 for (let i = 0; i < endLoop; i++) {
                     console.log("rte");
                     if (typeof insertionTempo === "number") {
-                        setTimeout(function () {}, insertionTempo);
+                        setTimeout(function () {
+                            insert(Math.floor(Math.random() * 100) + 1);
+                            console.log("inserting");
+                        }, insertionTempo);
                     }
-                    console.log("inserting");
-                    insert(Math.floor(Math.random() * 100) + 1);
                 }
             } else {
                 alert("False limits");
