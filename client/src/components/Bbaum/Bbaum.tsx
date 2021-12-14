@@ -59,8 +59,8 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const updateTree = () => {
-        traverserTreeBreadthFirst(tree.root, 0);
-        setTreeAsArray(traverserTreeBreadthFirst(tree.root, 0));
+        traverseTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(traverseTreeBreadthFirst(tree.root, 0));
         setTreeAsArray(treeTopBottom);
     };
 
@@ -125,6 +125,20 @@ const Bbaum: React.FC<Props> = () => {
 
         tempTree.traverse();
 
+        tempTree.insert(2);
+        tempTree.insert(3);
+        tempTree.insert(4);
+        tempTree.insert(5);
+        tempTree.insert(6);
+        tempTree.insert(7);
+        tempTree.insert(8);
+        tempTree.insert(9);
+        tempTree.insert(10);
+        tempTree.insert(11);
+        tempTree.insert(12);
+        tempTree.insert(13);
+        tempTree.insert(14);
+        tempTree.insert(15);
         // console.log("------- DELETE -------");
 
         let testCase = 0;
@@ -136,7 +150,6 @@ const Bbaum: React.FC<Props> = () => {
                 tempTree.delete(8);
                 tempTree.delete(12);
                 break;
-
             // Expected result: 8, 17 --> - 5 - 10 - 20,60 -
             case 2: // Forces theft from left sibling
                 tempTree.delete(12);
@@ -224,7 +237,7 @@ const Bbaum: React.FC<Props> = () => {
     let treeTopBottom: string[][][] = [];
     treeTopBottom[0] = [[]];
 
-    const traverserTreeBreadthFirst = (root: TreeNode | null, level: number) => {
+    const traverseTreeBreadthFirst = (root: TreeNode | null, level: number) => {
         if (root != null) {
             let childIndex = 0;
             // Initialize current tree level in array
@@ -237,14 +250,14 @@ const Bbaum: React.FC<Props> = () => {
         }
         treeTopBottom[1] = [];
 
-        traverserTreeBreadthFirstRecursion(root, 1);
+        traverseTreeBreadthFirstRecursion(root, 1);
 
         normalizeArray();
 
         return treeTopBottom;
     };
 
-    const traverserTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
+    const traverseTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
         // console.log("Root level: " + level);
 
         let childIndex = 0;
@@ -280,7 +293,7 @@ const Bbaum: React.FC<Props> = () => {
                     // Define undefined level
                     treeTopBottom[level + 1] = [];
                 }
-                traverserTreeBreadthFirstRecursion(child, level + 1);
+                traverseTreeBreadthFirstRecursion(child, level + 1);
             });
         }
     };
@@ -296,20 +309,20 @@ const Bbaum: React.FC<Props> = () => {
         normalizeArray();
         drawLines();
 
-        traverserTreeBreadthFirst(tree.root, 0);
+        traverseTreeBreadthFirst(tree.root, 0);
 
-        treeTopBottom[3][0] = ["2", "1"];
-        treeTopBottom[3][1] = ["border", "1"];
-        treeTopBottom[3][2] = ["2", "4"];
-        treeTopBottom[3][3] = ["border", "1"];
-        treeTopBottom[3][4] = ["2", "4"];
-        treeTopBottom[3][5] = ["border", "1"];
-        treeTopBottom[3][6] = ["2", "4"];
-        treeTopBottom[3][7] = ["border", "1"];
-        treeTopBottom[3][8] = ["2", "4"];
-        treeTopBottom[3][9] = ["border", "1"];
-        treeTopBottom[3][10] = ["2", "4"];
-        treeTopBottom[3][11] = ["border", "1"];
+        // treeTopBottom[3][0] = ["2", "1"];
+        // treeTopBottom[3][1] = ["border", "1"];
+        // treeTopBottom[3][2] = ["2", "4"];
+        // treeTopBottom[3][3] = ["border", "1"];
+        // treeTopBottom[3][4] = ["2", "4"];
+        // treeTopBottom[3][5] = ["border", "1"];
+        // treeTopBottom[3][6] = ["2", "4"];
+        // treeTopBottom[3][7] = ["border", "1"];
+        // treeTopBottom[3][8] = ["2", "4"];
+        // treeTopBottom[3][9] = ["border", "1"];
+        // treeTopBottom[3][10] = ["2", "4"];
+        // treeTopBottom[3][11] = ["border", "1"];
         // treeTopBottom[3][12] = ["2", "4"];
         // treeTopBottom[3][13] = ["border", "1"];
         // treeTopBottom[3][14] = ["2", "4"];
