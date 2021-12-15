@@ -93,6 +93,8 @@ const Control: React.FC<Props> = ({
                     break;
             }
 
+            console.log(insertionTempo);
+
             if (!stop) {
                 setTimeout(() => {
                     insertNextLine(arr);
@@ -322,9 +324,10 @@ const Control: React.FC<Props> = ({
                 </Button>
                 <Slider
                     className={classes.slider}
-                    min={1000}
+                    min={0}
                     step={100}
                     max={5000}
+                    defaultValue={3000}
                     //onChange={(_, newValue) => setInsertionTempo(newValue)}
                     //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
                     getAriaValueText={testSpeed}

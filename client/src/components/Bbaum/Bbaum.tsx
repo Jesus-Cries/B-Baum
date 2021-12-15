@@ -51,6 +51,7 @@ const Bbaum: React.FC<Props> = () => {
     //      10        |    (5,10)   |      t = 5
     let myTree: Tree = new Tree(4);
 
+    const [force, setForce] = useState<number>(1);
     const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
     const [order, setOrder] = useState(tree.maxChildren);
@@ -58,6 +59,11 @@ const Bbaum: React.FC<Props> = () => {
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
+
+    const forceUpdate = () => {
+        let newForce: number = Math.random();
+        setForce(newForce);
+    };
 
     const normalizeArray = () => {
         treeTopBottom.forEach((level) => {
@@ -82,10 +88,10 @@ const Bbaum: React.FC<Props> = () => {
         let tempTree: Tree = tree;
         tempTree.insert(key);
         console.log("Inserted: " + key);
-        tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
         updateTree();
+        forceUpdate();
     };
 
     const search = (key: number) => {
@@ -218,12 +224,14 @@ const Bbaum: React.FC<Props> = () => {
 
     useEffect(() => {
         setNodeSize(tree.maxChildren);
+        console.log("Tree has changed --> NodeSize was changed");
     }, [tree]);
 
     useEffect(() => {
+        console.log("Force update was called");
         traverserTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
-    }, [nodeSize]);
+    }, [force]);
 
     return (
         <Box className={classes.root}>
