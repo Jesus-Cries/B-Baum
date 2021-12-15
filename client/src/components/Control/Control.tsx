@@ -4,7 +4,7 @@ import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { ButtonGroup, Grid, Paper, TextField } from "@material-ui/core";
+import { ButtonGroup, Paper, TextField } from "@material-ui/core";
 
 // @ts-ignore
 const useStyles = makeStyles({
