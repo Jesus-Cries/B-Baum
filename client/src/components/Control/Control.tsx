@@ -74,7 +74,23 @@ const Control: React.FC<Props> = ({
         setSelectedFile(event.target.files[0]);
     };
 
-    const insertNextLine = (arr: string[]) => {
+    const parseCSV = (file: any) => {
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                if (reader.result != null) {
+                    let csvText: string | ArrayBuffer = reader.result;
+                    if (typeof csvText === "string") {
+                        let lines = csvText.split(/\r?\n/);
+                        treatNextLine(lines);
+                    }
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+
+    const treatNextLine = (arr: string[]) => {
         let stop: boolean = false;
 
         if (typeof insertionTempo === "number") {
@@ -88,34 +104,16 @@ const Control: React.FC<Props> = ({
                     remove(parseInt(currentLine.split(",")[1]));
                     break;
                 default:
-                    console.log("Switch default");
+                    console.log("Unknown command");
                     stop = true;
                     break;
             }
 
-            console.log(insertionTempo);
-
             if (!stop) {
                 setTimeout(() => {
-                    insertNextLine(arr);
+                    treatNextLine(arr);
                 }, insertionTempo);
             }
-        }
-    };
-
-    const parseCSV = (file: any) => {
-        if (file) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                if (reader.result != null) {
-                    let csvText: string | ArrayBuffer = reader.result;
-                    if (typeof csvText === "string") {
-                        let lines = csvText.split(/\r?\n/);
-                        insertNextLine(lines);
-                    }
-                }
-            };
-            reader.readAsText(file);
         }
     };
 
