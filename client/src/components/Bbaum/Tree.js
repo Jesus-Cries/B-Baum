@@ -1,6 +1,4 @@
 import { TreeNode } from "./TreeNode";
-import { runInNewContext } from "vm";
-import { flatten } from "express/lib/utils";
 
 export class Tree {
     constructor(degree) {

@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Grid, Paper, TextField } from "@material-ui/core";
-import { TreeNode } from "../Bbaum/TreeNode";
 
 // @ts-ignore
 const useStyles = makeStyles({
