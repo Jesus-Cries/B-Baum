@@ -95,7 +95,6 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Search");
     };
 
-    // Couldn't name this method "delete" as that name seems to be already used by React
     // FIXME: Algorithm doesnt reorder the nodes properly
     const remove = (key: number) => {
         let tempTree: Tree = tree;
