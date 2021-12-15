@@ -4,8 +4,7 @@ import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { ButtonGroup, Grid, Paper, TextField } from "@material-ui/core";
-import { TreeNode } from "../Bbaum/TreeNode";
+import { ButtonGroup, Paper, TextField } from "@material-ui/core";
 
 // @ts-ignore
 const useStyles = makeStyles({
@@ -154,7 +153,7 @@ const Control: React.FC<Props> = ({
                 let endLoop = Math.floor(
                     Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
                 );
-                if (endLoop == 0) {
+                if (endLoop === 0) {
                     endLoop = 1;
                 }
                 console.log(endLoop);

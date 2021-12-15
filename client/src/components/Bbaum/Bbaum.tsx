@@ -305,7 +305,7 @@ const Bbaum: React.FC<Props> = () => {
                 childIndex++;
             });
             // Add border element to indicate children end of the current root
-            if (treeTopBottom[level].length != 0) {
+            if (treeTopBottom[level].length !== 0) {
                 treeTopBottom[level][childIndex] = ["border"];
             }
 
@@ -369,62 +369,56 @@ const Bbaum: React.FC<Props> = () => {
             />
 
             {treeAsArray.map((level) => {
-                {
-                    let hasBorder = false;
+                let hasBorder = false;
 
-                    let levelCopy: string[][] = level;
-                    let levelSplit: string[][][] = [];
-                    let childrenIndex: number = 0;
-                    let startIndex: number = 0;
-                    let endIndex: number = 0;
+                let levelCopy: string[][] = level;
+                let levelSplit: string[][][] = [];
+                let childrenIndex: number = 0;
+                let startIndex: number = 0;
+                let endIndex: number = 0;
 
-                    level.forEach((node) => {
-                        levelSplit[childrenIndex] = [[]];
-                        if (node[0] == "border") {
-                            levelSplit[childrenIndex] = levelCopy.slice(startIndex, endIndex);
-                            childrenIndex++;
+                level.forEach((node) => {
+                    levelSplit[childrenIndex] = [[]];
+                    if (node[0] === "border") {
+                        levelSplit[childrenIndex] = levelCopy.slice(startIndex, endIndex);
+                        childrenIndex++;
 
-                            startIndex = endIndex;
-                            // Skips border node
-                            startIndex++;
+                        startIndex = endIndex;
+                        // Skips border node
+                        startIndex++;
 
-                            hasBorder = true;
-                        }
-                        endIndex++;
-                    });
-
-                    // Adds whole level to levelSplit because level without borders wont be added in loop
-                    if (!hasBorder) {
-                        levelSplit[childrenIndex] = levelCopy;
+                        hasBorder = true;
                     }
+                    endIndex++;
+                });
 
-                    // Apply appropriate scaling factor to Grids
-                    let scaling: number = 12;
-                    if (levelSplit.length != 0) {
-                        scaling = 12 / levelSplit.length;
-                        scaling = Math.round(scaling);
-                    }
-                    let scalingConvert: GridSize = scaling as GridSize;
-
-                    // Return Grid for current level
-                    return (
-                        <Grid className={classes.outerContainer} container>
-                            {levelSplit.map((element) => {
-                                return (
-                                    <Grid
-                                        className={classes.container}
-                                        xs={scalingConvert}
-                                        container
-                                    >
-                                        {element.map((node) => {
-                                            return <Node values={node} />;
-                                        })}
-                                    </Grid>
-                                );
-                            })}
-                        </Grid>
-                    );
+                // Adds whole level to levelSplit because level without borders wont be added in loop
+                if (!hasBorder) {
+                    levelSplit[childrenIndex] = levelCopy;
                 }
+
+                // Apply appropriate scaling factor to Grids
+                let scaling: number = 12;
+                if (levelSplit.length !== 0) {
+                    scaling = 12 / levelSplit.length;
+                    scaling = Math.round(scaling);
+                }
+                let scalingConvert: GridSize = scaling as GridSize;
+
+                // Return Grid for current level
+                return (
+                    <Grid className={classes.outerContainer} container>
+                        {levelSplit.map((element) => {
+                            return (
+                                <Grid className={classes.container} xs={scalingConvert} container>
+                                    {element.map((node) => {
+                                        return <Node values={node} />;
+                                    })}
+                                </Grid>
+                            );
+                        })}
+                    </Grid>
+                );
             })}
         </Box>
     );
