@@ -74,33 +74,34 @@ const Control: React.FC<Props> = ({
         setSelectedFile(event.target.files[0]);
     };
 
-    // TODO: Leons coole Version ggf. löschen
-    // const insertNextLine = (arr: string[]) => {
-    //     let stop: boolean = false;
+    const insertNextLine = (arr: string[]) => {
+        let stop: boolean = false;
 
-    //     if (typeof insertionTempo === "number") {
-    //         let currentLine: string = arr.splice(0, 1)[0];
-    //         console.log("CurrentLine: " + currentLine);
-    //         switch (currentLine.split(",")[0]) {
-    //             case "i":
-    //                 insert(parseInt(currentLine.split(",")[1]));
-    //                 break;
-    //             // case "d":
-    //             //     remove(parseInt(arr[i].split(",")[1]));
-    //             //     break;
-    //             default:
-    //                 console.log("Switch default");
-    //                 stop = true;
-    //                 break;
-    //         }
+        if (typeof insertionTempo === "number") {
+            let currentLine: string = arr.splice(0, 1)[0];
+            console.log("CurrentLine: " + currentLine);
+            switch (currentLine.split(",")[0]) {
+                case "i":
+                    insert(parseInt(currentLine.split(",")[1]));
+                    break;
+                case "d":
+                    remove(parseInt(currentLine.split(",")[1]));
+                    break;
+                default:
+                    console.log("Switch default");
+                    stop = true;
+                    break;
+            }
 
-    //         if (!stop) {
-    //             setTimeout(() => {
-    //                 insertNextLine(arr);
-    //             }, 3000);
-    //         }
-    //     }
-    // };
+            console.log(insertionTempo);
+
+            if (!stop) {
+                setTimeout(() => {
+                    insertNextLine(arr);
+                }, insertionTempo);
+            }
+        }
+    };
 
     const parseCSV = (file: any) => {
         if (file) {
@@ -110,31 +111,14 @@ const Control: React.FC<Props> = ({
                     let csvText: string | ArrayBuffer = reader.result;
                     if (typeof csvText === "string") {
                         let lines = csvText.split(/\r?\n/);
-                        let i = 0;
-                        if (typeof insertionTempo === "number") {
-                            let interval = setInterval(function () {
-                                switch (lines[i].split(",")[0]) {
-                                    case "i":
-                                        insert(parseInt(lines[i].split(",")[1]));
-                                        break;
-                                    case "d":
-                                        remove(parseInt(lines[i].split(",")[1]));
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                i++;
-                                if (i === lines.length) {
-                                    clearInterval(interval);
-                                }
-                            }, insertionTempo);
-                        }
+                        insertNextLine(lines);
                     }
                 }
             };
             reader.readAsText(file);
         }
     };
+
     // Forwards click to input element
     const handleUpload = () => {
         inputFile.current.click();
@@ -281,17 +265,39 @@ const Control: React.FC<Props> = ({
                     className={classes.numberInput}
                     autoFocus
                     label="Value"
+                    value={amount}
                     onChange={handleTextChange}
                     inputProps={{ maxLength: 75 }}
                 />
                 <ButtonGroup>
-                    <Button className={classes.button} variant="contained" onClick={handleInsert}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleInsert();
+                            setAmount("");
+                        }}
+                    >
                         Insert
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={handleSearch}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleSearch();
+                            setAmount("");
+                        }}
+                    >
                         Search
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={handleRemove}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleRemove();
+                            setAmount("");
+                        }}
+                    >
                         Delete
                     </Button>
                 </ButtonGroup>
@@ -315,9 +321,10 @@ const Control: React.FC<Props> = ({
                 </Button>
                 <Slider
                     className={classes.slider}
-                    min={1000}
+                    min={0}
                     step={100}
                     max={5000}
+                    defaultValue={3000}
                     //onChange={(_, newValue) => setInsertionTempo(newValue)}
                     //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
                     getAriaValueText={testSpeed}
