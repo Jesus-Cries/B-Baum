@@ -64,6 +64,7 @@ const Bbaum: React.FC<Props> = () => {
 
     const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
+    const [order, setOrder] = useState(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(tempTreeAsArrayForInitialization.length).fill(
@@ -83,7 +84,6 @@ const Bbaum: React.FC<Props> = () => {
 
     const updateTree = () => {
         traverserTreeBreadthFirst(tree.root, 0);
-        setTreeAsArray(traverserTreeBreadthFirst(tree.root, 0));
         setTreeAsArray(treeTopBottom);
     };
 
@@ -110,7 +110,6 @@ const Bbaum: React.FC<Props> = () => {
         let tempTree: Tree = tree;
         tempTree.insert(key);
         console.log("Inserted: " + key);
-        console.log(tree);
         tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
@@ -129,7 +128,6 @@ const Bbaum: React.FC<Props> = () => {
     const remove = (key: number) => {
         let tempTree: Tree = tree;
         tempTree.delete(key);
-
         setTree(tempTree);
         updateTree();
         console.log("Delete");
@@ -141,7 +139,23 @@ const Bbaum: React.FC<Props> = () => {
         updateTree();
     };
 
-    const changeOrder = () => {};
+    const changeOrder = (order: number) => {
+        if (order < 4) order = 4;
+        let newOrder = Math.ceil(order / 2) * 2;
+        console.log(newOrder);
+        setOrder(newOrder);
+        let tempTree: Tree = new Tree(newOrder);
+        for (let i = 0; i < treeAsArray.length; i++) {
+            for (let j = 0; j < treeAsArray[i].length; j++) {
+                for (let k = 0; k < treeAsArray[i][j].length; k++) {
+                    tempTree.insert(treeAsArray[i][j][k]);
+                }
+            }
+        }
+        myTree = tempTree;
+        setTree(tempTree);
+        //updateTree();
+    };
 
     const createTree = () => {
         let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
@@ -334,8 +348,13 @@ const Bbaum: React.FC<Props> = () => {
     }, []); // Wird zu Beginn einmal ausgeführt
 
     useEffect(() => {
-        updateTree();
+        setNodeSize(tree.maxChildren);
     }, [tree]);
+
+    useEffect(() => {
+        traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+    }, [nodeSize]);
 
     return (
         <Box className={classes.root}>
@@ -344,7 +363,7 @@ const Bbaum: React.FC<Props> = () => {
                 insert={insert}
                 search={search}
                 remove={remove}
-                order={tree.minChildren}
+                order={order}
                 changeOrder={changeOrder}
                 reset={reset}
             />

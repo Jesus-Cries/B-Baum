@@ -62,7 +62,6 @@ export class TreeNode {
     }
 
     addChild(node, position) {
-        // console.log(this);
         this.children.splice(position, 0, node);
         node.parent = this;
     }
