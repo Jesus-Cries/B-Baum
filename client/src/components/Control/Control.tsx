@@ -75,6 +75,34 @@ const Control: React.FC<Props> = ({
         setSelectedFile(event.target.files[0]);
     };
 
+    // TODO: Leons coole Version ggf. löschen
+    // const insertNextLine = (arr: string[]) => {
+    //     let stop: boolean = false;
+
+    //     if (typeof insertionTempo === "number") {
+    //         let currentLine: string = arr.splice(0, 1)[0];
+    //         console.log("CurrentLine: " + currentLine);
+    //         switch (currentLine.split(",")[0]) {
+    //             case "i":
+    //                 insert(parseInt(currentLine.split(",")[1]));
+    //                 break;
+    //             // case "d":
+    //             //     remove(parseInt(arr[i].split(",")[1]));
+    //             //     break;
+    //             default:
+    //                 console.log("Switch default");
+    //                 stop = true;
+    //                 break;
+    //         }
+
+    //         if (!stop) {
+    //             setTimeout(() => {
+    //                 insertNextLine(arr);
+    //             }, 3000);
+    //         }
+    //     }
+    // };
+
     const parseCSV = (file: any) => {
         if (file) {
             let reader = new FileReader();
