@@ -157,106 +157,6 @@ const Bbaum: React.FC<Props> = () => {
         //updateTree();
     };
 
-    const createTree = () => {
-        let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
-
-        tempTree.traverse();
-
-        // console.log("------- DELETE -------");
-
-        let testCase = 0;
-        // Base: 10, 17 --> - 5,8 - 12 - 20,60
-
-        switch (testCase) {
-            // Expected result: 10, 20 --> - 5 - 17 - 60 -
-            case 1: // Forces theft from right sibling
-                tempTree.delete(8);
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 8, 17 --> - 5 - 10 - 20,60 -
-            case 2: // Forces theft from left sibling
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 17 --> - 10,12 - 20,60 -
-            case 3: // Forces merge with right sibling
-                tempTree.delete(5);
-                tempTree.delete(8);
-                break;
-
-            // Expected result: 17 --> - 5,10 - 60 -
-            case 4: // Forces merge with left sibling
-                tempTree.delete(8);
-                tempTree.delete(20);
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 8,17 --> - 5 - 12 - 20,60
-            case 5: // Forces theft from left child
-                tempTree.delete(10);
-                break;
-
-            // Expected result: 20 --> - 12 - 60 -
-            case 6: // Forces theft from right child
-                tempTree.delete(5);
-                tempTree.delete(8);
-                tempTree.delete(10);
-                tempTree.delete(17);
-                break;
-
-            // Expected result: 17 --> - 8,12 - 60 -
-            case 7: // Forces merge of left and right children
-                tempTree.delete(5);
-                tempTree.delete(20);
-                tempTree.delete(10);
-                break;
-
-            // Expected result: 10 --> - 8 - 12,60 -
-            case 8: // Forces merge of left and right children (Alternative)
-                tempTree.delete(5);
-                tempTree.delete(20);
-                tempTree.delete(17);
-                break;
-
-            // Expected result: 10 --> - 7 - 17 - --> - 5 - 8 - 12 - 20 -
-            case 9: // Forces merging of parent with child
-                tempTree.delete(60);
-                tempTree.insert(7);
-                break;
-            default:
-                break;
-        }
-
-        // console.log(tempTree);
-        // console.log("        " + tempTree.root?.keys);
-
-        let childrenKeys = "    - ";
-        tempTree.root?.children.forEach((child: TreeNode) => {
-            childrenKeys += "|";
-            childrenKeys += child.keys + " - ";
-            childrenKeys += "|";
-        });
-        // console.log(childrenKeys);
-
-        let grandchildrenKeys = "| - ";
-        tempTree.root?.children.forEach((child: TreeNode) => {
-            child.children.forEach((grandchild) => {
-                grandchildrenKeys += "|";
-                grandchildrenKeys += grandchild.keys + " - ";
-                grandchildrenKeys += "|";
-            });
-            grandchildrenKeys += "| ";
-        });
-        // console.log(grandchildrenKeys);
-
-        // myTree.traverse();
-
-        myTree = tempTree;
-        setTree(tempTree);
-        // console.log(myTree);
-    };
-
     // Save tree from top to bottom as numbers
     let treeTopBottom: string[][][] = [];
     treeTopBottom[0] = [[]];
@@ -329,7 +229,6 @@ const Bbaum: React.FC<Props> = () => {
     // in der render methode auf basis von bbaum das array rendern
     useEffect(() => {
         tree.traverse();
-        createTree();
         normalizeArray();
         drawLines();
 
