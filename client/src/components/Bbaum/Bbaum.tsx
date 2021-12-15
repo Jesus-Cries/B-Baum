@@ -291,7 +291,7 @@ const Bbaum: React.FC<Props> = () => {
                 childIndex++;
             });
             // Add border element to indicate children end of the current root
-            if (treeTopBottom[level].length != 0) {
+            if (treeTopBottom[level].length !== 0) {
                 treeTopBottom[level][childIndex] = ["border"];
             }
 
@@ -361,7 +361,7 @@ const Bbaum: React.FC<Props> = () => {
 
                     level.forEach((node) => {
                         levelSplit[childrenIndex] = [[]];
-                        if (node[0] == "border") {
+                        if (node[0] === "border") {
                             levelSplit[childrenIndex] = levelCopy.slice(startIndex, endIndex);
                             childrenIndex++;
 
@@ -381,7 +381,7 @@ const Bbaum: React.FC<Props> = () => {
 
                     // Apply appropriate scaling factor to Grids
                     let scaling: number = 12;
-                    if (levelSplit.length != 0) {
+                    if (levelSplit.length !== 0) {
                         scaling = 12 / levelSplit.length;
                         scaling = Math.round(scaling);
                     }
