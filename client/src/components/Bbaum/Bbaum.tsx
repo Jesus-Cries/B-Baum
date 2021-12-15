@@ -50,26 +50,13 @@ const Bbaum: React.FC<Props> = () => {
     //      9         |    (5,9)    |        –
     //      10        |    (5,10)   |      t = 5
     let myTree: Tree = new Tree(4);
-    let tempTreeAsArrayForInitialization: string[][] = [
-        ["10"],
-        ["3", "7"],
-        ["13", "19"],
-        ["1", "2"],
-        ["8", "9"],
-        ["11", "12"],
-        ["20", "21"],
-        ["4", "5", "6"],
-        ["14", "15", "16"],
-    ]; // TODO: Kann eig gelöscht werden. Deswegen steht am Anfang was drinne.
 
     const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
     const [order, setOrder] = useState(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
-        new Array(tempTreeAsArrayForInitialization.length).fill(
-            new Array(1).fill(new Array(1).fill(" "))
-        )
+        new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
 
     const normalizeArray = () => {
