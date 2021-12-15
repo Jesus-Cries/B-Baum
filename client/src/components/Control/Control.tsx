@@ -261,7 +261,6 @@ const Control: React.FC<Props> = ({
                 <TextField
                     id="lowerLimit"
                     className={classes.limitUpper}
-                    autoFocus
                     label="Lower Limit"
                     onChange={handleLowerLimit}
                     inputProps={{ maxLength: 75 }}
@@ -269,7 +268,6 @@ const Control: React.FC<Props> = ({
                 <TextField
                     id="upperLimit"
                     className={classes.limitLower}
-                    autoFocus
                     label="Upper Limit"
                     onChange={handleUpperLimit}
                     inputProps={{ maxLength: 75 }}
@@ -305,7 +303,6 @@ const Control: React.FC<Props> = ({
                 <TextField
                     id="upperLimit"
                     className={classes.limitLower}
-                    autoFocus
                     label="Order"
                     onChange={handleOrderChange}
                     inputProps={{ maxLength: 75 }}

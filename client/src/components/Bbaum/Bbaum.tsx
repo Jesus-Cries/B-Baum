@@ -140,7 +140,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const changeOrder = (order: number) => {
-        if (order < 4) order = 4;
+        if (order < 2) order = 2;
         let newOrder = Math.ceil(order / 2) * 2;
         console.log(newOrder);
         setOrder(newOrder);
