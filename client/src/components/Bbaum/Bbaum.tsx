@@ -50,26 +50,13 @@ const Bbaum: React.FC<Props> = () => {
     //      9         |    (5,9)    |        –
     //      10        |    (5,10)   |      t = 5
     let myTree: Tree = new Tree(4);
-    let tempTreeAsArrayForInitialization: string[][] = [
-        ["10"],
-        ["3", "7"],
-        ["13", "19"],
-        ["1", "2"],
-        ["8", "9"],
-        ["11", "12"],
-        ["20", "21"],
-        ["4", "5", "6"],
-        ["14", "15", "16"],
-    ]; // TODO: Kann eig gelöscht werden. Deswegen steht am Anfang was drinne.
 
     const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
     const [order, setOrder] = useState(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
-        new Array(tempTreeAsArrayForInitialization.length).fill(
-            new Array(1).fill(new Array(1).fill(" "))
-        )
+        new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
 
     const normalizeArray = () => {
@@ -85,21 +72,6 @@ const Bbaum: React.FC<Props> = () => {
     const updateTree = () => {
         traverserTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
-    };
-
-    const drawLines = () => {
-        const canvas: HTMLCanvasElement | null = document.getElementById(
-            "canvas"
-        ) as HTMLCanvasElement;
-        if (canvas) {
-            const context = canvas.getContext("2d");
-            context?.beginPath();
-            context?.moveTo(702, 172);
-            context?.lineTo(358, 273);
-            context!.lineWidth = 1;
-            context!.strokeStyle = "#777";
-            context?.stroke();
-        }
     };
 
     const random = () => {
@@ -123,7 +95,6 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Search");
     };
 
-    // Couldn't name this method "delete" as that name seems to be already used by React
     // FIXME: Algorithm doesnt reorder the nodes properly
     const remove = (key: number) => {
         let tempTree: Tree = tree;
@@ -155,106 +126,6 @@ const Bbaum: React.FC<Props> = () => {
         myTree = tempTree;
         setTree(tempTree);
         //updateTree();
-    };
-
-    const createTree = () => {
-        let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
-
-        tempTree.traverse();
-
-        // console.log("------- DELETE -------");
-
-        let testCase = 0;
-        // Base: 10, 17 --> - 5,8 - 12 - 20,60
-
-        switch (testCase) {
-            // Expected result: 10, 20 --> - 5 - 17 - 60 -
-            case 1: // Forces theft from right sibling
-                tempTree.delete(8);
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 8, 17 --> - 5 - 10 - 20,60 -
-            case 2: // Forces theft from left sibling
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 17 --> - 10,12 - 20,60 -
-            case 3: // Forces merge with right sibling
-                tempTree.delete(5);
-                tempTree.delete(8);
-                break;
-
-            // Expected result: 17 --> - 5,10 - 60 -
-            case 4: // Forces merge with left sibling
-                tempTree.delete(8);
-                tempTree.delete(20);
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 8,17 --> - 5 - 12 - 20,60
-            case 5: // Forces theft from left child
-                tempTree.delete(10);
-                break;
-
-            // Expected result: 20 --> - 12 - 60 -
-            case 6: // Forces theft from right child
-                tempTree.delete(5);
-                tempTree.delete(8);
-                tempTree.delete(10);
-                tempTree.delete(17);
-                break;
-
-            // Expected result: 17 --> - 8,12 - 60 -
-            case 7: // Forces merge of left and right children
-                tempTree.delete(5);
-                tempTree.delete(20);
-                tempTree.delete(10);
-                break;
-
-            // Expected result: 10 --> - 8 - 12,60 -
-            case 8: // Forces merge of left and right children (Alternative)
-                tempTree.delete(5);
-                tempTree.delete(20);
-                tempTree.delete(17);
-                break;
-
-            // Expected result: 10 --> - 7 - 17 - --> - 5 - 8 - 12 - 20 -
-            case 9: // Forces merging of parent with child
-                tempTree.delete(60);
-                tempTree.insert(7);
-                break;
-            default:
-                break;
-        }
-
-        // console.log(tempTree);
-        // console.log("        " + tempTree.root?.keys);
-
-        let childrenKeys = "    - ";
-        tempTree.root?.children.forEach((child: TreeNode) => {
-            childrenKeys += "|";
-            childrenKeys += child.keys + " - ";
-            childrenKeys += "|";
-        });
-        // console.log(childrenKeys);
-
-        let grandchildrenKeys = "| - ";
-        tempTree.root?.children.forEach((child: TreeNode) => {
-            child.children.forEach((grandchild) => {
-                grandchildrenKeys += "|";
-                grandchildrenKeys += grandchild.keys + " - ";
-                grandchildrenKeys += "|";
-            });
-            grandchildrenKeys += "| ";
-        });
-        // console.log(grandchildrenKeys);
-
-        // myTree.traverse();
-
-        myTree = tempTree;
-        setTree(tempTree);
-        // console.log(myTree);
     };
 
     // Save tree from top to bottom as numbers
@@ -329,9 +200,7 @@ const Bbaum: React.FC<Props> = () => {
     // in der render methode auf basis von bbaum das array rendern
     useEffect(() => {
         tree.traverse();
-        createTree();
         normalizeArray();
-        drawLines();
 
         // let treeTopBottom: string[][][];
         traverserTreeBreadthFirst(tree.root, 0);
