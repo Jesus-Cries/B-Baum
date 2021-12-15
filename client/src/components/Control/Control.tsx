@@ -48,7 +48,7 @@ interface Props {
     insert: (key: number) => void;
     search: (key: number) => void;
     remove: (key: number) => void;
-    changeOrder: () => void;
+    changeOrder: (order: number) => void;
     reset: () => void;
     order: number;
 }
@@ -58,7 +58,7 @@ const Control: React.FC<Props> = ({
     insert,
     search,
     remove,
-    order,
+    //order,
     changeOrder,
     reset,
 }) => {
@@ -69,6 +69,7 @@ const Control: React.FC<Props> = ({
     const [lowerLimit, setLowerLimit] = useState<number>();
     const [upperLimit, setUpperLimit] = useState<number>();
     const [insertionTempo, setInsertionTempo] = useState<number | number[]>();
+    const [order, setOrder] = useState<number>(4);
 
     const changeHandler = (event: any) => {
         setSelectedFile(event.target.files[0]);
@@ -148,6 +149,11 @@ const Control: React.FC<Props> = ({
         setAmount(event.target.value as String);
     };
 
+    const handleOrderChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        let newOrder = Math.ceil((event.target.value as number) / 2) * 2;
+        setOrder(newOrder);
+    };
+
     const handleInsert = () => {
         if (amount) {
             let numbers = amount.split(",");
@@ -187,6 +193,10 @@ const Control: React.FC<Props> = ({
         }
     };
 
+    const handleChangeOrder = () => {
+        changeOrder(order);
+    };
+
     const handleReset = () => {
         reset();
     };
@@ -208,9 +218,7 @@ const Control: React.FC<Props> = ({
         //changeTempo(insertionTempo);
     }, [selectedFile]);
 
-    // @ts-ignore
     return (
-        // TODO: Implement Paper for better visivility
         <Box className={classes.root}>
             <Paper className={classes.row}>
                 <input
@@ -272,10 +280,10 @@ const Control: React.FC<Props> = ({
                     className={classes.limitLower}
                     autoFocus
                     label="Order"
-                    //onChange={}
+                    onChange={handleOrderChange}
                     inputProps={{ maxLength: 75 }}
                 />
-                <Button className={classes.button} variant="contained" onClick={changeOrder}>
+                <Button className={classes.button} variant="contained" onClick={handleChangeOrder}>
                     Change Order
                 </Button>
                 <Button className={classes.button} variant="contained" onClick={handleReset}>
