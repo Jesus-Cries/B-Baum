@@ -283,17 +283,39 @@ const Control: React.FC<Props> = ({
                     className={classes.numberInput}
                     autoFocus
                     label="Value"
+                    value={amount}
                     onChange={handleTextChange}
                     inputProps={{ maxLength: 75 }}
                 />
                 <ButtonGroup>
-                    <Button className={classes.button} variant="contained" onClick={handleInsert}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleInsert();
+                            setAmount("");
+                        }}
+                    >
                         Insert
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={handleSearch}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleSearch();
+                            setAmount("");
+                        }}
+                    >
                         Search
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={handleRemove}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleRemove();
+                            setAmount("");
+                        }}
+                    >
                         Delete
                     </Button>
                 </ButtonGroup>
