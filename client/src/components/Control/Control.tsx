@@ -6,7 +6,6 @@ import { useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Paper, TextField } from "@material-ui/core";
 
-// @ts-ignore
 const useStyles = makeStyles({
     root: {
         marginTop: 30,
@@ -140,15 +139,13 @@ const Control: React.FC<Props> = ({
                 if (endLoop === 0) {
                     endLoop = 1;
                 }
-                console.log(endLoop);
-                for (let i = 0; i < endLoop; i++) {
-                    console.log("rte");
-                    if (typeof insertionTempo === "number") {
-                        setTimeout(function () {
-                            insert(Math.floor(Math.random() * 100) + 1);
-                            console.log("inserting");
-                        }, insertionTempo);
-                    }
+                let i = 0;
+                if (typeof insertionTempo === "number") {
+                    let interval = setInterval(function () {
+                        insert(Math.floor(Math.random() * 100) + 1);
+                        i++;
+                        if (i == endLoop) clearInterval(interval);
+                    }, insertionTempo);
                 }
             } else {
                 alert("False limits");
@@ -324,7 +321,7 @@ const Control: React.FC<Props> = ({
                     min={0}
                     step={100}
                     max={5000}
-                    defaultValue={3000}
+                    defaultValue={0}
                     //onChange={(_, newValue) => setInsertionTempo(newValue)}
                     //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
                     getAriaValueText={testSpeed}

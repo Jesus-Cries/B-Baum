@@ -23,7 +23,11 @@ export class Tree {
             //check if tree is empty
             return null;
         } else {
-            return this.root.find(k);
+            if (this.root.find(k) != null || undefined) {
+                return this.root.find(k);
+            } else {
+                return "Key not found";
+            }
         }
     }
 

@@ -28,9 +28,7 @@ const useStyles = makeStyles({
     },
 });
 
-// TODO: Implement Change Order
 // TODO: Implement Search correctly (showing node of the key on display)
-// TODO: Integrate Deletion into upload and button
 
 interface Props {}
 
@@ -90,13 +88,18 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Inserted: " + key);
         myTree = tempTree;
         setTree(tempTree);
-        updateTree();
         forceUpdate();
+        console.log(tree);
     };
 
     const search = (key: number) => {
         console.log(tree);
-        alert(tree.find(key).cost);
+        let cost = tree.find(key).cost;
+        if (cost == null || undefined) {
+            alert("Key not found");
+        } else {
+            alert("Cost:" + cost);
+        }
         console.log(myTree);
         console.log("Search");
     };
@@ -131,7 +134,6 @@ const Bbaum: React.FC<Props> = () => {
         }
         myTree = tempTree;
         setTree(tempTree);
-        //updateTree();
     };
 
     // Save tree from top to bottom as numbers
