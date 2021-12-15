@@ -74,21 +74,6 @@ const Bbaum: React.FC<Props> = () => {
         setTreeAsArray(treeTopBottom);
     };
 
-    const drawLines = () => {
-        const canvas: HTMLCanvasElement | null = document.getElementById(
-            "canvas"
-        ) as HTMLCanvasElement;
-        if (canvas) {
-            const context = canvas.getContext("2d");
-            context?.beginPath();
-            context?.moveTo(702, 172);
-            context?.lineTo(358, 273);
-            context!.lineWidth = 1;
-            context!.strokeStyle = "#777";
-            context?.stroke();
-        }
-    };
-
     const random = () => {
         console.log("Random");
     };
@@ -217,7 +202,6 @@ const Bbaum: React.FC<Props> = () => {
     useEffect(() => {
         tree.traverse();
         normalizeArray();
-        drawLines();
 
         // let treeTopBottom: string[][][];
         traverserTreeBreadthFirst(tree.root, 0);
