@@ -10,6 +10,7 @@ import Control from "../../components/Control/Control";
 import { Tree } from "./Tree";
 import { TreeNode } from "./TreeNode";
 import node from "../../components/Node/Node";
+import React from "react";
 
 const useStyles = makeStyles({
     root: {
@@ -58,6 +59,7 @@ const Bbaum: React.FC<Props> = () => {
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
+    const [searchNumber, setSearchNumber] = useState<string>("");
 
     const forceUpdate = () => {
         let newForce: number = Math.random();
@@ -97,12 +99,18 @@ const Bbaum: React.FC<Props> = () => {
         console.log(tree);
         let cost = tree.find(key).cost;
         if (cost == null || undefined) {
-            alert("Key not found");
+            console.log("Key not found");
         } else {
-            alert("Cost:" + cost);
+            console.log("Cost:" + cost);
+            console.log(myTree);
+            console.log("Search");
         }
-        console.log(myTree);
-        console.log("Search");
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                setSearchNumber(i % 2 === 0 ? key.toString() : "");
+                forceUpdate();
+            }, 250 * i);
+        }
     };
 
     // FIXME: Algorithm doesnt reorder the nodes properly
@@ -319,7 +327,7 @@ const Bbaum: React.FC<Props> = () => {
                             return (
                                 <Grid className={classes.container} xs={scalingConvert} container>
                                     {element.map((node) => {
-                                        return <Node values={node} />;
+                                        return <Node searchedFor={searchNumber} values={node} />;
                                     })}
                                 </Grid>
                             );
