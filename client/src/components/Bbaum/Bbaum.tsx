@@ -253,7 +253,7 @@ const Bbaum: React.FC<Props> = () => {
     }, [tree.maxChildren]);
 
     useEffect(() => {
-        traverserTreeBreadthFirst(tree.root, 0);
+        traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     }, [nodeSize]);
 
