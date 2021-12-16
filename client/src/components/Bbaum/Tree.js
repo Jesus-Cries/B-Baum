@@ -1,6 +1,4 @@
 import { TreeNode } from "./TreeNode";
-import { runInNewContext } from "vm";
-import { flatten } from "express/lib/utils";
 
 export class Tree {
     constructor(degree) {
@@ -45,7 +43,7 @@ export class Tree {
             newRoot.addChild(currentRoot, 0);
             this.splitNode(currentRoot, newRoot, 1);
 
-            // After split add key
+            // After split add key normally
             this.insertNotFullNode(newRoot, parseInt(key));
         } else {
             // Else just insert the value into next best node
@@ -59,13 +57,15 @@ export class Tree {
 
         // Give the new child the keys from the old child
         for (let k = 1; k < this.minChildren; k++) {
-            newChild.addValue(child.removeValue(this.minChildren));
+            let deletedVal = child.removeValue(this.minChildren);
+            newChild.addValue(deletedVal);
         }
 
         // Give the new child the children from the old child
         if (!child.leaf) {
             for (let k = 1; k <= this.minChildren; k++) {
-                newChild.addChild(child.deleteChild(this.minChildren), k - 1);
+                let deletedKid = child.deleteChild(this.minChildren);
+                newChild.addChild(deletedKid, k - 1);
             }
         }
 
@@ -73,7 +73,8 @@ export class Tree {
         parent.addChild(newChild, pos);
 
         // Give parent the key
-        parent.addValue(child.removeValue(this.minChildren - 1));
+        let deletedVal = child.removeValue(this.minChildren - 1);
+        parent.addValue(deletedVal);
         parent.leaf = false;
     }
 
@@ -107,7 +108,7 @@ export class Tree {
             this.insertNotFullNode(node.children[currentKeyIndex], key);
         }
         //if (node.numberOfKeys === 2 * this.maxChildren - 1 && node.parent == null) {
-        //this.splitRoot();
+        //  this.splitRoot();
         //}
     }
 

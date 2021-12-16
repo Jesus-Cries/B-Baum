@@ -4,8 +4,7 @@ import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { ButtonGroup, Grid, Paper, TextField } from "@material-ui/core";
-import { TreeNode } from "../Bbaum/TreeNode";
+import { ButtonGroup, Paper, TextField } from "@material-ui/core";
 
 // @ts-ignore
 const useStyles = makeStyles({
@@ -48,7 +47,7 @@ interface Props {
     insert: (key: number) => void;
     search: (key: number) => void;
     remove: (key: number) => void;
-    changeOrder: () => void;
+    changeOrder: (order: number) => void;
     reset: () => void;
     order: number;
 }
@@ -58,7 +57,7 @@ const Control: React.FC<Props> = ({
     insert,
     search,
     remove,
-    order,
+    //order,
     changeOrder,
     reset,
 }) => {
@@ -69,9 +68,39 @@ const Control: React.FC<Props> = ({
     const [lowerLimit, setLowerLimit] = useState<number>();
     const [upperLimit, setUpperLimit] = useState<number>();
     const [insertionTempo, setInsertionTempo] = useState<number | number[]>();
+    const [order, setOrder] = useState<number>(4);
 
     const changeHandler = (event: any) => {
         setSelectedFile(event.target.files[0]);
+    };
+
+    const insertNextLine = (arr: string[]) => {
+        let stop: boolean = false;
+
+        if (typeof insertionTempo === "number") {
+            let currentLine: string = arr.splice(0, 1)[0];
+            console.log("CurrentLine: " + currentLine);
+            switch (currentLine.split(",")[0]) {
+                case "i":
+                    insert(parseInt(currentLine.split(",")[1]));
+                    break;
+                case "d":
+                    remove(parseInt(currentLine.split(",")[1]));
+                    break;
+                default:
+                    console.log("Switch default");
+                    stop = true;
+                    break;
+            }
+
+            console.log(insertionTempo);
+
+            if (!stop) {
+                setTimeout(() => {
+                    insertNextLine(arr);
+                }, insertionTempo);
+            }
+        }
     };
 
     const parseCSV = (file: any) => {
@@ -82,31 +111,14 @@ const Control: React.FC<Props> = ({
                     let csvText: string | ArrayBuffer = reader.result;
                     if (typeof csvText === "string") {
                         let lines = csvText.split(/\r?\n/);
-                        let i = 0;
-                        if (typeof insertionTempo === "number") {
-                            let interval = setInterval(function () {
-                                switch (lines[i].split(",")[0]) {
-                                    case "i":
-                                        insert(parseInt(lines[i].split(",")[1]));
-                                        break;
-                                    case "d":
-                                        remove(parseInt(lines[i].split(",")[1]));
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                i++;
-                                if (i === lines.length) {
-                                    clearInterval(interval);
-                                }
-                            }, insertionTempo);
-                        }
+                        insertNextLine(lines);
                     }
                 }
             };
             reader.readAsText(file);
         }
     };
+
     // Forwards click to input element
     const handleUpload = () => {
         inputFile.current.click();
@@ -125,7 +137,7 @@ const Control: React.FC<Props> = ({
                 let endLoop = Math.floor(
                     Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
                 );
-                if (endLoop == 0) {
+                if (endLoop === 0) {
                     endLoop = 1;
                 }
                 console.log(endLoop);
@@ -146,6 +158,11 @@ const Control: React.FC<Props> = ({
 
     const handleTextChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setAmount(event.target.value as String);
+    };
+
+    const handleOrderChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        let newOrder = Math.ceil((event.target.value as number) / 2) * 2;
+        setOrder(newOrder);
     };
 
     const handleInsert = () => {
@@ -187,6 +204,10 @@ const Control: React.FC<Props> = ({
         }
     };
 
+    const handleChangeOrder = () => {
+        changeOrder(order);
+    };
+
     const handleReset = () => {
         reset();
     };
@@ -208,9 +229,7 @@ const Control: React.FC<Props> = ({
         //changeTempo(insertionTempo);
     }, [selectedFile]);
 
-    // @ts-ignore
     return (
-        // TODO: Implement Paper for better visivility
         <Box className={classes.root}>
             <Paper className={classes.row}>
                 <input
@@ -248,17 +267,39 @@ const Control: React.FC<Props> = ({
                     className={classes.numberInput}
                     autoFocus
                     label="Value"
+                    value={amount}
                     onChange={handleTextChange}
                     inputProps={{ maxLength: 75 }}
                 />
                 <ButtonGroup>
-                    <Button className={classes.button} variant="contained" onClick={handleInsert}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleInsert();
+                            setAmount("");
+                        }}
+                    >
                         Insert
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={handleSearch}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleSearch();
+                            setAmount("");
+                        }}
+                    >
                         Search
                     </Button>
-                    <Button className={classes.button} variant="contained" onClick={handleRemove}>
+                    <Button
+                        className={classes.button}
+                        variant="contained"
+                        onClick={() => {
+                            handleRemove();
+                            setAmount("");
+                        }}
+                    >
                         Delete
                     </Button>
                 </ButtonGroup>
@@ -272,10 +313,10 @@ const Control: React.FC<Props> = ({
                     className={classes.limitLower}
                     autoFocus
                     label="Order"
-                    //onChange={}
+                    onChange={handleOrderChange}
                     inputProps={{ maxLength: 75 }}
                 />
-                <Button className={classes.button} variant="contained" onClick={changeOrder}>
+                <Button className={classes.button} variant="contained" onClick={handleChangeOrder}>
                     Change Order
                 </Button>
                 <Button className={classes.button} variant="contained" onClick={handleReset}>
@@ -283,9 +324,10 @@ const Control: React.FC<Props> = ({
                 </Button>
                 <Slider
                     className={classes.slider}
-                    min={1000}
+                    min={0}
                     step={100}
                     max={5000}
+                    defaultValue={3000}
                     //onChange={(_, newValue) => setInsertionTempo(newValue)}
                     //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
                     getAriaValueText={testSpeed}

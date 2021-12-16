@@ -36,17 +36,34 @@ interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
-    let myTree: Tree = new Tree(3);
-    let tempTreeAsArrayForInitialization: string[][] = [];
+    //Knuth Order, k |  (min,max)  | CLRS Degree, t
+    // ---------------|-------------|---------------
+    //      0         |      -      |        –
+    //      1         |      –      |        –
+    //      2         |      –      |        –
+    //      3         |    (2,3)    |        –
+    //      4         |    (2,4)    |      t = 2
+    //      5         |    (3,5)    |        –
+    //      6         |    (3,6)    |      t = 3
+    //      7         |    (4,7)    |        –
+    //      8         |    (4,8)    |      t = 4
+    //      9         |    (5,9)    |        –
+    //      10        |    (5,10)   |      t = 5
+    let myTree: Tree = new Tree(4);
 
+    const [force, setForce] = useState<number>(1);
     const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
+    const [order, setOrder] = useState(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
-        // Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
-        new Array(tempTreeAsArrayForInitialization.length).fill(
-            new Array(1).fill(new Array(1).fill(" "))
-        )
+        // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
+        new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
+
+    const forceUpdate = () => {
+        let newForce: number = Math.random();
+        setForce(newForce);
+    };
 
     const normalizeArray = () => {
         treeTopBottom.forEach((level) => {
@@ -60,23 +77,7 @@ const Bbaum: React.FC<Props> = () => {
 
     const updateTree = () => {
         traverseTreeBreadthFirst(tree.root, 0);
-        setTreeAsArray(traverseTreeBreadthFirst(tree.root, 0));
         setTreeAsArray(treeTopBottom);
-    };
-
-    const drawLines = () => {
-        const canvas: HTMLCanvasElement | null = document.getElementById(
-            "canvas"
-        ) as HTMLCanvasElement;
-        if (canvas) {
-            const context = canvas.getContext("2d");
-            context?.beginPath();
-            context?.moveTo(702, 172);
-            context?.lineTo(358, 273);
-            context!.lineWidth = 1;
-            context!.strokeStyle = "#777";
-            context?.stroke();
-        }
     };
 
     const random = () => {
@@ -87,11 +88,10 @@ const Bbaum: React.FC<Props> = () => {
         let tempTree: Tree = tree;
         tempTree.insert(key);
         console.log("Inserted: " + key);
-        console.log(tree);
-        tempTree.traverse();
         myTree = tempTree;
         setTree(tempTree);
         updateTree();
+        forceUpdate();
     };
 
     const search = (key: number) => {
@@ -101,12 +101,10 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Search");
     };
 
-    // Couldn't name this method "delete" as that name seems to be already used by React
     // FIXME: Algorithm doesnt reorder the nodes properly
     const remove = (key: number) => {
         let tempTree: Tree = tree;
         tempTree.delete(key);
-
         setTree(tempTree);
         updateTree();
         console.log("Delete");
@@ -118,119 +116,22 @@ const Bbaum: React.FC<Props> = () => {
         updateTree();
     };
 
-    const changeOrder = () => {};
-
-    const createTree = () => {
-        let tempTree: Tree = tree; // tree ist ein State (Variable von der das Rendering abhängt) -> soll nicht direkt geändert werden
-
-        tempTree.traverse();
-
-        tempTree.insert(2);
-        tempTree.insert(3);
-        tempTree.insert(4);
-        tempTree.insert(5);
-        tempTree.insert(6);
-        tempTree.insert(7);
-        tempTree.insert(8);
-        tempTree.insert(9);
-        tempTree.insert(10);
-        tempTree.insert(11);
-        tempTree.insert(12);
-        tempTree.insert(13);
-        tempTree.insert(14);
-        tempTree.insert(15);
-        // console.log("------- DELETE -------");
-
-        let testCase = 0;
-        // Base: 10, 17 --> - 5,8 - 12 - 20,60
-
-        switch (testCase) {
-            // Expected result: 10, 20 --> - 5 - 17 - 60 -
-            case 1: // Forces theft from right sibling
-                tempTree.delete(8);
-                tempTree.delete(12);
-                break;
-            // Expected result: 8, 17 --> - 5 - 10 - 20,60 -
-            case 2: // Forces theft from left sibling
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 17 --> - 10,12 - 20,60 -
-            case 3: // Forces merge with right sibling
-                tempTree.delete(5);
-                tempTree.delete(8);
-                break;
-
-            // Expected result: 17 --> - 5,10 - 60 -
-            case 4: // Forces merge with left sibling
-                tempTree.delete(8);
-                tempTree.delete(20);
-                tempTree.delete(12);
-                break;
-
-            // Expected result: 8,17 --> - 5 - 12 - 20,60
-            case 5: // Forces theft from left child
-                tempTree.delete(10);
-                break;
-
-            // Expected result: 20 --> - 12 - 60 -
-            case 6: // Forces theft from right child
-                tempTree.delete(5);
-                tempTree.delete(8);
-                tempTree.delete(10);
-                tempTree.delete(17);
-                break;
-
-            // Expected result: 17 --> - 8,12 - 60 -
-            case 7: // Forces merge of left and right children
-                tempTree.delete(5);
-                tempTree.delete(20);
-                tempTree.delete(10);
-                break;
-
-            // Expected result: 10 --> - 8 - 12,60 -
-            case 8: // Forces merge of left and right children (Alternative)
-                tempTree.delete(5);
-                tempTree.delete(20);
-                tempTree.delete(17);
-                break;
-
-            // Expected result: 10 --> - 7 - 17 - --> - 5 - 8 - 12 - 20 -
-            case 9: // Forces merging of parent with child
-                tempTree.delete(60);
-                tempTree.insert(7);
-                break;
-            default:
-                break;
+    const changeOrder = (order: number) => {
+        if (order < 4) order = 4;
+        let newOrder = Math.ceil(order / 2) * 2;
+        console.log(newOrder);
+        setOrder(newOrder);
+        let tempTree: Tree = new Tree(newOrder);
+        for (let i = 0; i < treeAsArray.length; i++) {
+            for (let j = 0; j < treeAsArray[i].length; j++) {
+                for (let k = 0; k < treeAsArray[i][j].length; k++) {
+                    tempTree.insert(treeAsArray[i][j][k]);
+                }
+            }
         }
-
-        // console.log(tempTree);
-        // console.log("        " + tempTree.root?.keys);
-
-        let childrenKeys = "    - ";
-        tempTree.root?.children.forEach((child: TreeNode) => {
-            childrenKeys += "|";
-            childrenKeys += child.keys + " - ";
-            childrenKeys += "|";
-        });
-        // console.log(childrenKeys);
-
-        let grandchildrenKeys = "| - ";
-        tempTree.root?.children.forEach((child: TreeNode) => {
-            child.children.forEach((grandchild) => {
-                grandchildrenKeys += "|";
-                grandchildrenKeys += grandchild.keys + " - ";
-                grandchildrenKeys += "|";
-            });
-            grandchildrenKeys += "| ";
-        });
-        // console.log(grandchildrenKeys);
-
-        // myTree.traverse();
-
         myTree = tempTree;
         setTree(tempTree);
-        // console.log(myTree);
+        //updateTree();
     };
 
     // Save tree from top to bottom as numbers
@@ -281,7 +182,7 @@ const Bbaum: React.FC<Props> = () => {
                 childIndex++;
             });
             // Add border element to indicate children end of the current root
-            if (treeTopBottom[level].length != 0) {
+            if (treeTopBottom[level].length !== 0) {
                 treeTopBottom[level][childIndex] = ["border"];
             }
 
@@ -305,9 +206,7 @@ const Bbaum: React.FC<Props> = () => {
     // in der render methode auf basis von bbaum das array rendern
     useEffect(() => {
         tree.traverse();
-        createTree();
         normalizeArray();
-        drawLines();
 
         traverseTreeBreadthFirst(tree.root, 0);
 
@@ -347,8 +246,15 @@ const Bbaum: React.FC<Props> = () => {
     }, []); // Wird zu Beginn einmal ausgeführt
 
     useEffect(() => {
-        updateTree();
+        setNodeSize(tree.maxChildren);
+        console.log("Tree has changed --> NodeSize was changed");
     }, [tree]);
+
+    useEffect(() => {
+        console.log("Force update was called");
+        traverseTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+    }, [force]);
 
     return (
         <Box className={classes.root}>
@@ -357,69 +263,62 @@ const Bbaum: React.FC<Props> = () => {
                 insert={insert}
                 search={search}
                 remove={remove}
-                order={tree.minChildren}
+                order={order}
                 changeOrder={changeOrder}
                 reset={reset}
             />
 
             {treeAsArray.map((level) => {
-                {
-                    let hasBorder = false;
+                let hasBorder = false;
 
-                    let levelCopy: string[][] = level;
-                    let levelSplit: string[][][] = [];
-                    let childrenIndex: number = 0;
-                    let startIndex: number = 0;
-                    let endIndex: number = 0;
+                let levelCopy: string[][] = level;
+                let levelSplit: string[][][] = [];
+                let childrenIndex: number = 0;
+                let startIndex: number = 0;
+                let endIndex: number = 0;
 
-                    level.forEach((node) => {
-                        levelSplit[childrenIndex] = [[]];
-                        if (node[0] == "border") {
-                            levelSplit[childrenIndex] = levelCopy.slice(startIndex, endIndex);
-                            childrenIndex++;
+                level.forEach((node) => {
+                    levelSplit[childrenIndex] = [[]];
+                    if (node[0] === "border") {
+                        levelSplit[childrenIndex] = levelCopy.slice(startIndex, endIndex);
+                        childrenIndex++;
 
-                            startIndex = endIndex;
-                            // Skips border node
-                            startIndex++;
+                        startIndex = endIndex;
+                        // Skips border node
+                        startIndex++;
 
-                            hasBorder = true;
-                        }
-                        endIndex++;
-                    });
-
-                    // Adds whole level to levelSplit because level without borders wont be added in loop
-                    if (!hasBorder) {
-                        levelSplit[childrenIndex] = levelCopy;
+                        hasBorder = true;
                     }
+                    endIndex++;
+                });
 
-                    // Apply appropriate scaling factor to Grids
-                    // FIXME: When levelSplit.length = 5 or more the result is bad
-                    let scaling: number = 12;
-                    if (levelSplit.length != 0) {
-                        scaling = 12 / levelSplit.length;
-                        scaling = Math.round(scaling);
-                    }
-                    let scalingConvert: GridSize = scaling as GridSize;
-
-                    // Return Grid for current level
-                    return (
-                        <Grid className={classes.outerContainer} container>
-                            {levelSplit.map((element) => {
-                                return (
-                                    <Grid
-                                        className={classes.container}
-                                        xs={scalingConvert}
-                                        container
-                                    >
-                                        {element.map((node) => {
-                                            return <Node values={node} />;
-                                        })}
-                                    </Grid>
-                                );
-                            })}
-                        </Grid>
-                    );
+                // Adds whole level to levelSplit because level without borders wont be added in loop
+                if (!hasBorder) {
+                    levelSplit[childrenIndex] = levelCopy;
                 }
+
+                // Apply appropriate scaling factor to Grids
+                let scaling: number = 12;
+                if (levelSplit.length !== 0) {
+                    scaling = 12 / levelSplit.length;
+                    scaling = Math.round(scaling);
+                }
+                let scalingConvert: GridSize = scaling as GridSize;
+
+                // Return Grid for current level
+                return (
+                    <Grid className={classes.outerContainer} container>
+                        {levelSplit.map((element) => {
+                            return (
+                                <Grid className={classes.container} xs={scalingConvert} container>
+                                    {element.map((node) => {
+                                        return <Node values={node} />;
+                                    })}
+                                </Grid>
+                            );
+                        })}
+                    </Grid>
+                );
             })}
         </Box>
     );
