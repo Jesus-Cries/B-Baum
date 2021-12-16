@@ -67,7 +67,7 @@ const Control: React.FC<Props> = ({
     const [amount, setAmount] = useState<String>();
     const [lowerLimit, setLowerLimit] = useState<number>();
     const [upperLimit, setUpperLimit] = useState<number>();
-    const [insertionTempo, setInsertionTempo] = useState<number | number[]>();
+    const [insertionTempo, setInsertionTempo] = useState<number | number[]>(0);
     const [order, setOrder] = useState<number>(4);
 
     const changeHandler = (event: any) => {
@@ -216,9 +216,8 @@ const Control: React.FC<Props> = ({
     //    setInsertionTempo(event.target.value as number);
     //};
 
-    const testSpeed = (value: number) => {
-        setInsertionTempo(value);
-        return value.toString();
+    const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
+        setInsertionTempo(newValue as number);
     };
 
     useEffect(() => {
@@ -318,17 +317,17 @@ const Control: React.FC<Props> = ({
                     Change Order
                 </Button>
                 <Button className={classes.button} variant="contained" onClick={handleReset}>
-                    Reset
+                    Reset {insertionTempo}
                 </Button>
                 <Slider
                     className={classes.slider}
                     min={0}
                     step={100}
                     max={5000}
-                    defaultValue={3000}
-                    //onChange={(_, newValue) => setInsertionTempo(newValue)}
-                    //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
-                    getAriaValueText={testSpeed}
+                    defaultValue={0}
+                    onChange={(first, second) => {
+                        handleSliderChange(first, second);
+                    }}
                 />
             </Paper>
         </Box>
