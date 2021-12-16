@@ -9,6 +9,7 @@ import Control from "../../components/Control/Control";
 
 import { Tree } from "./Tree";
 import { TreeNode } from "./TreeNode";
+import node from "../../components/Node/Node";
 
 const useStyles = makeStyles({
     root: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles({
     container: {
         marginTop: 30,
         borderRadius: 50,
-        backgroundColor: "#eee",
+        backgroundColor: "#E9E9E9",
         justifyContent: "space-around",
     },
     outerContainer: {
@@ -28,9 +29,7 @@ const useStyles = makeStyles({
     },
 });
 
-// TODO: Implement Change Order
 // TODO: Implement Search correctly (showing node of the key on display)
-// TODO: Integrate Deletion into upload and button
 
 interface Props {}
 
@@ -90,13 +89,18 @@ const Bbaum: React.FC<Props> = () => {
         console.log("Inserted: " + key);
         myTree = tempTree;
         setTree(tempTree);
-        updateTree();
         forceUpdate();
+        console.log(tree);
     };
 
     const search = (key: number) => {
         console.log(tree);
-        alert(tree.find(key).cost);
+        let cost = tree.find(key).cost;
+        if (cost == null || undefined) {
+            alert("Key not found");
+        } else {
+            alert("Cost:" + cost);
+        }
         console.log(myTree);
         console.log("Search");
     };
@@ -117,7 +121,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const changeOrder = (order: number) => {
-        if (order < 4) order = 4;
+        if (order < 2) order = 2;
         let newOrder = Math.ceil(order / 2) * 2;
         console.log(newOrder);
         setOrder(newOrder);
@@ -131,7 +135,6 @@ const Bbaum: React.FC<Props> = () => {
         }
         myTree = tempTree;
         setTree(tempTree);
-        //updateTree();
     };
 
     // Save tree from top to bottom as numbers
@@ -247,8 +250,12 @@ const Bbaum: React.FC<Props> = () => {
 
     useEffect(() => {
         setNodeSize(tree.maxChildren);
-        console.log("Tree has changed --> NodeSize was changed");
-    }, [tree]);
+    }, [tree.maxChildren]);
+
+    useEffect(() => {
+        traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+    }, [nodeSize]);
 
     useEffect(() => {
         console.log("Force update was called");

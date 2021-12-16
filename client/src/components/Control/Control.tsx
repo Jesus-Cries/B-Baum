@@ -6,7 +6,6 @@ import { useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Paper, TextField } from "@material-ui/core";
 
-// @ts-ignore
 const useStyles = makeStyles({
     root: {
         marginTop: 30,
@@ -19,7 +18,7 @@ const useStyles = makeStyles({
     row: {
         display: "flex",
         //flexWrap: "wrap",
-        justifyContent: "space-evenly",
+        justifyContent: "space-around",
         alignItems: "center",
         width: "90%",
         margin: 10,
@@ -140,15 +139,13 @@ const Control: React.FC<Props> = ({
                 if (endLoop === 0) {
                     endLoop = 1;
                 }
-                console.log(endLoop);
-                for (let i = 0; i < endLoop; i++) {
-                    console.log("rte");
-                    if (typeof insertionTempo === "number") {
-                        setTimeout(function () {
-                            insert(Math.floor(Math.random() * 100) + 1);
-                            console.log("inserting");
-                        }, insertionTempo);
-                    }
+                let i = 0;
+                if (typeof insertionTempo === "number") {
+                    let interval = setInterval(function () {
+                        insert(Math.floor(Math.random() * 100) + 1);
+                        i++;
+                        if (i == endLoop) clearInterval(interval);
+                    }, insertionTempo);
                 }
             } else {
                 alert("False limits");
@@ -245,7 +242,6 @@ const Control: React.FC<Props> = ({
                 <TextField
                     id="lowerLimit"
                     className={classes.limitUpper}
-                    autoFocus
                     label="Lower Limit"
                     onChange={handleLowerLimit}
                     inputProps={{ maxLength: 75 }}
@@ -253,7 +249,6 @@ const Control: React.FC<Props> = ({
                 <TextField
                     id="upperLimit"
                     className={classes.limitLower}
-                    autoFocus
                     label="Upper Limit"
                     onChange={handleUpperLimit}
                     inputProps={{ maxLength: 75 }}
@@ -311,7 +306,6 @@ const Control: React.FC<Props> = ({
                 <TextField
                     id="upperLimit"
                     className={classes.limitLower}
-                    autoFocus
                     label="Order"
                     onChange={handleOrderChange}
                     inputProps={{ maxLength: 75 }}
@@ -327,7 +321,7 @@ const Control: React.FC<Props> = ({
                     min={0}
                     step={100}
                     max={5000}
-                    defaultValue={3000}
+                    defaultValue={0}
                     //onChange={(_, newValue) => setInsertionTempo(newValue)}
                     //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
                     getAriaValueText={testSpeed}
