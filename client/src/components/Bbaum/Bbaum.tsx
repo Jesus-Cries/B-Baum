@@ -76,7 +76,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const updateTree = () => {
-        traverserTreeBreadthFirst(tree.root, 0);
+        traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     };
 
@@ -138,7 +138,7 @@ const Bbaum: React.FC<Props> = () => {
     let treeTopBottom: string[][][] = [];
     treeTopBottom[0] = [[]];
 
-    const traverserTreeBreadthFirst = (root: TreeNode | null, level: number) => {
+    const traverseTreeBreadthFirst = (root: TreeNode | null, level: number) => {
         if (root != null) {
             let childIndex = 0;
             // Initialize current tree level in array
@@ -151,14 +151,14 @@ const Bbaum: React.FC<Props> = () => {
         }
         treeTopBottom[1] = [];
 
-        traverserTreeBreadthFirstRecursion(root, 1);
+        traverseTreeBreadthFirstRecursion(root, 1);
 
         normalizeArray();
 
         return treeTopBottom;
     };
 
-    const traverserTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
+    const traverseTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
         // console.log("Root level: " + level);
 
         let childIndex = 0;
@@ -194,7 +194,7 @@ const Bbaum: React.FC<Props> = () => {
                     // Define undefined level
                     treeTopBottom[level + 1] = [];
                 }
-                traverserTreeBreadthFirstRecursion(child, level + 1);
+                traverseTreeBreadthFirstRecursion(child, level + 1);
             });
         }
     };
@@ -208,8 +208,31 @@ const Bbaum: React.FC<Props> = () => {
         tree.traverse();
         normalizeArray();
 
-        // let treeTopBottom: string[][][];
-        traverserTreeBreadthFirst(tree.root, 0);
+        traverseTreeBreadthFirst(tree.root, 0);
+
+        // treeTopBottom[3][0] = ["2", "1"];
+        // treeTopBottom[3][1] = ["border", "1"];
+        // treeTopBottom[3][2] = ["2", "4"];
+        // treeTopBottom[3][3] = ["border", "1"];
+        // treeTopBottom[3][4] = ["2", "4"];
+        // treeTopBottom[3][5] = ["border", "1"];
+        // treeTopBottom[3][6] = ["2", "4"];
+        // treeTopBottom[3][7] = ["border", "1"];
+        // treeTopBottom[3][8] = ["2", "4"];
+        // treeTopBottom[3][9] = ["border", "1"];
+        // treeTopBottom[3][10] = ["2", "4"];
+        // treeTopBottom[3][11] = ["border", "1"];
+        // treeTopBottom[3][12] = ["2", "4"];
+        // treeTopBottom[3][13] = ["border", "1"];
+        // treeTopBottom[3][14] = ["2", "4"];
+        // treeTopBottom[3][15] = ["border", "1"];
+        // treeTopBottom[3][16] = ["2", "4"];
+        // treeTopBottom[3][17] = ["border", "1"];
+        // treeTopBottom[3][18] = ["2", "4"];
+        // treeTopBottom[3][19] = ["border", "1"];
+
+        normalizeArray();
+        console.log("Weird stuff");
         // console.log("Weird stuff");
         treeTopBottom.forEach((element) => {
             // console.log(element);
@@ -229,7 +252,7 @@ const Bbaum: React.FC<Props> = () => {
 
     useEffect(() => {
         console.log("Force update was called");
-        traverserTreeBreadthFirst(tree.root, 0);
+        traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     }, [force]);
 
