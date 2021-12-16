@@ -9,6 +9,7 @@ import Control from "../../components/Control/Control";
 
 import { Tree } from "./Tree";
 import { TreeNode } from "./TreeNode";
+import node from "../../components/Node/Node";
 
 const useStyles = makeStyles({
     root: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles({
     container: {
         marginTop: 30,
         borderRadius: 50,
-        backgroundColor: "#eee",
+        backgroundColor: "#E9E9E9",
         justifyContent: "space-around",
     },
     outerContainer: {
@@ -226,8 +227,12 @@ const Bbaum: React.FC<Props> = () => {
 
     useEffect(() => {
         setNodeSize(tree.maxChildren);
-        console.log("Tree has changed --> NodeSize was changed");
-    }, [tree]);
+    }, [tree.maxChildren]);
+
+    useEffect(() => {
+        traverserTreeBreadthFirst(tree.root, 0);
+        setTreeAsArray(treeTopBottom);
+    }, [nodeSize]);
 
     useEffect(() => {
         console.log("Force update was called");

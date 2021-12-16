@@ -61,7 +61,7 @@ export class Tree {
 
         // Give the new child the keys from the old child
         for (let k = 1; k < this.minChildren; k++) {
-            let deletedVal = child.removeValue(this.minChildren);
+            let deletedVal = child.deleteValue(this.minChildren);
             newChild.addValue(deletedVal);
         }
 
@@ -77,7 +77,7 @@ export class Tree {
         parent.addChild(newChild, pos);
 
         // Give parent the key
-        let deletedVal = child.removeValue(this.minChildren - 1);
+        let deletedVal = child.deleteValue(this.minChildren - 1);
         parent.addValue(deletedVal);
         parent.leaf = false;
     }
@@ -120,11 +120,15 @@ export class Tree {
         let newRoot = new TreeNode(this.maxChildren, false, null);
         let oldRoot = this.root;
         this.root = newRoot;
-        newRoot.addValue(oldRoot.removeValue(this.minChildren - 1));
+
+        newRoot.addValue(oldRoot.deleteValue(this.minChildren - 1));
+
         for (let i = 0; i < oldRoot.numberOfKeys; i++) {
             let newChild = new TreeNode(this.maxChildren, false, this.root);
+
             newChild.addValue(oldRoot.keys[i]);
             newRoot.addChild(newChild, i);
+
             for (let j = 0 + i; j < this.minChildren + i; j++) {
                 newChild.addChild(oldRoot.children[j + i], j);
             }
