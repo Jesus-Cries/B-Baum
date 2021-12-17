@@ -79,9 +79,7 @@ const Bbaum: React.FC<Props> = () => {
         setTreeAsArray(treeTopBottom);
     };
 
-    const random = () => {
-        console.log("Random");
-    };
+    const random = () => {};
 
     const insert = (key: number) => {
         let tempTree: Tree = tree;
@@ -90,7 +88,6 @@ const Bbaum: React.FC<Props> = () => {
         myTree = tempTree;
         setTree(tempTree);
         forceUpdate();
-        console.log(tree);
     };
 
     const search = (key: number) => {
@@ -101,8 +98,6 @@ const Bbaum: React.FC<Props> = () => {
         } else {
             console.log("Cost:" + cost);
         }
-        console.log(myTree);
-        console.log("Search");
     };
 
     // FIXME: Algorithm doesnt reorder the nodes properly
