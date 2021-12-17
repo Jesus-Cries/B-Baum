@@ -157,9 +157,13 @@ const Control: React.FC<Props> = ({
         insert(Math.floor(Math.random() * 100) + 1);
         counter--;
         if (typeof insertionTempo === "number" && counter > 0) {
-            setTimeout(() => {
+            if (insertionTempo === 0) {
                 insertRandom(counter);
-            }, insertionTempo);
+            } else {
+                setTimeout(() => {
+                    insertRandom(counter);
+                }, insertionTempo);
+            }
         }
     };
 
