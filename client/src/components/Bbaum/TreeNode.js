@@ -103,7 +103,7 @@ export class TreeNode {
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
     // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
-    deleteKey(value) {
+    delete(value) {
         console.log(`------- DELETING ${value} -------`);
 
         let index = this.keys.indexOf(value);
