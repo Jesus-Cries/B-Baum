@@ -113,7 +113,9 @@ const Control: React.FC<Props> = ({
                     break;
             }
 
-            if (!stop) {
+            if (!stop && insertionTempo === 0) {
+                treatNextLine(arr);
+            } else if (!stop) {
                 setTimeout(() => {
                     treatNextLine(arr);
                 }, insertionTempo);
