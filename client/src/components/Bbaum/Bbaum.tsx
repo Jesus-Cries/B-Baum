@@ -1,3 +1,4 @@
+// Imports
 import { useState, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,6 +13,7 @@ import { TreeNode } from "./TreeNode";
 import node from "../../components/Node/Node";
 import React from "react";
 
+// CSS
 const useStyles = makeStyles({
     root: {
         padding: 5,
@@ -30,12 +32,11 @@ const useStyles = makeStyles({
     },
 });
 
-// TODO: Implement Search correctly (showing node of the key on display)
-
 interface Props {}
 
 const Bbaum: React.FC<Props> = () => {
     const classes = useStyles();
+    // Table for all possible orders:
     //Knuth Order, k |  (min,max)  | CLRS Degree, t
     // ---------------|-------------|---------------
     //      0         |      -      |        –
@@ -51,22 +52,24 @@ const Bbaum: React.FC<Props> = () => {
     //      10        |    (5,10)   |      t = 5
     let myTree: Tree = new Tree(4);
 
+    // States
     const [force, setForce] = useState<number>(1);
     const [tree, setTree] = useState<Tree>(new Tree(4)); // Der tatsächliche Baum
     const [nodeSize, setNodeSize] = useState<number>(tree.maxChildren);
     const [order, setOrder] = useState(tree.maxChildren);
     const [treeAsArray, setTreeAsArray] = useState<string[][][]>(
-        // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
     const [cost, setCost] = useState<number>(-1);
     const [searchNumber, setSearchNumber] = useState<string>("");
 
+    // Forces new rendering
     const forceUpdate = () => {
         let newForce: number = Math.random();
         setForce(newForce);
     };
 
+    // Makes all array the same size
     const normalizeArray = () => {
         treeTopBottom.forEach((level) => {
             level.forEach((node) => {
@@ -77,24 +80,23 @@ const Bbaum: React.FC<Props> = () => {
         });
     };
 
+    // Updates the array version of the btree
     const updateTree = () => {
         traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     };
 
-    const random = () => {};
-
+    // Insert value into btree
     const insert = (key: number) => {
         let tempTree: Tree = tree;
         tempTree.insert(key);
-        console.log("Inserted: " + key);
         myTree = tempTree;
         setTree(tempTree);
         forceUpdate();
     };
 
+    // Search value in btree
     const search = (key: number) => {
-        console.log(tree);
         let node = tree.find(key);
         if (node === null) {
             setCost(-3);
@@ -102,13 +104,9 @@ const Bbaum: React.FC<Props> = () => {
         }
         let nodeCost = node.cost;
         if (nodeCost == null || undefined) {
-            console.log("Key not found");
             setCost(-2);
         } else {
-            console.log("Cost:" + nodeCost);
             setCost(nodeCost);
-            console.log(myTree);
-            console.log("Search");
             for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
                     setSearchNumber(i % 2 === 0 ? key.toString() : "");
@@ -118,26 +116,26 @@ const Bbaum: React.FC<Props> = () => {
         }
     };
 
-    // FIXME: Algorithm doesnt reorder the nodes properly
+    // Remove value from btree
     const remove = (key: number) => {
         let tempTree: Tree = tree;
         tempTree.delete(key);
         setTree(tempTree);
         updateTree();
         forceUpdate();
-        console.log(tree);
     };
 
+    // Reset btree (Delete all values)
     const reset = () => {
         myTree.root = null;
         tree.root = null;
         updateTree();
     };
 
+    // Change the order of the tree and insert all values again
     const changeOrder = (order: number) => {
         if (order < 4) order = 4;
         let newOrder = Math.ceil(order / 2) * 2;
-        console.log(newOrder);
         setOrder(newOrder);
         let tempTree: Tree = new Tree(newOrder);
         for (let i = 0; i < treeAsArray.length; i++) {
@@ -176,8 +174,6 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const traverseTreeBreadthFirstRecursion = (root: TreeNode | null, level: number) => {
-        // console.log("Root level: " + level);
-
         let childIndex = 0;
         // Determines the childIndex for the current level
         for (let i = 0; i < treeTopBottom[level].length; i++) {
@@ -216,59 +212,31 @@ const Bbaum: React.FC<Props> = () => {
         }
     };
 
-    // Neuer useEffect hook mit dependency bTree
-    // getRootAndChildren ausführen
-    // array normalisieren -> jedes array hat für jede node die selbe länge
-    // setBbaum() ausführen -> akutalisiert das ui
-    // in der render methode auf basis von bbaum das array rendern
+    // Is called once at the beginning
     useEffect(() => {
         tree.traverse();
         normalizeArray();
 
         traverseTreeBreadthFirst(tree.root, 0);
 
-        // treeTopBottom[3][0] = ["2", "1"];
-        // treeTopBottom[3][1] = ["border", "1"];
-        // treeTopBottom[3][2] = ["2", "4"];
-        // treeTopBottom[3][3] = ["border", "1"];
-        // treeTopBottom[3][4] = ["2", "4"];
-        // treeTopBottom[3][5] = ["border", "1"];
-        // treeTopBottom[3][6] = ["2", "4"];
-        // treeTopBottom[3][7] = ["border", "1"];
-        // treeTopBottom[3][8] = ["2", "4"];
-        // treeTopBottom[3][9] = ["border", "1"];
-        // treeTopBottom[3][10] = ["2", "4"];
-        // treeTopBottom[3][11] = ["border", "1"];
-        // treeTopBottom[3][12] = ["2", "4"];
-        // treeTopBottom[3][13] = ["border", "1"];
-        // treeTopBottom[3][14] = ["2", "4"];
-        // treeTopBottom[3][15] = ["border", "1"];
-        // treeTopBottom[3][16] = ["2", "4"];
-        // treeTopBottom[3][17] = ["border", "1"];
-        // treeTopBottom[3][18] = ["2", "4"];
-        // treeTopBottom[3][19] = ["border", "1"];
-
         normalizeArray();
-        treeTopBottom.forEach((element) => {
-            // console.log(element);
-        });
+        treeTopBottom.forEach((element) => {});
 
         setTreeAsArray(treeTopBottom);
+    }, []);
 
-        // treeTopBottom.map((item) => {
-        //     console.log("Test print Nodes: " + item);
-        // });
-    }, []); // Wird zu Beginn einmal ausgeführt
-
+    // Is called everytime maxChildren of tree changes
     useEffect(() => {
         setNodeSize(tree.maxChildren);
     }, [tree.maxChildren]);
 
+    // Is called everytime the nodeSize changes
     useEffect(() => {
         traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     }, [nodeSize]);
 
+    // Is called everytime a rendering is forced
     useEffect(() => {
         traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
@@ -276,8 +244,8 @@ const Bbaum: React.FC<Props> = () => {
 
     return (
         <Box className={classes.root}>
+            {/* Part of the UI that controls everything */}
             <Control
-                random={random}
                 insert={insert}
                 search={search}
                 remove={remove}
@@ -288,6 +256,7 @@ const Bbaum: React.FC<Props> = () => {
                 searchedFor={searchNumber}
             />
 
+            {/* Displays the btree */}
             {treeAsArray.map((level) => {
                 let hasBorder = false;
 

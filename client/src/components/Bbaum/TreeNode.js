@@ -21,18 +21,14 @@ export class TreeNode {
                 this.children[i].traverse();
             }
             if (this.keys[i]) {
-                // console.log(this.keys[i]);
                 array.push(this.keys[i]);
             }
         }
-        //console.log(this.keys);
 
         if (this.leaf === false) {
-            // print subtree rooted with last child
+            // Print subtree rooted with last child
             this.children[i].traverse();
         }
-
-        // console.log(array);
     }
 
     find(key) {
@@ -41,25 +37,25 @@ export class TreeNode {
         }
         let i = 0;
         while (i < this.keys.length && key > this.keys[i]) {
-            // find key which is equal or greater than key
+            // Find key which is equal or greater than key
             this.cost++;
             i++;
         }
 
         if (this.keys[i] === key) {
-            // if key found return the key
+            // If key found return the key
             return this;
         }
 
         if (this.leaf === true) {
-            // if the key is not found it is a leaf
+            // If the key is not found it is a leaf
             // Alternative: If the node is a leaf then the key is not in the tree
             return null;
         }
 
         // Adds cost to child if the next child is to be searched
         this.children[i].cost = this.cost + 1;
-        return this.children[i].find(key); // go to child of the node to find the key
+        return this.children[i].find(key); // Go to child of the node to find the key
     }
 
     addChild(node, index) {

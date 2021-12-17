@@ -1,6 +1,8 @@
+// Imports
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
+// CSS
 const useStyles = makeStyles({
     root: {
         width: 250,
@@ -35,14 +37,12 @@ interface Props {
 
 const Node: React.FC<Props> = ({ values, searchedFor }) => {
     const classes = useStyles();
-    // let i = -1;
 
     return (
         <Grid className={classes.root} container>
             {values.map((value) => {
                 let valueAsInt: number = parseInt(value);
                 let valueAsNaN: boolean = isNaN(valueAsInt);
-                // i++;
                 return (
                     <>
                         <Grid className={classes.gap} item>

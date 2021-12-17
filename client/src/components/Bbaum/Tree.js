@@ -11,7 +11,7 @@ export class Tree {
 
     traverse() {
         if (this.root != null) {
-            //check if tree is empty
+            // Check if tree is empty
             this.root.traverse();
         } else {
             console.log("Tree is empty");
@@ -20,7 +20,7 @@ export class Tree {
 
     find(k) {
         if (this.root === null) {
-            //check if tree is empty
+            // Check if tree is empty
             return null;
         } else {
             if (this.root.find(k) != null || undefined) {
@@ -98,8 +98,6 @@ export class Tree {
         let inserted = false;
         if (node.children[currentKeyIndex].numberOfKeys === this.maxKeys) {
             // Split the node if node is already full
-            //inserted = true;
-            //node.children[temp].addKey(key);
             this.splitNode(node.children[currentKeyIndex], node, currentKeyIndex + 1);
 
             // After splitting the node check to which child the key should be added
@@ -111,9 +109,6 @@ export class Tree {
         if (inserted === false) {
             this.insertNotFullNode(node.children[currentKeyIndex], key);
         }
-        //if (node.numberOfKeys === 2 * this.maxChildren - 1 && node.parent == null) {
-        //  this.splitRoot();
-        //}
     }
 
     splitRoot() {
