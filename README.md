@@ -1,5 +1,7 @@
 # B-Baum
 
+The full documentation of the project can be found in the following file: Documentation.pdf
+
 ## Specs
 
 -   Frontend: React with TypeScript
