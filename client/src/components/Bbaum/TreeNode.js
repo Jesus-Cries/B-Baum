@@ -102,8 +102,6 @@ export class TreeNode {
     removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
-        // console.log(this.children[0].keys);
-
         let index = this.keys.indexOf(value);
         let indexInParentsChildren = this.parent.children.indexOf(this);
 
@@ -192,6 +190,7 @@ export class TreeNode {
             return (this.keys[index] = lowestKeyFromRightChild);
         }
 
+        console.log("Merge left and right children");
         // MERGE LEFT AND RIGHT CHILDREN
         this.keys.splice(index, 1);
 
@@ -199,7 +198,9 @@ export class TreeNode {
         let keysFromLeftChild = this.children[index].keys;
 
         // Put keys in right child
-        this.children[index + 1].keys.splice(0, 0, keysFromLeftChild);
+        keysFromLeftChild.reverse().forEach((currentKey) => {
+            this.children[index + 1].keys.splice(0, 0, currentKey);
+        });
 
         this.children.splice(index, 1);
 
