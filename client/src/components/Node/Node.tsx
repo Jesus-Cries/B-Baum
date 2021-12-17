@@ -53,7 +53,7 @@ const Node: React.FC<Props> = ({ values, searchedFor }) => {
                             style={{
                                 backgroundColor:
                                     searchedFor == value
-                                        ? "#ff0000"
+                                        ? "#ffc400"
                                         : valueAsNaN
                                         ? "#ccc"
                                         : "#fafafa",

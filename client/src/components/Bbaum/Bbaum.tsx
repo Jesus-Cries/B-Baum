@@ -96,21 +96,25 @@ const Bbaum: React.FC<Props> = () => {
     const search = (key: number) => {
         console.log(tree);
         let node = tree.find(key);
-        if (node === null) return;
+        if (node === null) {
+            setCost(-3);
+            return;
+        }
         let nodeCost = node.cost;
         if (nodeCost == null || undefined) {
             console.log("Key not found");
+            setCost(-2);
         } else {
             console.log("Cost:" + nodeCost);
             setCost(nodeCost);
             console.log(myTree);
             console.log("Search");
-        }
-        for (let i = 0; i < 20; i++) {
-            setTimeout(() => {
-                setSearchNumber(i % 2 === 0 ? key.toString() : "");
-                forceUpdate();
-            }, 500 * i);
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    setSearchNumber(i % 2 === 0 ? key.toString() : "");
+                    forceUpdate();
+                }, 750 * i);
+            }
         }
     };
 

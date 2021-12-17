@@ -106,7 +106,7 @@ export class TreeNode {
     removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
-        console.log(this.children[0].keys);
+        // console.log(this.children[0].keys);
 
         let index = this.keys.indexOf(value);
         let indexInParentsChildren = this.parent.children.indexOf(this);

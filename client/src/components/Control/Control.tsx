@@ -51,6 +51,7 @@ interface Props {
     reset: () => void;
     order: number;
     cost: number;
+    searchedFor: string;
 }
 
 const Control: React.FC<Props> = ({
@@ -62,6 +63,7 @@ const Control: React.FC<Props> = ({
     changeOrder,
     reset,
     cost,
+    searchedFor,
 }) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
@@ -183,9 +185,13 @@ const Control: React.FC<Props> = ({
     const handleSearch = () => {
         if (amount) {
             let numbers = amount.split(",");
+            let i = 0;
             numbers.forEach(function (item) {
                 if (Number.isInteger(parseInt(item))) {
-                    search(parseInt(item));
+                    setTimeout(() => {
+                        search(parseInt(item));
+                    }, i * 750 * 10);
+                    i++;
                 } else {
                     console.log("error");
                 }
@@ -270,7 +276,21 @@ const Control: React.FC<Props> = ({
                     value={amount}
                     onChange={handleTextChange}
                 />
-                {cost !== -1 && <Typography>Cost: {cost}</Typography>}
+                {cost === -3 ? (
+                    <Typography>Tree is empty</Typography>
+                ) : cost === -2 ? (
+                    <Typography>Key not found</Typography>
+                ) : (
+                    cost !== -1 && (
+                        <Typography
+                            style={{
+                                backgroundColor: searchedFor !== "" ? "#ffc400" : "#ffffff",
+                            }}
+                        >
+                            Cost: {cost}
+                        </Typography>
+                    )
+                )}
 
                 <ButtonGroup>
                     <Button
@@ -327,7 +347,7 @@ const Control: React.FC<Props> = ({
                     min={0}
                     step={100}
                     max={5000}
-                    defaultValue={insertionTempo}
+                    defaultValue={0}
                     onChange={(first, second) => {
                         handleSliderChange(first, second);
                     }}
