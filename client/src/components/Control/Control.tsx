@@ -116,7 +116,9 @@ const Control: React.FC<Props> = ({
                     break;
             }
 
-            if (!stop) {
+            if (!stop && insertionTempo === 0) {
+                treatNextLine(arr);
+            } else if (!stop) {
                 setTimeout(() => {
                     treatNextLine(arr);
                 }, insertionTempo);
@@ -160,9 +162,13 @@ const Control: React.FC<Props> = ({
         insert(Math.floor(Math.random() * 100) + 1);
         counter--;
         if (typeof insertionTempo === "number" && counter > 0) {
-            setTimeout(() => {
+            if (insertionTempo === 0) {
                 insertRandom(counter);
-            }, insertionTempo);
+            } else {
+                setTimeout(() => {
+                    insertRandom(counter);
+                }, insertionTempo);
+            }
         }
     };
 
