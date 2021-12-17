@@ -328,6 +328,16 @@ const Control: React.FC<Props> = ({
                 </ButtonGroup>
             </Paper>
             <Paper className={classes.row}>
+                <Slider
+                    className={classes.slider}
+                    min={0}
+                    step={100}
+                    max={5000}
+                    defaultValue={0}
+                    onChange={(first, second) => {
+                        handleSliderChange(first, second);
+                    }}
+                />
                 <Box component="div" sx={{ display: "inline" }}>
                     Current Order: {order}
                 </Box>
@@ -344,16 +354,6 @@ const Control: React.FC<Props> = ({
                 <Button className={classes.button} variant="contained" onClick={handleReset}>
                     Reset
                 </Button>
-                <Slider
-                    className={classes.slider}
-                    min={0}
-                    step={100}
-                    max={5000}
-                    defaultValue={0}
-                    onChange={(first, second) => {
-                        handleSliderChange(first, second);
-                    }}
-                />
             </Paper>
         </Box>
     );
