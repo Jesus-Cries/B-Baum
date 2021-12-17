@@ -3,9 +3,11 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
     root: {
-        width: 250,
-        marginTop: 35,
-        marginBottom: 35,
+        minWidth: 250,
+        maxWidth: 600,
+        // width: 250,
+        marginTop: 20,
+        marginBottom: 20,
         justifyContent: "center",
         alignItems: "center",
         zIndex: 100,
@@ -16,8 +18,7 @@ const useStyles = makeStyles({
         justifyContent: "center",
         width: 30,
         padding: 10,
-        borderTop: "1px solid black",
-        borderBottom: "1px solid black",
+        border: "1px solid black",
     },
     gap: {
         paddingTop: 10,
