@@ -133,9 +133,13 @@ const Control: React.FC<Props> = ({
     const handleRandom = () => {
         if (upperLimit && lowerLimit) {
             if (lowerLimit <= upperLimit) {
-                let endLoop = Math.floor(
-                    Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
-                );
+                let endLoop: number =
+                    Math.floor(Math.random() * (upperLimit - lowerLimit)) +
+                    Math.floor(Math.random() * 2) +
+                    parseInt(String(lowerLimit));
+                parseInt(String(lowerLimit));
+                //parseInt(Math.floor(Math.random() * (upperLimit - lowerLimit))) + lowerLimit;
+                console.log("Endloop: " + endLoop);
                 if (endLoop === 0) {
                     endLoop = 1;
                 }
@@ -169,7 +173,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     insert(parseInt(item));
                 } else {
-                    alert("error");
+                    alert("Wrong input passed");
                 }
             });
         }
@@ -241,17 +245,17 @@ const Control: React.FC<Props> = ({
                 </Button>
                 <TextField
                     id="lowerLimit"
+                    inputProps={{ type: "number", pattern: "[0-9]*", maxLength: 75 }}
                     className={classes.limitUpper}
                     label="Lower Limit"
                     onChange={handleLowerLimit}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <TextField
                     id="upperLimit"
+                    inputProps={{ type: "number", pattern: "[0-9]*", maxLength: 75 }}
                     className={classes.limitLower}
                     label="Upper Limit"
                     onChange={handleUpperLimit}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <Button className={classes.button} variant="contained" onClick={handleRandom}>
                     Random
@@ -259,12 +263,12 @@ const Control: React.FC<Props> = ({
 
                 <TextField
                     id="numberInput"
+                    inputProps={{ maxLength: 75 }}
                     className={classes.numberInput}
                     autoFocus
                     label="Value"
                     value={amount}
                     onChange={handleTextChange}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <ButtonGroup>
                     <Button
@@ -305,10 +309,10 @@ const Control: React.FC<Props> = ({
                 </Box>
                 <TextField
                     id="upperLimit"
+                    inputProps={{ type: "number", pattern: "[0-9]*", maxLength: 75 }}
                     className={classes.limitLower}
                     label="Order"
                     onChange={handleOrderChange}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <Button className={classes.button} variant="contained" onClick={handleChangeOrder}>
                     Change Order
