@@ -68,14 +68,14 @@ export class TreeNode {
         node.parent = this;
     }
 
-    addValue(value) {
-        if (!value) return;
+    addKey(Key) {
+        if (!Key) return;
         // Search fitting index for insertion and insert it
         let index = 0;
-        while (index < this.keys.length && this.keys[index] < value) {
+        while (index < this.keys.length && this.keys[index] < Key) {
             index++;
         }
-        this.keys.splice(index, 0, value);
+        this.keys.splice(index, 0, Key);
     }
 
     deleteChild(index) {
@@ -86,15 +86,15 @@ export class TreeNode {
         return deletedChild;
     }
 
-    deleteValue(index) {
+    deleteKey(index) {
         if (!index) return;
-        // Delete key at position if position is inside keys array and return deletedValue
-        // (Returning the value helps with copy operation)
+        // Delete key at position if position is inside keys array and return deletedKey
+        // (Returning the Key helps with copy operation)
         if (index >= this.keys.length) {
             return null;
         }
-        let deletedValue = this.keys.splice(index, 1)[0];
-        return deletedValue;
+        let deletedKey = this.keys.splice(index, 1)[0];
+        return deletedKey;
     }
 
     get numberOfKeys() {
@@ -103,10 +103,11 @@ export class TreeNode {
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
     // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
-    deleteKey(value) {
+    removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
         let index = this.keys.indexOf(value);
+        let indexInParentsChildren = this.parent.children.indexOf(this);
 
         // NODE IS LEAF
         if (this.leaf) {
@@ -120,7 +121,6 @@ export class TreeNode {
 
             // NOT ENOUGH KEYS
             console.log("NOT enough keys for simple removal");
-            let indexInParentsChildren = this.parent.children.indexOf(this);
 
             // SIBLING TO LEFT EXISTS
             let leftSiblingsExists = indexInParentsChildren - 1 >= 0;
@@ -203,7 +203,53 @@ export class TreeNode {
         // Put keys in right child
         this.children[index + 1].keys.splice(0, 0, keysFromLeftChild);
 
-        return this.children.splice(index, 1);
+        this.children.splice(index, 1);
+
+        if (this.keys < this.minKeys) {
+            console.log("NOT enough keys anymore");
+
+            // SIBLING TO LEFT EXISTS
+            let leftSiblingsExists = indexInParentsChildren - 1 >= 0;
+            if (leftSiblingsExists) {
+                console.log("Sibling to the left exists");
+                // SIBLING HAS ENOUGH KEYS FOR THEFT
+                if (
+                    this.parent.children[indexInParentsChildren - 1].keys.length >
+                    this.minChildren - 1
+                ) {
+                    console.log("Has enough keys for theft");
+                    return this.theftFromSibling(index, indexInParentsChildren, "Left");
+                }
+            }
+
+            // SIBLING TO RIGHT EXISTS
+            let rightSiblingExists = indexInParentsChildren + 1 < this.parent.children.length;
+            if (rightSiblingExists) {
+                console.log("Sibling to the right exists");
+                // SIBLING HAS ENOUGH KEYS FOR THEFT
+                if (
+                    this.parent.children[indexInParentsChildren + 1].keys.length >
+                    this.minChildren - 1
+                ) {
+                    console.log("Has enough keys for theft");
+                    return this.theftFromSibling(index, indexInParentsChildren, "Right");
+                }
+            }
+
+            // MERGE WITH LEFT SIBLING
+            if (leftSiblingsExists) {
+                console.log("Merge with left sibling");
+                return this.mergeWithSibling(index, indexInParentsChildren, "Left");
+            }
+
+            // MERGE WITH RIGHT SIBLING
+            if (rightSiblingExists) {
+                console.log("Merge with right sibling");
+                return this.mergeWithSibling(index, indexInParentsChildren, "Right");
+            }
+        }
+
+        console.log("Nothing was deleted");
     }
 
     theftFromSibling(index, indexInParentsChildren, siblingSide) {
@@ -250,6 +296,18 @@ export class TreeNode {
             0,
             keyFromParent
         );
+
+        // TODO: Sich selbst aus dem Childen Array des Parents entfernen
+        // Give children to parent
+        if (this.children.length > 0) {
+            this.parent.children.splice(this.parent.children.length - 1, 0, this.children);
+
+            this.children.forEach((child) => {
+                child.parent = this.parent;
+            });
+
+            console.log("LUL");
+        }
 
         // Remove self from children list in parent
         this.parent.children.splice(indexInParentsChildren, 1);

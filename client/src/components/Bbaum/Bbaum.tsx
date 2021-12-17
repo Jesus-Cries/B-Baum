@@ -81,9 +81,7 @@ const Bbaum: React.FC<Props> = () => {
         setTreeAsArray(treeTopBottom);
     };
 
-    const random = () => {
-        console.log("Random");
-    };
+    const random = () => {};
 
     const insert = (key: number) => {
         let tempTree: Tree = tree;
@@ -92,7 +90,6 @@ const Bbaum: React.FC<Props> = () => {
         myTree = tempTree;
         setTree(tempTree);
         forceUpdate();
-        console.log(tree);
     };
 
     const search = (key: number) => {
@@ -119,7 +116,7 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.delete(key);
         setTree(tempTree);
         updateTree();
-        console.log("Delete");
+        forceUpdate();
     };
 
     const reset = () => {
@@ -129,7 +126,7 @@ const Bbaum: React.FC<Props> = () => {
     };
 
     const changeOrder = (order: number) => {
-        if (order < 2) order = 2;
+        if (order < 4) order = 4;
         let newOrder = Math.ceil(order / 2) * 2;
         console.log(newOrder);
         setOrder(newOrder);
@@ -266,7 +263,6 @@ const Bbaum: React.FC<Props> = () => {
     }, [nodeSize]);
 
     useEffect(() => {
-        console.log("Force update was called");
         traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     }, [force]);
