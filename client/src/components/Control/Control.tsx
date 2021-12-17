@@ -147,6 +147,8 @@ const Control: React.FC<Props> = ({
                     endLoop = 1;
                 }
                 let i = 0;
+                insert(Math.floor(Math.random() * 100) + 1);
+                i++;
                 if (typeof insertionTempo === "number") {
                     let interval = setInterval(function () {
                         insert(Math.floor(Math.random() * 100) + 1);
