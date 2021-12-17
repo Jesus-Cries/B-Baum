@@ -2,6 +2,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
+import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Paper, TextField } from "@material-ui/core";
@@ -49,6 +50,7 @@ interface Props {
     changeOrder: (order: number) => void;
     reset: () => void;
     order: number;
+    cost: number;
 }
 
 const Control: React.FC<Props> = ({
@@ -59,6 +61,7 @@ const Control: React.FC<Props> = ({
     //order,
     changeOrder,
     reset,
+    cost,
 }) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
@@ -146,7 +149,7 @@ const Control: React.FC<Props> = ({
                     let interval = setInterval(function () {
                         insert(Math.floor(Math.random() * 100) + 1);
                         i++;
-                        if (i == endLoop) clearInterval(interval);
+                        if (i === endLoop) clearInterval(interval);
                     }, insertionTempo);
                 }
             } else {
@@ -267,6 +270,8 @@ const Control: React.FC<Props> = ({
                     value={amount}
                     onChange={handleTextChange}
                 />
+                {cost !== -1 && <Typography>Cost: {cost}</Typography>}
+
                 <ButtonGroup>
                     <Button
                         className={classes.button}
