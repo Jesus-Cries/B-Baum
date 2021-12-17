@@ -57,35 +57,44 @@ export class TreeNode {
             return null;
         }
 
+        // Adds cost to child if the next child is to be searched
         this.children[i].cost = this.cost + 1;
         return this.children[i].find(key); // go to child of the node to find the key
     }
 
-    addChild(node, position) {
-        this.children.splice(position, 0, node);
+    addChild(node, index) {
+        // Adds child at given index
+        this.children.splice(index, 0, node); // Adds node at given index
         node.parent = this;
     }
 
     addValue(value) {
-        if (!value) {
-            return;
+        if (!value) return;
+        // Search fitting index for insertion and insert it
+        let index = 0;
+        while (index < this.keys.length && this.keys[index] < value) {
+            index++;
         }
-        let pos = 0;
-        while (pos < this.keys.length && this.keys[pos] < value) {
-            pos++;
-        }
-        this.keys.splice(pos, 0, value);
+        this.keys.splice(index, 0, value);
     }
 
-    deleteChild(pos) {
-        return this.children.splice(pos, 1)[0];
+    deleteChild(index) {
+        // If index is set delete child at index and return child
+        // (Returning the Child helps with copy operation)
+        if (!index) return;
+        let deletedChild = this.children.splice(index, 1)[0];
+        return deletedChild;
     }
 
-    removeValue(pos) {
-        if (pos >= this.keys.length) {
+    deleteValue(index) {
+        if (!index) return;
+        // Delete key at position if position is inside keys array and return deletedValue
+        // (Returning the value helps with copy operation)
+        if (index >= this.keys.length) {
             return null;
         }
-        return this.keys.splice(pos, 1)[0];
+        let deletedValue = this.keys.splice(index, 1)[0];
+        return deletedValue;
     }
 
     get numberOfKeys() {

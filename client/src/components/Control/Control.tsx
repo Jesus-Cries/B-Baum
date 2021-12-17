@@ -6,7 +6,6 @@ import { useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Paper, TextField } from "@material-ui/core";
 
-// @ts-ignore
 const useStyles = makeStyles({
     root: {
         marginTop: 30,
@@ -19,7 +18,7 @@ const useStyles = makeStyles({
     row: {
         display: "flex",
         //flexWrap: "wrap",
-        justifyContent: "space-evenly",
+        justifyContent: "space-around",
         alignItems: "center",
         width: "90%",
         margin: 10,
@@ -132,21 +131,23 @@ const Control: React.FC<Props> = ({
     const handleRandom = () => {
         if (upperLimit && lowerLimit) {
             if (lowerLimit <= upperLimit) {
-                let endLoop = Math.floor(
-                    Math.random() * (upperLimit - lowerLimit + 1) + lowerLimit
-                );
+                let endLoop: number =
+                    Math.floor(Math.random() * (upperLimit - lowerLimit)) +
+                    Math.floor(Math.random() * 2) +
+                    parseInt(String(lowerLimit));
+                parseInt(String(lowerLimit));
+                //parseInt(Math.floor(Math.random() * (upperLimit - lowerLimit))) + lowerLimit;
+                console.log("Endloop: " + endLoop);
                 if (endLoop === 0) {
                     endLoop = 1;
                 }
-                console.log(endLoop);
-                for (let i = 0; i < endLoop; i++) {
-                    console.log("rte");
-                    if (typeof insertionTempo === "number") {
-                        setTimeout(function () {
-                            insert(Math.floor(Math.random() * 100) + 1);
-                            console.log("inserting");
-                        }, insertionTempo);
-                    }
+                let i = 0;
+                if (typeof insertionTempo === "number") {
+                    let interval = setInterval(function () {
+                        insert(Math.floor(Math.random() * 100) + 1);
+                        i++;
+                        if (i == endLoop) clearInterval(interval);
+                    }, insertionTempo);
                 }
             } else {
                 alert("False limits");
@@ -170,7 +171,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     insert(parseInt(item));
                 } else {
-                    alert("error");
+                    alert("Wrong input passed");
                 }
             });
         }
@@ -241,19 +242,17 @@ const Control: React.FC<Props> = ({
                 </Button>
                 <TextField
                     id="lowerLimit"
+                    inputProps={{ type: "number", pattern: "[0-9]*", maxLength: 75 }}
                     className={classes.limitUpper}
-                    autoFocus
                     label="Lower Limit"
                     onChange={handleLowerLimit}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <TextField
                     id="upperLimit"
+                    inputProps={{ type: "number", pattern: "[0-9]*", maxLength: 75 }}
                     className={classes.limitLower}
-                    autoFocus
                     label="Upper Limit"
                     onChange={handleUpperLimit}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <Button className={classes.button} variant="contained" onClick={handleRandom}>
                     Random
@@ -261,12 +260,12 @@ const Control: React.FC<Props> = ({
 
                 <TextField
                     id="numberInput"
+                    inputProps={{ maxLength: 75 }}
                     className={classes.numberInput}
                     autoFocus
                     label="Value"
                     value={amount}
                     onChange={handleTextChange}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <ButtonGroup>
                     <Button
@@ -307,11 +306,10 @@ const Control: React.FC<Props> = ({
                 </Box>
                 <TextField
                     id="upperLimit"
+                    inputProps={{ type: "number", pattern: "[0-9]*", maxLength: 75 }}
                     className={classes.limitLower}
-                    autoFocus
                     label="Order"
                     onChange={handleOrderChange}
-                    inputProps={{ maxLength: 75 }}
                 />
                 <Button className={classes.button} variant="contained" onClick={handleChangeOrder}>
                     Change Order
