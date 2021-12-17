@@ -227,27 +227,6 @@ const Bbaum: React.FC<Props> = () => {
 
         traverseTreeBreadthFirst(tree.root, 0);
 
-        // treeTopBottom[3][0] = ["2", "1"];
-        // treeTopBottom[3][1] = ["border", "1"];
-        // treeTopBottom[3][2] = ["2", "4"];
-        // treeTopBottom[3][3] = ["border", "1"];
-        // treeTopBottom[3][4] = ["2", "4"];
-        // treeTopBottom[3][5] = ["border", "1"];
-        // treeTopBottom[3][6] = ["2", "4"];
-        // treeTopBottom[3][7] = ["border", "1"];
-        // treeTopBottom[3][8] = ["2", "4"];
-        // treeTopBottom[3][9] = ["border", "1"];
-        // treeTopBottom[3][10] = ["2", "4"];
-        // treeTopBottom[3][11] = ["border", "1"];
-        // treeTopBottom[3][12] = ["2", "4"];
-        // treeTopBottom[3][13] = ["border", "1"];
-        // treeTopBottom[3][14] = ["2", "4"];
-        // treeTopBottom[3][15] = ["border", "1"];
-        // treeTopBottom[3][16] = ["2", "4"];
-        // treeTopBottom[3][17] = ["border", "1"];
-        // treeTopBottom[3][18] = ["2", "4"];
-        // treeTopBottom[3][19] = ["border", "1"];
-
         normalizeArray();
         treeTopBottom.forEach((element) => {
             // console.log(element);
