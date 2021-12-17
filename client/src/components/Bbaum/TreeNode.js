@@ -68,14 +68,14 @@ export class TreeNode {
         node.parent = this;
     }
 
-    addValue(value) {
-        if (!value) return;
+    addKey(Key) {
+        if (!Key) return;
         // Search fitting index for insertion and insert it
         let index = 0;
-        while (index < this.keys.length && this.keys[index] < value) {
+        while (index < this.keys.length && this.keys[index] < Key) {
             index++;
         }
-        this.keys.splice(index, 0, value);
+        this.keys.splice(index, 0, Key);
     }
 
     deleteChild(index) {
@@ -86,15 +86,15 @@ export class TreeNode {
         return deletedChild;
     }
 
-    deleteValue(index) {
+    deleteKey(index) {
         if (!index) return;
-        // Delete key at position if position is inside keys array and return deletedValue
-        // (Returning the value helps with copy operation)
+        // Delete key at position if position is inside keys array and return deletedKey
+        // (Returning the Key helps with copy operation)
         if (index >= this.keys.length) {
             return null;
         }
-        let deletedValue = this.keys.splice(index, 1)[0];
-        return deletedValue;
+        let deletedKey = this.keys.splice(index, 1)[0];
+        return deletedKey;
     }
 
     get numberOfKeys() {
@@ -103,7 +103,7 @@ export class TreeNode {
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
     // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
-    deleteKey(value) {
+    removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
         console.log(this.children[0].keys);

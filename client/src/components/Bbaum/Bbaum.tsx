@@ -10,6 +10,7 @@ import Control from "../../components/Control/Control";
 import { Tree } from "./Tree";
 import { TreeNode } from "./TreeNode";
 import node from "../../components/Node/Node";
+import React from "react";
 
 const useStyles = makeStyles({
     root: {
@@ -59,6 +60,7 @@ const Bbaum: React.FC<Props> = () => {
         new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
     const [cost, setCost] = useState<number>(-1);
+    const [searchNumber, setSearchNumber] = useState<string>("");
 
     const forceUpdate = () => {
         let newForce: number = Math.random();
@@ -80,9 +82,7 @@ const Bbaum: React.FC<Props> = () => {
         setTreeAsArray(treeTopBottom);
     };
 
-    const random = () => {
-        console.log("Random");
-    };
+    const random = () => {};
 
     const insert = (key: number) => {
         let tempTree: Tree = tree;
@@ -91,7 +91,6 @@ const Bbaum: React.FC<Props> = () => {
         myTree = tempTree;
         setTree(tempTree);
         forceUpdate();
-        console.log(tree);
     };
 
     const search = (key: number) => {
@@ -104,9 +103,15 @@ const Bbaum: React.FC<Props> = () => {
         } else {
             console.log("Cost:" + nodeCost);
             setCost(nodeCost);
+            console.log(myTree);
+            console.log("Search");
         }
-        console.log(myTree);
-        console.log("Search");
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                setSearchNumber(i % 2 === 0 ? key.toString() : "");
+                forceUpdate();
+            }, 500 * i);
+        }
     };
 
     // FIXME: Algorithm doesnt reorder the nodes properly
@@ -276,6 +281,7 @@ const Bbaum: React.FC<Props> = () => {
                 changeOrder={changeOrder}
                 reset={reset}
                 cost={cost}
+                searchedFor={searchNumber}
             />
 
             {treeAsArray.map((level) => {
@@ -322,7 +328,7 @@ const Bbaum: React.FC<Props> = () => {
                             return (
                                 <Grid className={classes.container} xs={scalingConvert} container>
                                     {element.map((node) => {
-                                        return <Node values={node} />;
+                                        return <Node searchedFor={searchNumber} values={node} />;
                                     })}
                                 </Grid>
                             );
