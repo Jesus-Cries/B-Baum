@@ -282,7 +282,7 @@ const Control: React.FC<Props> = ({
                 {cost === -3 ? (
                     <Typography>Tree is empty</Typography>
                 ) : cost === -2 ? (
-                    <Typography>Key not found</Typography>
+                    <Typography>Value not found</Typography>
                 ) : (
                     cost !== -1 && (
                         <Typography
