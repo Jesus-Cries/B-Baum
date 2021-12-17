@@ -136,5 +136,6 @@ export class Tree {
         if (nodeWithValue === null) return null;
 
         nodeWithValue.removeKey(k);
+        nodeWithValue.checkForParent();
     }
 }

@@ -97,6 +97,10 @@ export class TreeNode {
         return this.keys.length;
     }
 
+    checkForParent() {
+        if (this.parent.keys < this.minKeys) console.log("OH NO");
+    }
+
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
     // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
     removeKey(value) {
@@ -204,9 +208,6 @@ export class TreeNode {
 
         this.children.splice(index, 1);
 
-        // CASE 3
-        // -------------------------------------------------------------------------------
-
         if (this.keys < this.minKeys) {
             console.log("NOT enough keys anymore");
 
@@ -298,7 +299,6 @@ export class TreeNode {
             keyFromParent
         );
 
-        // TODO: Check if this works for both sides
         // Give children to sibling
         if (this.children.length > 0) {
             this.children.forEach((child) => {
