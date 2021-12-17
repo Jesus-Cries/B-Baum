@@ -107,7 +107,7 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.delete(key);
         setTree(tempTree);
         updateTree();
-        console.log("Delete");
+        forceUpdate();
     };
 
     const reset = () => {
@@ -228,7 +228,6 @@ const Bbaum: React.FC<Props> = () => {
     }, [tree]);
 
     useEffect(() => {
-        console.log("Force update was called");
         traverserTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     }, [force]);

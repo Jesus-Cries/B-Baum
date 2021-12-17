@@ -317,14 +317,14 @@ const Control: React.FC<Props> = ({
                     Change Order
                 </Button>
                 <Button className={classes.button} variant="contained" onClick={handleReset}>
-                    Reset {insertionTempo}
+                    Reset
                 </Button>
                 <Slider
                     className={classes.slider}
                     min={0}
                     step={100}
                     max={5000}
-                    defaultValue={0}
+                    defaultValue={insertionTempo}
                     onChange={(first, second) => {
                         handleSliderChange(first, second);
                     }}
