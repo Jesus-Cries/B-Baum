@@ -36,12 +36,12 @@ export class Tree {
 
         if (currentRoot === null) {
             // Check if tree is empty
-            this.root = new TreeNode(this.maxChildren, true, null); // make new node as leaf
+            this.root = new TreeNode(this, this.maxChildren, true, null); // make new node as leaf
             this.root.keys[0] = key; // add key to the node
         } else if (currentRoot.numberOfKeys === this.maxKeys) {
             // If root is full create a new node to become the root
             // Make the old root a child of the new Root
-            let newRoot = new TreeNode(this.root.maxChildren, false, null);
+            let newRoot = new TreeNode(this, this.root.maxChildren, false, null);
             newRoot.tree = this;
             this.root = newRoot;
             newRoot.addChild(currentRoot, 0);
@@ -57,7 +57,7 @@ export class Tree {
 
     splitNode(child, parent, index) {
         // Create a new child
-        let newChild = new TreeNode(this.maxChildren, child.leaf, parent);
+        let newChild = new TreeNode(this, this.maxChildren, child.leaf, parent);
 
         // Give the new child the keys from the old child
         for (let k = 1; k < this.minChildren; k++) {
@@ -112,14 +112,14 @@ export class Tree {
     }
 
     splitRoot() {
-        let newRoot = new TreeNode(this.maxChildren, false, null);
+        let newRoot = new TreeNode(this, this.maxChildren, false, null);
         let oldRoot = this.root;
         this.root = newRoot;
 
         newRoot.addKey(oldRoot.deleteKey(this.minChildren - 1));
 
         for (let i = 0; i < oldRoot.numberOfKeys; i++) {
-            let newChild = new TreeNode(this.maxChildren, false, this.root);
+            let newChild = new TreeNode(this, this.maxChildren, false, this.root);
 
             newChild.addKey(oldRoot.keys[i]);
             newRoot.addChild(newChild, i);

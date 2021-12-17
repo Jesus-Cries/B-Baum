@@ -1,5 +1,6 @@
 export class TreeNode {
-    constructor(maxChildren, leaf, parent) {
+    constructor(wholeTree, maxChildren, leaf, parent) {
+        this.wholeTree = wholeTree;
         this.maxChildren = maxChildren;
         this.minChildren = Math.ceil(maxChildren / 2);
         this.maxKeys = maxChildren - 1;
@@ -97,12 +98,7 @@ export class TreeNode {
         return this.keys.length;
     }
 
-    checkForParent() {
-        if (this.parent.keys < this.minKeys) console.log("OH NO");
-    }
-
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
-    // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
     removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
@@ -309,5 +305,12 @@ export class TreeNode {
 
         // Remove self from children list in parent
         this.parent.children.splice(indexInParentsChildren, 1);
+    }
+
+    checkForParent() {
+        if (this.parent.keys < this.minKeys) {
+            console.log("Parent does NOT have enough keys");
+            this.wholeTree.root = this.parent.children[0];
+        }
     }
 }
