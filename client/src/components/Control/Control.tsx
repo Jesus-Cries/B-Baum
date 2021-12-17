@@ -146,19 +146,20 @@ const Control: React.FC<Props> = ({
                 if (endLoop === 0) {
                     endLoop = 1;
                 }
-                let i = 0;
-                insert(Math.floor(Math.random() * 100) + 1);
-                i++;
-                if (typeof insertionTempo === "number") {
-                    let interval = setInterval(function () {
-                        insert(Math.floor(Math.random() * 100) + 1);
-                        i++;
-                        if (i === endLoop) clearInterval(interval);
-                    }, insertionTempo);
-                }
+                insertRandom(endLoop);
             } else {
                 console.log("False limits");
             }
+        }
+    };
+
+    const insertRandom = (counter: number) => {
+        insert(Math.floor(Math.random() * 100) + 1);
+        counter--;
+        if (typeof insertionTempo === "number" && counter > 0) {
+            setTimeout(() => {
+                insertRandom(counter);
+            }, insertionTempo);
         }
     };
 
