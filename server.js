@@ -3,6 +3,7 @@ const path = require("path");
 
 const app = express();
 
+// Serve production build
 app.use(express.static(path.join(__dirname, "client", "build")));
 
 app.use("/", (req, res) => {

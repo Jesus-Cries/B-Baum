@@ -1,3 +1,4 @@
+// Imports
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Slider from "@material-ui/core/Slider";
@@ -7,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Paper, TextField } from "@material-ui/core";
 
+// CSS
 const useStyles = makeStyles({
     root: {
         marginTop: 30,
@@ -43,7 +45,6 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-    random: () => void;
     insert: (key: number) => void;
     search: (key: number) => void;
     remove: (key: number) => void;
@@ -55,7 +56,6 @@ interface Props {
 }
 
 const Control: React.FC<Props> = ({
-    random,
     insert,
     search,
     remove,
@@ -66,6 +66,7 @@ const Control: React.FC<Props> = ({
     searchedFor,
 }) => {
     const classes = useStyles();
+    // States
     const [selectedFile, setSelectedFile] = useState();
     const inputFile = useRef<any>(null);
     const [amount, setAmount] = useState<String>("");
@@ -73,11 +74,13 @@ const Control: React.FC<Props> = ({
     const [upperLimit, setUpperLimit] = useState<number>();
     const [insertionTempo, setInsertionTempo] = useState<number | number[]>(0);
     const [order, setOrder] = useState<number>(4);
+    const [shownOrder, setShownOrder] = useState<number>(4);
 
     const changeHandler = (event: any) => {
         setSelectedFile(event.target.files[0]);
     };
 
+    // Reads in the CSV
     const parseCSV = (file: any) => {
         if (file) {
             let reader = new FileReader();
@@ -94,12 +97,12 @@ const Control: React.FC<Props> = ({
         }
     };
 
+    // Inserts and deletes based on line of csv
     const treatNextLine = (arr: string[]) => {
         let stop: boolean = false;
 
         if (typeof insertionTempo === "number") {
             let currentLine: string = arr.splice(0, 1)[0];
-            console.log("CurrentLine: " + currentLine);
             switch (currentLine.split(",")[0]) {
                 case "i":
                     insert(parseInt(currentLine.split(",")[1]));
@@ -133,6 +136,7 @@ const Control: React.FC<Props> = ({
         setUpperLimit(event.target.value as number);
     };
 
+    // Created random values for btree
     const handleRandom = () => {
         if (upperLimit && lowerLimit) {
             if (lowerLimit <= upperLimit) {
@@ -141,8 +145,6 @@ const Control: React.FC<Props> = ({
                     Math.floor(Math.random() * 2) +
                     parseInt(String(lowerLimit));
                 parseInt(String(lowerLimit));
-                //parseInt(Math.floor(Math.random() * (upperLimit - lowerLimit))) + lowerLimit;
-                console.log("Endloop: " + endLoop);
                 if (endLoop === 0) {
                     endLoop = 1;
                 }
@@ -153,6 +155,7 @@ const Control: React.FC<Props> = ({
         }
     };
 
+    // Inserts a single random value
     const insertRandom = (counter: number) => {
         insert(Math.floor(Math.random() * 100) + 1);
         counter--;
@@ -196,7 +199,7 @@ const Control: React.FC<Props> = ({
                     }, i * 750 * 10);
                     i++;
                 } else {
-                    console.log("error");
+                    console.log("Error");
                 }
             });
         }
@@ -209,7 +212,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     remove(parseInt(item));
                 } else {
-                    console.log("error");
+                    console.log("Error");
                 }
             });
         }
@@ -217,26 +220,19 @@ const Control: React.FC<Props> = ({
 
     const handleChangeOrder = () => {
         changeOrder(order);
+        setShownOrder(order);
     };
 
     const handleReset = () => {
         reset();
     };
 
-    //const handleTempo = (
-    //    event: React.ChangeEvent<{ value: number | Array<number>; activeThumb: number }>
-    //) => {
-    //    setInsertionTempo(event.target.value as number);
-    //};
-
     const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
         setInsertionTempo(newValue as number);
     };
 
     useEffect(() => {
-        console.log(selectedFile);
         parseCSV(selectedFile);
-        //changeTempo(insertionTempo);
     }, [selectedFile]);
 
     return (
@@ -340,7 +336,7 @@ const Control: React.FC<Props> = ({
                     }}
                 />
                 <Box component="div" sx={{ display: "inline" }}>
-                    Current Order: {order}
+                    Current Order: {shownOrder}
                 </Box>
                 <TextField
                     id="upperLimit"
