@@ -265,7 +265,18 @@ const Control: React.FC<Props> = ({
                 <Button className={classes.button} variant="contained" onClick={handleRandom}>
                     Random
                 </Button>
-
+                <Slider
+                    className={classes.slider}
+                    min={0}
+                    step={100}
+                    max={5000}
+                    defaultValue={0}
+                    onChange={(first, second) => {
+                        handleSliderChange(first, second);
+                    }}
+                />
+            </Paper>
+            <Paper className={classes.row}>
                 <TextField
                     id="numberInput"
                     inputProps={{ maxLength: 75 }}
@@ -323,18 +334,7 @@ const Control: React.FC<Props> = ({
                         Delete
                     </Button>
                 </ButtonGroup>
-            </Paper>
-            <Paper className={classes.row}>
-                <Slider
-                    className={classes.slider}
-                    min={0}
-                    step={100}
-                    max={5000}
-                    defaultValue={0}
-                    onChange={(first, second) => {
-                        handleSliderChange(first, second);
-                    }}
-                />
+
                 <Box component="div" sx={{ display: "inline" }}>
                     Current Order: {shownOrder}
                 </Box>
