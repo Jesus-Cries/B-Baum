@@ -103,7 +103,7 @@ export class TreeNode {
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
     // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
-    delete(value) {
+    removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
         let index = this.keys.indexOf(value);
@@ -297,7 +297,7 @@ export class TreeNode {
             keyFromParent
         );
 
-        // TODO: Sich selbst aus dem Childen Array des Parents entfernen    
+        // TODO: Sich selbst aus dem Childen Array des Parents entfernen
         // Give children to parent
         if (this.children.length > 0) {
             this.parent.children.splice(this.parent.children.length - 1, 0, this.children);

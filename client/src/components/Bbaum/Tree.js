@@ -140,6 +140,6 @@ export class Tree {
 
         if (nodeWithValue === null) return null;
 
-        nodeWithValue.delete(k);
+        nodeWithValue.removeKey(k);
     }
 }
