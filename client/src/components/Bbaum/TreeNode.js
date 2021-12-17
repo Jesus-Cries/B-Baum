@@ -106,6 +106,8 @@ export class TreeNode {
     removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
 
+        // console.log(this.children[0].keys);
+
         let index = this.keys.indexOf(value);
         let indexInParentsChildren = this.parent.children.indexOf(this);
 
@@ -205,6 +207,9 @@ export class TreeNode {
 
         this.children.splice(index, 1);
 
+        // CASE 3
+        // -------------------------------------------------------------------------------
+
         if (this.keys < this.minKeys) {
             console.log("NOT enough keys anymore");
 
@@ -248,8 +253,6 @@ export class TreeNode {
                 return this.mergeWithSibling(index, indexInParentsChildren, "Right");
             }
         }
-
-        console.log("Nothing was deleted");
     }
 
     theftFromSibling(index, indexInParentsChildren, siblingSide) {
@@ -288,6 +291,7 @@ export class TreeNode {
             siblingSide === "Left"
                 ? this.parent.children[indexInParentsChildren + indexOffset].keys.length
                 : 0;
+        let sibling = this.parent.children[indexInParentsChildren + indexOffset];
 
         // Put lowest key from parent in sibling
         let keyFromParent = this.parent.keys.splice(0, 1)[0];
@@ -297,16 +301,13 @@ export class TreeNode {
             keyFromParent
         );
 
-        // TODO: Sich selbst aus dem Childen Array des Parents entfernen
-        // Give children to parent
+        // TODO: Check if this works for both sides
+        // Give children to sibling
         if (this.children.length > 0) {
-            this.parent.children.splice(this.parent.children.length - 1, 0, this.children);
-
             this.children.forEach((child) => {
-                child.parent = this.parent;
+                child.parent = sibling;
+                sibling.addChild(child, sibling.children.length);
             });
-
-            console.log("LUL");
         }
 
         // Remove self from children list in parent

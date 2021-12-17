@@ -59,6 +59,7 @@ const Bbaum: React.FC<Props> = () => {
         // TODO: Setzt Defaultwerte für das Array. Nur nötig, weil in der Rendermoethode hardgecoded auf explizite Indizes zugegriffen wird (kann später weg)
         new Array(1).fill(new Array(1).fill(new Array(1).fill(" ")))
     );
+    const [cost, setCost] = useState<number>(-1);
     const [searchNumber, setSearchNumber] = useState<string>("");
 
     const forceUpdate = () => {
@@ -94,19 +95,26 @@ const Bbaum: React.FC<Props> = () => {
 
     const search = (key: number) => {
         console.log(tree);
-        let cost = tree.find(key).cost;
-        if (cost == null || undefined) {
+        let node = tree.find(key);
+        if (node === null) {
+            setCost(-3);
+            return;
+        }
+        let nodeCost = node.cost;
+        if (nodeCost == null || undefined) {
             console.log("Key not found");
+            setCost(-2);
         } else {
-            console.log("Cost:" + cost);
+            console.log("Cost:" + nodeCost);
+            setCost(nodeCost);
             console.log(myTree);
             console.log("Search");
-        }
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => {
-                setSearchNumber(i % 2 === 0 ? key.toString() : "");
-                forceUpdate();
-            }, 250 * i);
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    setSearchNumber(i % 2 === 0 ? key.toString() : "");
+                    forceUpdate();
+                }, 750 * i);
+            }
         }
     };
 
@@ -117,6 +125,7 @@ const Bbaum: React.FC<Props> = () => {
         setTree(tempTree);
         updateTree();
         forceUpdate();
+        console.log(tree);
     };
 
     const reset = () => {
@@ -240,8 +249,6 @@ const Bbaum: React.FC<Props> = () => {
         // treeTopBottom[3][19] = ["border", "1"];
 
         normalizeArray();
-        console.log("Weird stuff");
-        // console.log("Weird stuff");
         treeTopBottom.forEach((element) => {
             // console.log(element);
         });
@@ -277,6 +284,8 @@ const Bbaum: React.FC<Props> = () => {
                 order={order}
                 changeOrder={changeOrder}
                 reset={reset}
+                cost={cost}
+                searchedFor={searchNumber}
             />
 
             {treeAsArray.map((level) => {

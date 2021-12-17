@@ -2,6 +2,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Slider from "@material-ui/core/Slider";
 import { useEffect, useState, useRef } from "react";
+import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { ButtonGroup, Paper, TextField } from "@material-ui/core";
@@ -49,6 +50,8 @@ interface Props {
     changeOrder: (order: number) => void;
     reset: () => void;
     order: number;
+    cost: number;
+    searchedFor: string;
 }
 
 const Control: React.FC<Props> = ({
@@ -59,6 +62,8 @@ const Control: React.FC<Props> = ({
     //order,
     changeOrder,
     reset,
+    cost,
+    searchedFor,
 }) => {
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
@@ -141,17 +146,20 @@ const Control: React.FC<Props> = ({
                 if (endLoop === 0) {
                     endLoop = 1;
                 }
-                let i = 0;
-                if (typeof insertionTempo === "number") {
-                    let interval = setInterval(function () {
-                        insert(Math.floor(Math.random() * 100) + 1);
-                        i++;
-                        if (i == endLoop) clearInterval(interval);
-                    }, insertionTempo);
-                }
+                insertRandom(endLoop);
             } else {
                 console.log("False limits");
             }
+        }
+    };
+
+    const insertRandom = (counter: number) => {
+        insert(Math.floor(Math.random() * 100) + 1);
+        counter--;
+        if (typeof insertionTempo === "number" && counter > 0) {
+            setTimeout(() => {
+                insertRandom(counter);
+            }, insertionTempo);
         }
     };
 
@@ -180,9 +188,13 @@ const Control: React.FC<Props> = ({
     const handleSearch = () => {
         if (amount) {
             let numbers = amount.split(",");
+            let i = 0;
             numbers.forEach(function (item) {
                 if (Number.isInteger(parseInt(item))) {
-                    search(parseInt(item));
+                    setTimeout(() => {
+                        search(parseInt(item));
+                    }, i * 750 * 10);
+                    i++;
                 } else {
                     console.log("error");
                 }
@@ -267,6 +279,22 @@ const Control: React.FC<Props> = ({
                     value={amount}
                     onChange={handleTextChange}
                 />
+                {cost === -3 ? (
+                    <Typography>Tree is empty</Typography>
+                ) : cost === -2 ? (
+                    <Typography>Value not found</Typography>
+                ) : (
+                    cost !== -1 && (
+                        <Typography
+                            style={{
+                                backgroundColor: searchedFor !== "" ? "#ffc400" : "#ffffff",
+                            }}
+                        >
+                            Cost: {cost}
+                        </Typography>
+                    )
+                )}
+
                 <ButtonGroup>
                     <Button
                         className={classes.button}
@@ -301,6 +329,16 @@ const Control: React.FC<Props> = ({
                 </ButtonGroup>
             </Paper>
             <Paper className={classes.row}>
+                <Slider
+                    className={classes.slider}
+                    min={0}
+                    step={100}
+                    max={5000}
+                    defaultValue={0}
+                    onChange={(first, second) => {
+                        handleSliderChange(first, second);
+                    }}
+                />
                 <Box component="div" sx={{ display: "inline" }}>
                     Current Order: {order}
                 </Box>
@@ -317,16 +355,6 @@ const Control: React.FC<Props> = ({
                 <Button className={classes.button} variant="contained" onClick={handleReset}>
                     Reset
                 </Button>
-                <Slider
-                    className={classes.slider}
-                    min={0}
-                    step={100}
-                    max={5000}
-                    defaultValue={insertionTempo}
-                    onChange={(first, second) => {
-                        handleSliderChange(first, second);
-                    }}
-                />
             </Paper>
         </Box>
     );
