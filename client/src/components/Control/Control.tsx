@@ -63,17 +63,33 @@ const Control: React.FC<Props> = ({
     const classes = useStyles();
     const [selectedFile, setSelectedFile] = useState();
     const inputFile = useRef<any>(null);
-    const [amount, setAmount] = useState<String>();
+    const [amount, setAmount] = useState<String>("");
     const [lowerLimit, setLowerLimit] = useState<number>();
     const [upperLimit, setUpperLimit] = useState<number>();
-    const [insertionTempo, setInsertionTempo] = useState<number | number[]>();
+    const [insertionTempo, setInsertionTempo] = useState<number | number[]>(0);
     const [order, setOrder] = useState<number>(4);
 
     const changeHandler = (event: any) => {
         setSelectedFile(event.target.files[0]);
     };
 
-    const insertNextLine = (arr: string[]) => {
+    const parseCSV = (file: any) => {
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                if (reader.result != null) {
+                    let csvText: string | ArrayBuffer = reader.result;
+                    if (typeof csvText === "string") {
+                        let lines = csvText.split(/\r?\n/);
+                        treatNextLine(lines);
+                    }
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+
+    const treatNextLine = (arr: string[]) => {
         let stop: boolean = false;
 
         if (typeof insertionTempo === "number") {
@@ -87,34 +103,16 @@ const Control: React.FC<Props> = ({
                     remove(parseInt(currentLine.split(",")[1]));
                     break;
                 default:
-                    console.log("Switch default");
+                    console.log("Unknown command");
                     stop = true;
                     break;
             }
 
-            console.log(insertionTempo);
-
             if (!stop) {
                 setTimeout(() => {
-                    insertNextLine(arr);
+                    treatNextLine(arr);
                 }, insertionTempo);
             }
-        }
-    };
-
-    const parseCSV = (file: any) => {
-        if (file) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                if (reader.result != null) {
-                    let csvText: string | ArrayBuffer = reader.result;
-                    if (typeof csvText === "string") {
-                        let lines = csvText.split(/\r?\n/);
-                        insertNextLine(lines);
-                    }
-                }
-            };
-            reader.readAsText(file);
         }
     };
 
@@ -152,7 +150,7 @@ const Control: React.FC<Props> = ({
                     }, insertionTempo);
                 }
             } else {
-                alert("False limits");
+                console.log("False limits");
             }
         }
     };
@@ -173,7 +171,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     insert(parseInt(item));
                 } else {
-                    alert("Wrong input passed");
+                    console.log("Wrong input passed");
                 }
             });
         }
@@ -186,7 +184,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     search(parseInt(item));
                 } else {
-                    alert("error");
+                    console.log("error");
                 }
             });
         }
@@ -199,7 +197,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     remove(parseInt(item));
                 } else {
-                    alert("error");
+                    console.log("error");
                 }
             });
         }
@@ -219,9 +217,8 @@ const Control: React.FC<Props> = ({
     //    setInsertionTempo(event.target.value as number);
     //};
 
-    const testSpeed = (value: number) => {
-        setInsertionTempo(value);
-        return value.toString();
+    const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
+        setInsertionTempo(newValue as number);
     };
 
     useEffect(() => {
@@ -325,10 +322,10 @@ const Control: React.FC<Props> = ({
                     min={0}
                     step={100}
                     max={5000}
-                    defaultValue={0}
-                    //onChange={(_, newValue) => setInsertionTempo(newValue)}
-                    //onChangeCommitted={(_, newValue) => setInsertionTempo(newValue)}
-                    getAriaValueText={testSpeed}
+                    defaultValue={insertionTempo}
+                    onChange={(first, second) => {
+                        handleSliderChange(first, second);
+                    }}
                 />
             </Paper>
         </Box>

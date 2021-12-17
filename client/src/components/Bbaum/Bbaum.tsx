@@ -97,9 +97,9 @@ const Bbaum: React.FC<Props> = () => {
         console.log(tree);
         let cost = tree.find(key).cost;
         if (cost == null || undefined) {
-            alert("Key not found");
+            console.log("Key not found");
         } else {
-            alert("Cost:" + cost);
+            console.log("Cost:" + cost);
         }
         console.log(myTree);
         console.log("Search");
@@ -111,7 +111,7 @@ const Bbaum: React.FC<Props> = () => {
         tempTree.delete(key);
         setTree(tempTree);
         updateTree();
-        console.log("Delete");
+        forceUpdate();
     };
 
     const reset = () => {
@@ -258,7 +258,6 @@ const Bbaum: React.FC<Props> = () => {
     }, [nodeSize]);
 
     useEffect(() => {
-        console.log("Force update was called");
         traverseTreeBreadthFirst(tree.root, 0);
         setTreeAsArray(treeTopBottom);
     }, [force]);
