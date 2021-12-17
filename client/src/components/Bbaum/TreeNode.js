@@ -1,5 +1,6 @@
 export class TreeNode {
-    constructor(maxChildren, leaf, parent) {
+    constructor(wholeTree, maxChildren, leaf, parent) {
+        this.wholeTree = wholeTree;
         this.maxChildren = maxChildren;
         this.minChildren = Math.ceil(maxChildren / 2);
         this.maxKeys = maxChildren - 1;
@@ -98,11 +99,8 @@ export class TreeNode {
     }
 
     // Explanation: https://www.programiz.com/dsa/deletion-from-a-b-tree
-    // TODO: After merging if the parent node has less than the minimum number of keys then, look for the siblings as in Case I.
     removeKey(value) {
         console.log(`------- DELETING ${value} -------`);
-
-        // console.log(this.children[0].keys);
 
         let index = this.keys.indexOf(value);
         let indexInParentsChildren = this.parent.children.indexOf(this);
@@ -192,6 +190,7 @@ export class TreeNode {
             return (this.keys[index] = lowestKeyFromRightChild);
         }
 
+        console.log("Merge left and right children");
         // MERGE LEFT AND RIGHT CHILDREN
         this.keys.splice(index, 1);
 
@@ -199,12 +198,11 @@ export class TreeNode {
         let keysFromLeftChild = this.children[index].keys;
 
         // Put keys in right child
-        this.children[index + 1].keys.splice(0, 0, keysFromLeftChild);
+        keysFromLeftChild.reverse().forEach((currentKey) => {
+            this.children[index + 1].keys.splice(0, 0, currentKey);
+        });
 
         this.children.splice(index, 1);
-
-        // CASE 3
-        // -------------------------------------------------------------------------------
 
         if (this.keys < this.minKeys) {
             console.log("NOT enough keys anymore");
@@ -297,7 +295,6 @@ export class TreeNode {
             keyFromParent
         );
 
-        // TODO: Check if this works for both sides
         // Give children to sibling
         if (this.children.length > 0) {
             this.children.forEach((child) => {
@@ -308,5 +305,12 @@ export class TreeNode {
 
         // Remove self from children list in parent
         this.parent.children.splice(indexInParentsChildren, 1);
+    }
+
+    checkForParent() {
+        if (this.parent.keys < this.minKeys) {
+            console.log("Parent does NOT have enough keys");
+            this.wholeTree.root = this.parent.children[0];
+        }
     }
 }
