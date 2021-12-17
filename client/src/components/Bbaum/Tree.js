@@ -55,14 +55,14 @@ export class Tree {
         }
     }
 
-    splitNode(child, parent, pos) {
+    splitNode(child, parent, index) {
         // Create a new child
         let newChild = new TreeNode(this.maxChildren, child.leaf, parent);
 
         // Give the new child the keys from the old child
         for (let k = 1; k < this.minChildren; k++) {
-            let deletedVal = child.deleteValue(this.minChildren);
-            newChild.addValue(deletedVal);
+            let deletedVal = child.deleteKey(this.minChildren);
+            newChild.addKey(deletedVal);
         }
 
         // Give the new child the children from the old child
@@ -74,18 +74,18 @@ export class Tree {
         }
 
         // Give parent the new child
-        parent.addChild(newChild, pos);
+        parent.addChild(newChild, index);
 
         // Give parent the key
-        let deletedVal = child.deleteValue(this.minChildren - 1);
-        parent.addValue(deletedVal);
+        let deletedVal = child.deleteKey(this.minChildren - 1);
+        parent.addKey(deletedVal);
         parent.leaf = false;
     }
 
     insertNotFullNode(node, key) {
         if (node.leaf) {
             // Give lead node the key
-            node.addValue(key);
+            node.addKey(key);
             return;
         }
 
@@ -99,7 +99,7 @@ export class Tree {
         if (node.children[currentKeyIndex].numberOfKeys === this.maxKeys) {
             // Split the node if node is already full
             //inserted = true;
-            //node.children[temp].addValue(key);
+            //node.children[temp].addKey(key);
             this.splitNode(node.children[currentKeyIndex], node, currentKeyIndex + 1);
 
             // After splitting the node check to which child the key should be added
@@ -121,12 +121,12 @@ export class Tree {
         let oldRoot = this.root;
         this.root = newRoot;
 
-        newRoot.addValue(oldRoot.deleteValue(this.minChildren - 1));
+        newRoot.addKey(oldRoot.deleteKey(this.minChildren - 1));
 
         for (let i = 0; i < oldRoot.numberOfKeys; i++) {
             let newChild = new TreeNode(this.maxChildren, false, this.root);
 
-            newChild.addValue(oldRoot.keys[i]);
+            newChild.addKey(oldRoot.keys[i]);
             newRoot.addChild(newChild, i);
 
             for (let j = 0 + i; j < this.minChildren + i; j++) {
