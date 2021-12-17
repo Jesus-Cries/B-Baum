@@ -97,9 +97,9 @@ const Bbaum: React.FC<Props> = () => {
         console.log(tree);
         let cost = tree.find(key).cost;
         if (cost == null || undefined) {
-            alert("Key not found");
+            console.log("Key not found");
         } else {
-            alert("Cost:" + cost);
+            console.log("Cost:" + cost);
         }
         console.log(myTree);
         console.log("Search");

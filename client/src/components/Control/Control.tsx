@@ -150,7 +150,7 @@ const Control: React.FC<Props> = ({
                     }, insertionTempo);
                 }
             } else {
-                alert("False limits");
+                console.log("False limits");
             }
         }
     };
@@ -171,7 +171,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     insert(parseInt(item));
                 } else {
-                    alert("Wrong input passed");
+                    console.log("Wrong input passed");
                 }
             });
         }
@@ -184,7 +184,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     search(parseInt(item));
                 } else {
-                    alert("error");
+                    console.log("error");
                 }
             });
         }
@@ -197,7 +197,7 @@ const Control: React.FC<Props> = ({
                 if (Number.isInteger(parseInt(item))) {
                     remove(parseInt(item));
                 } else {
-                    alert("error");
+                    console.log("error");
                 }
             });
         }
